@@ -5,11 +5,10 @@ COPY package.json .
 
 RUN bun install -g vite
 
-
+RUN bun install
 
 COPY . .
 
-RUN bun install
 
 EXPOSE 5173
 

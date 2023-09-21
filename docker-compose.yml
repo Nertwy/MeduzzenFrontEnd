@@ -1,0 +1,13 @@
+version: '3'
+services:
+  web:
+    env_file:
+      - .env
+    image: frontendmeduza:v2
+    build: 
+      context: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - '.:/app'
+      - '/app/node_modules'
