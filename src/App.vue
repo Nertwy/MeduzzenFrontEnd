@@ -1,12 +1,11 @@
 <script setup lang="ts">
-
+import ModalWindow from "./components/ModalWindow.vue"
 </script>
 
 <template>
-<h1 class="">This is Starting Page</h1>
-    <router-link to="/"></router-link>
+    <ModalWindow />
+    <div>{{ $t("hello") }}</div>
+    <router-view></router-view>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
