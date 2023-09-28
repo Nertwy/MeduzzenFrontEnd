@@ -1,16 +1,13 @@
-FROM oven/bun
+FROM node
+
 WORKDIR /app
 
-COPY package.json .
+COPY package.json package-lock.json ./
 
-RUN bun install -g vite
+RUN npm install --silent
 
+COPY . ./
 
+EXPOSE 3000
+CMD [ "npm","run","dev"]
 
-COPY . .
-
-RUN bun install
-
-EXPOSE 5173
-
-CMD [ "bun","run","dev"]
