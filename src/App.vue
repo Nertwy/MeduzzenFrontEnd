@@ -2,22 +2,12 @@
 import { MutationTypes, useStore } from "./store/store";
 import LangSelect from "./components/LangSelect.vue";
 import ModalWindow from "./components/ModalWindow.vue"
-import InputWithValidation from "./components/InputWithValidation.vue";
+import InputWithValidation from "./components/FormComponents/InputWithValidation.vue";
 import { useAuth0 } from "@auth0/auth0-vue";
 import { onMounted } from "vue";
 import NavBar from "./components/NavBar.vue";
 const store = useStore()
 const { getAccessTokenSilently, user } = useAuth0()
-// onMounted(async () => {
-//     let token = localStorage.getItem('token')
-//     if (!token) {
-//         token = await getAccessTokenSilently()
-//         localStorage.setItem('token', token ?? "")
-//     }
-//     // const token = await getAccessTokenSilently()
-//     // console.log(token);
-
-// })
 
 </script>
 
