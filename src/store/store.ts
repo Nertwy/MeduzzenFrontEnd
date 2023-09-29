@@ -11,12 +11,15 @@ import {
 type State = {
   count: number;
   test: string;
+  user: User | null;
 };
 
 export const key: InjectionKey<Store<State>> = Symbol();
 export const MutationTypes = {
   increment: "increment",
   changeString: "changeString",
+  userLogin: "userLogin",
+  userLogout: "userLogout",
 };
 const getters = <GetterTree<State, any>>{
   //For getting data with some filtration or sort
@@ -27,6 +30,12 @@ const mutations = <MutationTree<State>>{
   [MutationTypes.increment](state: State) {
     state.count++;
   },
+  [MutationTypes.userLogin](state: State, payload: User) {
+    state.user = payload;
+  },
+  [MutationTypes.userLogout](state: State) {
+    state.user = null;
+  },
 };
 
 const actions = <ActionTree<State, any>>{
@@ -36,6 +45,7 @@ const store = createStore<State>({
   state: {
     count: 0,
     test: "test String",
+    user: null,
   },
   mutations: mutations,
   actions: actions,

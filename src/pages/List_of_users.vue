@@ -3,10 +3,8 @@
         List Of Users
     </div>
 </template>
-<script>
-export default {
-    
-}
+<script setup lang="ts">
+
 </script>
 <style lang="">
     

@@ -14,6 +14,7 @@ app.use(
     authorizationParams: {
       redirect_uri: import.meta.env.VITE_AUTH0_CALLBACK_URL,
     },
+    cacheLocation: "localstorage",
   })
 );
 app.use(i18n);

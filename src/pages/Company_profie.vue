@@ -1,12 +1,10 @@
 <template lang="">
     <div>
-        
+        Company Profile
     </div>
 </template>
-<script>
-export default {
-    
-}
+<script setup lang="ts">
+
 </script>
 <style lang="">
     

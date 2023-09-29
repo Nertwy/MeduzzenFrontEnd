@@ -1,6 +1,5 @@
 <template >
     <section>
-        <NavBar/>
         <form @submit="handleSubmit">
             <InputWithValidation :regex="/^[^\s@]+@[^\s@]+\.[^\s@]+$/" :type="'email'" v-model="data.email"
                 placeholder="Enter your email" />
