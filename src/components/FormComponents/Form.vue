@@ -1,8 +1,7 @@
 <template >
     <form>
         <InputWithValidation :regex="/^[^\s@]+@[^\s@]+\.[^\s@]+$/" :type="'email'" v-model="data.email"
-            placeholder="Enter your email" />
-            
+            placeholder="Enter your email" />  
         <input v-model="data.password" placeholder="Enter your password" />
         <input v-model="data.confirmPassword" placeholder="Confirm password" />
         <input v-model="data.userName" placeholder="Enter your User name" />
