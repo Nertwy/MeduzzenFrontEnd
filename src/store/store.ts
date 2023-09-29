@@ -1,12 +1,15 @@
+import { User } from "../../types";
 import { InjectionKey } from "vue";
+
 import {
   ActionTree,
   GetterTree,
   MutationTree,
   Store,
   createStore,
-  useStore as baseUseStore,
+  useStore as baseStore,
 } from "vuex";
+import { TypedDispatchAndAction } from "../../types";
 
 type State = {
   count: number;
@@ -21,37 +24,40 @@ export const MutationTypes = {
   userLogin: "userLogin",
   userLogout: "userLogout",
 };
-const getters = <GetterTree<State, any>>{
-  //For getting data with some filtration or sort
-  stringUpper: (state: State) => state.test.toUpperCase(),
+export const GetterTypes = {
+  getUser: "getUser",
+  stringUpper: "stringUpper",
 };
-const mutations = <MutationTree<State>>{
+const getters = {
+  stringUpper: (state: State) => state.test.toUpperCase(),
+  getUser: (state: State) => state.user,
+};
+const mutations = {
   //only sync operations here
-  [MutationTypes.increment](state: State) {
+  increment(state: State) {
     state.count++;
   },
-  [MutationTypes.userLogin](state: State, payload: User) {
+  userLogin(state: State, payload: User) {
     state.user = payload;
   },
-  [MutationTypes.userLogout](state: State) {
+  userLogout(state: State) {
     state.user = null;
   },
 };
-
-const actions = <ActionTree<State, any>>{
-  //This is Async mutations
-};
-const store = createStore<State>({
+const actions = {};
+export const storeInitializer = {
   state: {
     count: 0,
     test: "test String",
     user: null,
-  },
-  mutations: mutations,
-  actions: actions,
-  getters: getters,
-});
-export const useStore = () => {
-  return baseUseStore(key);
+  } as State,
+  mutations,
+  actions,
+  getters,
 };
-export default store;
+export const useStoreTyped = () => {
+  const keyedStore = baseStore(key);
+  return keyedStore as Omit<typeof keyedStore, "dispatch" | "commit"> &
+    TypedDispatchAndAction<typeof storeInitializer>;
+};
+export default useStoreTyped;

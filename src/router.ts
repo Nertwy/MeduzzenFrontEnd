@@ -5,34 +5,43 @@ import {
   createWebHistory,
 } from "vue-router";
 import AppVue from "./App.vue";
-import { authGuard,useAuth0 } from "@auth0/auth0-vue";
-// const notLoggedInGuard = (to,from,next)=>{
-//   const {isAuthenticated} = useAuth0()
-//   if(!isAuthenticated.value){
-//     next()
-//   }else{
-//     next({name:"home"})
-//   }
-// }
+import { authGuard, useAuth0, createAuthGuard } from "@auth0/auth0-vue";
+import { RouteLocation } from "vue-router";
+import useStoreTyped, { storeInitializer } from "./store/store";
+
+const authGuardReverse = (
+  _to: RouteLocationNormalized,
+  _from: RouteLocationNormalized,
+  next: NavigationGuardNext
+) => {
+  const user = storeInitializer.getters.getUser;
+  if (!user) next();
+  else next({ name: "about" });
+};
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path:'/',
-      name:'home',
-      component:()=> import('./App.vue')
+      path: "/",
+      name: "home",
+      component: () => import("./pages/MainPage.vue"),
     },
     {
+      name: "about",
       path: "/about",
       component: () => import("./pages/About.vue"),
     },
     {
       path: "/Register",
+      name: "Register",
       component: () => import("./pages/User_registration.vue"),
-      async beforeEnter(to) {
-        const result = await authGuard(to)
-        return !result
-      }
+      beforeEnter: authGuardReverse,
+    },
+    {
+      path: "/Auth",
+      name: "Authorization",
+      component: () => import("./pages/User_authorization.vue"),
+      beforeEnter: authGuardReverse,
     },
     {
       path: "/callback",
