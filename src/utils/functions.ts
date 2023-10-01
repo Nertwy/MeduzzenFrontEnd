@@ -28,3 +28,16 @@ export const register = async (userData: RegisterUser) => {
     return false;
   }
 };
+
+export const googlePress = async () => {
+  try {
+    const responce = await axiosInstance.get("api/auth/social/o/google-oauth2/", {
+      params: {
+        redirect_uri: "http://localhost:3000/callback/",
+      },
+    });
+    return responce.data.authorization_url;
+  } catch (error) {
+    console.error(error);
+  }
+};
