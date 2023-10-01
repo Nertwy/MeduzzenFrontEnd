@@ -3,7 +3,7 @@ import "./style.css";
 import AppVue from "./App.vue";
 import router from "./router";
 import i18n from "./i18n";
-import store, { key } from "./store/store";
+import { key,store } from "./store/store";
 import { createAuth0 } from "@auth0/auth0-vue";
 const app = createApp(AppVue);
 app.use(router);
@@ -20,3 +20,4 @@ app.use(
 app.use(i18n);
 app.use(store, key);
 app.mount("#app");
+    

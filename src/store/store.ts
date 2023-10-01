@@ -1,15 +1,13 @@
-import { User } from "../../types";
+import { User } from "../types";
 import { InjectionKey } from "vue";
 
 import {
-  ActionTree,
-  GetterTree,
-  MutationTree,
+
   Store,
   createStore,
   useStore as baseStore,
 } from "vuex";
-import { TypedDispatchAndAction } from "../../types";
+import { TypedDispatchAndAction } from "../types";
 
 type State = {
   count: number;
@@ -28,9 +26,9 @@ export const GetterTypes = {
   getUser: "getUser",
   stringUpper: "stringUpper",
 };
-const getters = {
+export const getters = {
   stringUpper: (state: State) => state.test.toUpperCase(),
-  getUser: (state: State) => state.user,
+  getUser: () => storeInitializer.state.user,
 };
 const mutations = {
   //only sync operations here
@@ -55,6 +53,7 @@ export const storeInitializer = {
   actions,
   getters,
 };
+export const store = createStore<State>(storeInitializer);
 export const useStoreTyped = () => {
   const keyedStore = baseStore(key);
   return keyedStore as Omit<typeof keyedStore, "dispatch" | "commit"> &

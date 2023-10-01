@@ -1,4 +1,4 @@
-import axios from "axios";
+import { RegisterUser } from "../types";
 import axiosInstance from "../axios-instance";
 /**
  * If healthy returns true else false on error logs error
@@ -14,5 +14,17 @@ const checkHealth = async () => {
     }
   } catch (error) {
     console.error("Error at checkHealth, Error:", error);
+  }
+};
+
+export const register = async (userData: RegisterUser) => {
+  try {
+    const responce = await axiosInstance.post("/api/auth/users/", userData);
+    if (responce.status === 400) throw new Error("Could not register user");
+    else if (responce.status === 201) return true;
+  } catch (error) {
+    console.error(error);
+  } finally {
+    return false;
   }
 };

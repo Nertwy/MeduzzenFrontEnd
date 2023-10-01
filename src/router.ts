@@ -7,16 +7,17 @@ import {
 import AppVue from "./App.vue";
 import { authGuard, useAuth0, createAuthGuard } from "@auth0/auth0-vue";
 import { RouteLocation } from "vue-router";
-import useStoreTyped, { storeInitializer } from "./store/store";
+import useStoreTyped, { store, storeInitializer } from "./store/store";
 
 const authGuardReverse = (
   _to: RouteLocationNormalized,
   _from: RouteLocationNormalized,
   next: NavigationGuardNext
 ) => {
-  const user = storeInitializer.getters.getUser;
-  if (!user) next();
-  else next({ name: "about" });
+  const user = store.state.user
+  if(!user) next()
+  else next("about")
+
 };
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
