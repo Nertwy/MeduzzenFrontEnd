@@ -44,15 +44,15 @@ export const googlePress = async () => {
     console.error(error);
   }
 };
-export const googleGetToken = async (code: string, state: string,scope:string,authuser:string,prompt:string) => {
+export const googleGetToken = async (state: string,code: string,scope:string,authuser:string,prompt:string) => {
   console.log("Code", code, "State", state);
   try {
     const responce = await axiosInstance.post(
       "api/auth/social/o/google-oauth2/",undefined,
       {
         params: {
-          code,
           state,
+          code,
           scope,
           authuser,
           prompt

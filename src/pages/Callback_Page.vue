@@ -2,7 +2,6 @@
     <div class="">
         <nav>Navigation Bar</nav>
         <div class="">
-            <slot />
             <button @click="handleFetchToken">Fetch Token</button>
         </div>
     </div>
@@ -20,7 +19,7 @@ const handleFetchToken = async () => {
     const prompt = url.searchParams.get("prompt");
     console.log(code, state);
     if (code && state && scope && authuser && prompt)
-        await googleGetToken(code, state, scope, authuser, prompt)
+        await googleGetToken(state,code, scope, authuser, prompt)
 }
 
 </script>
