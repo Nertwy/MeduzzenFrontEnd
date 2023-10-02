@@ -11,5 +11,5 @@ const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_BACKEND_BASE_URL,
   timeout: 5000,
 });
-
+// Do an interceptor
 export default axiosInstance;

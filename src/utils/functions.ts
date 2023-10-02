@@ -102,3 +102,16 @@ export const Login = async (email: string, password: string) => {
     return null;
   }
 };
+export const RefreshToken = async (refreshToken: string) => {
+  try {
+    const result = await axiosInstance.post("api/auth/jwt/refresh/", {
+      refresh: refreshToken,
+    });
+    if (result.status === 200) return result.data.access;
+    throw new Error(
+      `Couldnt refresh token status code: ${result.status}, text: ${result.statusText}`
+    );
+  } catch (error) {
+    console.error(error);
+  }
+};
