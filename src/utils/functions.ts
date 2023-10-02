@@ -21,7 +21,7 @@ export const register = async (userData: RegisterUser) => {
   try {
     const responce = await axiosInstance.post("/api/auth/users/", userData);
     if (responce.status === 400) throw new Error("Could not register user");
-    else if (responce.status === 201) return true;
+    else if (responce.status === 201) return responce.data;
   } catch (error) {
     console.error(error);
   } finally {
@@ -34,6 +34,7 @@ export const googlePress = async () => {
     const responce = await axiosInstance.get(
       "api/auth/social/o/google-oauth2/",
       {
+        xsrfCookieName: "csrftoken",
         params: {
           redirect_uri: "http://localhost:3000/callback/",
         },
@@ -44,27 +45,60 @@ export const googlePress = async () => {
     console.error(error);
   }
 };
-export const googleGetToken = async (state: string,code: string,scope:string,authuser:string,prompt:string) => {
-  console.log("Code", code, "State", state);
+export const googleGetToken = async (url: URL) => {
+  const code = url.searchParams.get("code");
+  const state = url.searchParams.get("state");
+  const scope = url.searchParams.get("scope");
+  const authuser = url.searchParams.get("authuser");
+  const prompt = url.searchParams.get("prompt");
   try {
     const responce = await axiosInstance.post(
-      "api/auth/social/o/google-oauth2/",undefined,
+      "api/auth/social/o/google-oauth2/",
+      undefined,
       {
         params: {
           state,
           code,
           scope,
           authuser,
-          prompt
+          prompt,
         },
-        headers:{
+        headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
       }
-      
-      );
-      console.log(responce.data);
+    );
+    const { access, refresh, user } = responce.data;
+    return {
+      access,
+      refresh,
+      user,
+    };
   } catch (error) {
     console.error(error);
+  }
+};
+
+export const Login = async (email: string, password: string) => {
+  try {
+    const result = await axiosInstance.post(
+      "api/auth/token/login/",
+      {
+        email,
+        password,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    console.log(result.status);
+
+    if (result.status === 200) return result.data;
+    else throw new Error("Login failed");
+  } catch (error) {
+    console.error(error);
+    return null;
   }
 };

@@ -8,12 +8,13 @@ type User = {
 };
 
 type RegisterUser = {
+  first_name: string;
+  last_name: string;
   username: string;
   password: string;
   re_password: string;
   email: string;
 };
-
 
 //Store Types
 type Length<L extends any[]> = L["length"];
