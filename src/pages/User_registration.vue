@@ -2,8 +2,8 @@
     <section>
         page info
         <Form />
-        <Google_Button/>
     </section>
+    <Google_Button/>
 </template>
 <script setup lang='ts'>
 import Google_Button from '@/components/buttons/Google_Button.vue';

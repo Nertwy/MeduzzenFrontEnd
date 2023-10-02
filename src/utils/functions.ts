@@ -31,12 +31,39 @@ export const register = async (userData: RegisterUser) => {
 
 export const googlePress = async () => {
   try {
-    const responce = await axiosInstance.get("api/auth/social/o/google-oauth2/", {
-      params: {
-        redirect_uri: "http://localhost:3000/callback/",
-      },
-    });
+    const responce = await axiosInstance.get(
+      "api/auth/social/o/google-oauth2/",
+      {
+        params: {
+          redirect_uri: "http://localhost:3000/callback/",
+        },
+      }
+    );
     return responce.data.authorization_url;
+  } catch (error) {
+    console.error(error);
+  }
+};
+export const googleGetToken = async (code: string, state: string,scope:string,authuser:string,prompt:string) => {
+  console.log("Code", code, "State", state);
+  try {
+    const responce = await axiosInstance.post(
+      "api/auth/social/o/google-oauth2/",undefined,
+      {
+        params: {
+          code,
+          state,
+          scope,
+          authuser,
+          prompt
+        },
+        headers:{
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      }
+      
+      );
+      console.log(responce.data);
   } catch (error) {
     console.error(error);
   }

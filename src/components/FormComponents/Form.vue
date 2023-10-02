@@ -6,7 +6,6 @@
         <input v-model="data.re_password" placeholder="Confirm password" required />
         <input v-model="data.username" placeholder="Enter your User name" required />
         <button type="submit" @click.stop.prevent="handleSubmit">Register!</button>
-        <Auth0 type="button" />
     </form>
 </template>
 <script setup lang="ts">
