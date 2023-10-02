@@ -1,3 +1,5 @@
-# Develop branch
-1. docker build -t frontendmeduza .  
-2. docker run -p 3000:3000 frontendmeduza 
+## How To start 
+1. git clone repo
+2. docker build -t frontendmeduza .  
+3. docker run -p 3000:3000 frontendmeduza 
+
