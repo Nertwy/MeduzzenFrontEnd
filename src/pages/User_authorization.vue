@@ -14,8 +14,8 @@ const handleLogin = async () => {
     const token = await Login(data.value.email, data.value.password)
     console.log(token);
 
-    if (token) {
-        localStorage.setItem('access', token)
+    if (token.auth_token) {
+        localStorage.setItem('access', token.auth_token)
     }
     return
 }
