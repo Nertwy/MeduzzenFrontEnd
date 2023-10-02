@@ -25,4 +25,4 @@ dist-ssr
 *.sw?
 pnpm-lock.yaml
 bun.lockb
-pachage-lock.json*
+
