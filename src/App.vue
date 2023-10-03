@@ -1,12 +1,13 @@
 <script setup lang="ts">
-
+import LangSelect from "./components/LangSelect.vue";
+import ModalWindow from "./components/ModalWindow.vue"
 </script>
 
 <template>
-<h1 class="">This is Starting Page</h1>
-    <router-link to="/"></router-link>
+    <ModalWindow />
+    <LangSelect :items="['en','uk']" :default-selected-item="'en'"/>
+    <div>{{ $t("hello") }}</div>
+    <router-view></router-view>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

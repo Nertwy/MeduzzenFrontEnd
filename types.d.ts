@@ -1,3 +1,3 @@
-import { messages } from "./src/i18n";
-
-type Languages = keyof typeof messages
+type Flag = "🇺🇸" | "🇺🇦";
+type Language = "en" | "uk";
+type LanguageAndFlag = [Language, Flag];
