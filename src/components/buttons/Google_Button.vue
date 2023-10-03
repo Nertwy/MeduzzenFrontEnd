@@ -26,8 +26,6 @@ import useStoreTyped from '@/store/store';
 import { googlePress } from '@/utils/functions';
 import { useRouter } from 'vue-router';
 
-const store = useStoreTyped()
-const router = useRouter()
 const googleBtnPress = async () => {
     try {
         const url = await googlePress()

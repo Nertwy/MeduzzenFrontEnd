@@ -115,3 +115,8 @@ export const RefreshToken = async (refreshToken: string) => {
     console.error(error);
   }
 };
+
+export const logout = () => {
+  localStorage.removeItem("accessToken");
+  localStorage.removeItem("refreshToken");
+};

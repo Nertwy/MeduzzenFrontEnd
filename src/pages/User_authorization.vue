@@ -11,13 +11,14 @@ import { Login } from '@/utils/functions';
 import { ref } from 'vue';
 const data = ref<{ email: string, password: string }>({ password: "", email: "" })
 const handleLogin = async () => {
-    const token = await Login(data.value.email, data.value.password)
-    console.log(token);
-
-    if (token.auth_token) {
+    try {
+        const token = await Login(data.value.email, data.value.password)
+        if (!token.auth_token) throw new Error("No token in responce");
         localStorage.setItem('access', token.auth_token)
+
+    } catch (error) {
+        console.error(error);
     }
-    return
 }
 </script>
 <style lang="">
