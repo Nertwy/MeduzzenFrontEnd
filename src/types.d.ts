@@ -1,10 +1,20 @@
+import { Url } from "url";
+
 type Flag = "🇺🇸" | "🇺🇦";
 type Language = "en" | "uk";
 type LanguageAndFlag = [Language, Flag];
 
 type User = {
-  name: string;
+  id?: number;
+  first_name: string;
+  last_name: string;
   email: string;
+};
+type PageWith<T> = {
+  count: number;
+  next: Url | null;
+  previous: Url | null;
+  results: Array<T>;
 };
 
 type RegisterUser = {

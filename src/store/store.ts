@@ -1,12 +1,7 @@
 import { User } from "../types";
 import { InjectionKey } from "vue";
 
-import {
-
-  Store,
-  createStore,
-  useStore as baseStore,
-} from "vuex";
+import { Store, createStore, useStore as baseStore, ActionContext } from "vuex";
 import { TypedDispatchAndAction } from "../types";
 
 type State = {
@@ -15,7 +10,6 @@ type State = {
   user: User | null;
 };
 
-export const key: InjectionKey<Store<State>> = Symbol();
 export const MutationTypes = {
   increment: "increment",
   changeString: "changeString",
@@ -28,7 +22,7 @@ export const GetterTypes = {
 };
 export const getters = {
   stringUpper: (state: State) => state.test.toUpperCase(),
-  getUser: () => storeInitializer.state.user,
+  getUser: (state: State) => state.user,
 };
 const mutations = {
   //only sync operations here
@@ -42,7 +36,11 @@ const mutations = {
     state.user = null;
   },
 };
-const actions = {};
+export const actions = {
+  setUser({ commit }: ActionContext<State, State>, payload: User) {
+    commit("userLogin", payload);
+  },
+};
 export const storeInitializer = {
   state: {
     count: 0,
@@ -53,7 +51,10 @@ export const storeInitializer = {
   actions,
   getters,
 };
+export const key: InjectionKey<Store<State>> = Symbol();
+
 export const store = createStore<State>(storeInitializer);
+
 export const useStoreTyped = () => {
   const keyedStore = baseStore(key);
   return keyedStore as Omit<typeof keyedStore, "dispatch" | "commit"> &

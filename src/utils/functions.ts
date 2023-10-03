@@ -1,4 +1,4 @@
-import { RegisterUser } from "../types";
+import { PageWith, RegisterUser, User } from "../types";
 import axiosInstance from "../axios-instance";
 /**
  * If healthy returns true else false on error logs error
@@ -93,7 +93,6 @@ export const Login = async (email: string, password: string) => {
         },
       }
     );
-    console.log(result.status);
 
     if (result.status === 200) return result.data;
     else throw new Error("Login failed");
@@ -115,7 +114,38 @@ export const RefreshToken = async (refreshToken: string) => {
     console.error(error);
   }
 };
+export const fetchUserInfo = async () => {
+  try {
+    const token = localStorage.getItem("access");
+    if (!token) throw new Error("No token where found!");
 
+    const result = await axiosInstance.get<User>("api/auth/users/me/", {
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+    });
+    if (result.status === 200) return result.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const GetAllUsers = async (page: number | undefined) => {
+  try {
+    const result = await axiosInstance.get<PageWith<User>>("api/users/", {
+      params: {
+        page,
+      },
+    });
+    if (result.status === 200) {
+      return result.data;
+    } else {
+      throw new Error("Cant fetch users!");
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
 export const logout = () => {
   localStorage.removeItem("accessToken");
   localStorage.removeItem("refreshToken");
