@@ -130,7 +130,7 @@ export const fetchUserInfo = async () => {
   }
 };
 
-export const GetAllUsers = async (page: number | undefined) => {
+export const GetAllUsers = async (page: number = 1) => {
   try {
     const result = await axiosInstance.get<PageWith<User>>("api/users/", {
       params: {
@@ -144,6 +144,56 @@ export const GetAllUsers = async (page: number | undefined) => {
     }
   } catch (error) {
     console.error(error);
+  }
+};
+async function axiosRequest<T>(
+  url: string,
+  params?: Record<string, any>
+): Promise<T> {
+  try {
+    const response = await axiosInstance.get<T>(url, { params });
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      throw new Error("Request failed with status code " + response.status);
+    }
+  } catch (error) {
+    console.error(error);
+    throw error; // Re-throw the error for handling at a higher level, if needed
+  }
+}
+type axiosProps = {
+  params?: any;
+  data?: any;
+};
+export const deleteReqAxios = async (
+  url: string,
+  axiosReqSettings: axiosProps
+) => {
+  const token = localStorage.getItem("access");
+  if (!token) return false;
+  const responce = await axiosInstance.delete(url, {
+    headers: {
+      Authorization: `Token ${token}`,
+    },
+    ...axiosReqSettings,
+  });
+  if (responce.status === 204) {
+    return true;
+  } else {
+    return false;
+  }
+};
+export const updateReqAxios = async (url: string, id: number, data: any) => {
+  const token = localStorage.getItem("access");
+  if (!token) return false;
+  const responce = await axiosInstance.put(url + id + "/", data, {
+    
+  });
+  if (responce.status === 200) {
+    return true;
+  } else {
+    return false;
   }
 };
 export const logout = () => {

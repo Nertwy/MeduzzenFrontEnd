@@ -1,11 +1,6 @@
 <template>
-    <NavBar />
-    some text
+    <span class="loading loading-spinner loading-lg"></span>
 </template>
 <script setup lang='ts'>
-
-import NavBar from '../components/NavBar.vue';
-
-
 </script>
 <style lang='scss'></style>

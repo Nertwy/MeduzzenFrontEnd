@@ -1,11 +1,6 @@
 <template>
-    <NavBar />
-    some text
+    <input class="input" />
 </template>
 <script setup lang='ts'>
-
-import NavBar from '../components/NavBar.vue';
-
-
 </script>
 <style lang='scss'></style>

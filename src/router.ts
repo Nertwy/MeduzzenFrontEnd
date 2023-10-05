@@ -50,7 +50,7 @@ const router = createRouter({
     {
       path: "/Users_List",
       name: "List_of_users",
-      meta: { requiresAuth: true },
+      // meta: { requiresAuth: true },
       component: () => import("./pages/List_of_users.vue"),
     },
     {
