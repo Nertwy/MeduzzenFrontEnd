@@ -1,18 +1,19 @@
 <template>
    <template v-if="edit">
       <td v-for="(key, index) in dataKeys" :key="index">
-         <input class="input text-white input-primary" v-model.trim="inputVal[key]" :type="getInputType"
+         <input class="input text-white input-primary" v-model.trim="inputVal[key]" :type="getInputType(key)"
             :disabled="key === 'id'" @input="emit('input', key, inputVal[key])" />
       </td>
    </template>
    <template v-else>
-      <td v-for="(item, index) in user">
+      <td v-for="item in user">
+         {{ console.log(item) }}
          {{ item }}
       </td>
    </template>
 </template>
 <script setup lang='ts'>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
 type Props = {
    edit: boolean
@@ -23,7 +24,7 @@ const props = withDefaults(defineProps<Props>(), {
 })
 const emit = defineEmits(["input"])
 const inputVal = ref<Record<string, any>>({ ...props.data })
-const user = Object.values(props.data as object)
+const user = computed(() => Object.values(props.data as object))
 const dataKeys = Object.keys(props.data as object)
 const getInputType = (key: string) => {
    if (key.toLowerCase().includes("email")) {

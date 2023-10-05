@@ -7,13 +7,15 @@
             <table class="table table-zebra">
                 <thead>
                     <tr>
-                        <th v-for="(value, index) in Object.keys(store.state.usersList[0])" :key="index">{{ value }}</th>
+                        <th v-for="(value, index) in Object.keys(userList[0])" :key="index">{{ value }}</th>
                         <th>Edit</th>
                         <th>Delete</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(value, index) in  store.getters.getUsersList " :key="index">
+                    <tr v-for="(value, index) in  userList " :key="index">
+                        {{ console.log(value)
+                        }}
                         <Custom_td :edit="editIndex === index" :data="value" @input="handleInputChange" />
                         <td>
                             <Edit_Button :edit-function="() => updateUser(value)" :edit-index="editIndex"
@@ -40,7 +42,7 @@
 <script setup lang="ts">
 import { User } from '@/types';
 import { GetAllUsers, deleteReqAxios, updateReqAxios } from '@/utils/functions';
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import Spinner from '@/components/Spinner.vue';
 import Pagination from '@/components/Pagination.vue';
 import Delete_Button from '@/components/buttons/Delete_Button.vue';
@@ -52,7 +54,7 @@ const store = useStoreTyped()
 const isLoading = ref(true)
 const pagesCount = ref(0)
 const editIndex = ref<number | null>(null)
-const userList = ref<User[]>([])
+const userList = computed(() => store.state.usersList)
 const userPassword = ref("")
 const userData = ref<Record<string, any>>({})
 const handleInputChange = (key: string, value: any) => {
@@ -74,7 +76,7 @@ const updateUser = async (user: User) => {
     }
     if (!user) return
     const result = await updateReqAxios("api/users/", user.id ?? -1, userData.value)
-    if (result) store.commit("updateUserFromList", newUser)
+    if (result) await store.dispatch("updateUserFromList", newUser)
 }
 const handleEditClick = (clickedIndex: number | null) => {
     editIndex.value = clickedIndex;
@@ -83,7 +85,7 @@ const fetch = async () => {
     const fetchedData = await GetAllUsers()
     fetchedData?.results.forEach((user) => {
         store.commit('addUserToList', user)
-        userList.value.push(user)
+        // userList.value.push(user)
     })
     isLoading.value = false
     pagesCount.value = fetchedData?.count ?? 0
