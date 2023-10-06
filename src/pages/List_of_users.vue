@@ -14,8 +14,6 @@
                 </thead>
                 <tbody>
                     <tr v-for="(value, index) in  userList " :key="index">
-                        {{ console.log(value)
-                        }}
                         <Custom_td :edit="editIndex === index" :data="value" @input="handleInputChange" />
                         <td>
                             <Edit_Button :edit-function="() => updateUser(value)" :edit-index="editIndex"
@@ -35,12 +33,12 @@
                     </tr>
                 </tbody>
             </table>
-            <Pagination />
+            <Pagination :items-per-page="2" :items="userList" @page-change="handlePageChange" :pagination-data="pageData" />
         </template>
     </section>
 </template>
 <script setup lang="ts">
-import { User } from '@/types';
+import { PageWith, User } from '@/types';
 import { GetAllUsers, deleteReqAxios, updateReqAxios } from '@/utils/functions';
 import { computed, onMounted, ref } from 'vue';
 import Spinner from '@/components/Spinner.vue';
@@ -52,13 +50,28 @@ import Custom_td from '@/components/Custom_td.vue';
 import ModalWindow from '@/components/ModalWindow.vue';
 const store = useStoreTyped()
 const isLoading = ref(true)
-const pagesCount = ref(0)
 const editIndex = ref<number | null>(null)
+const pageData = ref<PageWith<User>>({
+    count: 0,
+    next: null,
+    results: [],
+    previous: null
+})
+// const paginatedList = computed(() => userList.value.slice(startIndex.value, endIndex.value));
 const userList = computed(() => store.state.usersList)
 const userPassword = ref("")
 const userData = ref<Record<string, any>>({})
 const handleInputChange = (key: string, value: any) => {
     userData.value[key] = value
+}
+const handlePageChange = async (page: number | string) => {
+    if (typeof page === "string") return
+    console.log(page);
+
+    const fetchedData = await GetAllUsers(page)
+    if (fetchedData) {
+        await store.dispatch("changeUserList", fetchedData.results)
+    }
 }
 const deleteUser = async (id: number | undefined, password: string) => {
     if (!id) return
@@ -83,12 +96,13 @@ const handleEditClick = (clickedIndex: number | null) => {
 };
 const fetch = async () => {
     const fetchedData = await GetAllUsers()
+    if (!fetchedData) return
     fetchedData?.results.forEach((user) => {
         store.commit('addUserToList', user)
         // userList.value.push(user)
     })
     isLoading.value = false
-    pagesCount.value = fetchedData?.count ?? 0
+    pageData.value = fetchedData
 }
 onMounted(() => {
     fetch()

@@ -50,7 +50,7 @@ const router = createRouter({
     {
       path: "/Users_List",
       name: "List_of_users",
-      // meta: { requiresAuth: true },
+      meta: { requiresAuth: true },
       component: () => import("./pages/List_of_users.vue"),
     },
     {
@@ -78,7 +78,7 @@ router.beforeEach((to, _from, next) => {
   // Check if the route requires authentication
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     // Check if the user is authenticated (e.g., by checking the access token)
-    const accessToken = localStorage.getItem("accessToken");
+    const accessToken = localStorage.getItem("access");
     if (!accessToken) {
       // User is not authenticated, redirect to login page
       next({ path: "/Auth" });

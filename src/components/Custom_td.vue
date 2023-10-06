@@ -2,12 +2,11 @@
    <template v-if="edit">
       <td v-for="(key, index) in dataKeys" :key="index">
          <input class="input text-white input-primary" v-model.trim="inputVal[key]" :type="getInputType(key)"
-            :disabled="key === 'id'" @input="emit('input', key, inputVal[key])" />
+            :disabled="key === 'id' || key === 'email'" @input="emit('input', key, inputVal[key])" />
       </td>
    </template>
    <template v-else>
       <td v-for="item in user">
-         {{ console.log(item) }}
          {{ item }}
       </td>
    </template>

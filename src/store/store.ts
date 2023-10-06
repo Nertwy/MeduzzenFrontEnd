@@ -41,6 +41,9 @@ const mutations = {
   addUserToList(state: State, payload: User) {
     state.usersList.push(payload);
   },
+  changeUserList(state:State,payload:User[]){
+    state.usersList = payload
+  },
   removeUserFromList(state: State, user_id: number) {
     state.usersList = state.usersList.filter((val) => val.id !== user_id);
   },
@@ -66,6 +69,9 @@ export const actions = {
   },
   updateUserFromList({ commit }: ActionContext<State, State>, payload: User) {
     commit("updateUserFromList", payload);
+  },
+  changeUserList({commit}:ActionContext<State,State>,payload:User[]){
+    commit("changeUserList",payload)
   },
 };
 export const storeInitializer = {

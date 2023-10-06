@@ -1,28 +1,48 @@
 <template>
-    <div class="pagination">
-        <button @click="changePage(-1)" :disabled="currentPage === 1">Previous</button>
-        <span>{{ currentPage }} / {{ totalPages }}</span>
-        <button @click="changePage(1)" :disabled="currentPage === totalPages">Next</button>
+    <div>
+        <!-- Display paginated items -->
+        <ul class="join">
+            <li :class="{ disabled: !hasPrevious }" class="join-item btn" @click="goToPage(1)">
+                <a href="#">First</a>
+            </li>
+            <li :class="{ disabled: !hasPrevious }" class="join-item btn" @click="goToPage(currentPage - 1)">
+                <a href="#">Previous</a>
+            </li>
+            <li :class="{ disabled: !hasNext }" class="join-item btn" @click="goToPage(currentPage + 1)">
+                <a href="#">Next</a>
+            </li>
+            <li :class="{ disabled: !hasNext }" class="join-item btn" @click="goToPage(totalPages)">
+                <a href="#">Last</a>
+            </li>
+        </ul>
     </div>
 </template>
-<script setup lang='ts'>
-import { defineEmits, withDefaults } from 'vue';
+  
+<script setup lang="ts" generic="T">
+import { PageWith } from '@/types';
+import { ref, computed, PropType } from 'vue';
+
 type Props = {
-    currentPage: number
-    totalPages: number
-}
+    itemsPerPage: number,
+    paginationData: PageWith<T>
+};
+
 const props = withDefaults(defineProps<Props>(), {
-    currentPage: 1,
-    totalPages: 0
-})
+    itemsPerPage: 5
+});
+const emit = defineEmits(['page-change'])
+const currentPage = ref(1);
 
-const emit = defineEmits();
+const totalPages = computed(() => Math.ceil(props.paginationData!.count / props.itemsPerPage));
+const hasPrevious = computed(() => props.paginationData!.previous !== null);
+const hasNext = computed(() => props.paginationData!.next !== null);
 
-const changePage = (delta: number) => {
-    const newPage = props.currentPage + delta;
-    if (newPage >= 1 && newPage <= props.totalPages) {
-        emit('page-change', newPage);
+const goToPage = (page: number) => {
+    if (page >= 1 && page <= totalPages.value) {
+        currentPage.value = page;
+        // Emit the page-change event with the selected page number
+        emit('page-change', page);
     }
 };
 </script>
-<style lang='scss'></style>
+  
