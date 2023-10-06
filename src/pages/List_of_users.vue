@@ -64,9 +64,7 @@ const userData = ref<Record<string, any>>({})
 const handleInputChange = (key: string, value: any) => {
     userData.value[key] = value
 }
-const handlePageChange = async (page: number | string) => {
-    if (typeof page === "string") return
-    console.log(page);
+const handlePageChange = async (page: number) => {
 
     const fetchedData = await GetAllUsers(page)
     if (fetchedData) {
