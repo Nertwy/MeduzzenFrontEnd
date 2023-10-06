@@ -2,16 +2,16 @@
     <div>
         <!-- Display paginated items -->
         <ul class="join">
-            <li :class="{ disabled: !hasPrevious }" class="join-item btn" @click="goToPage(1)">
+            <li class="join-item btn" @click="goToPage(1)">
                 <a href="#">First</a>
             </li>
-            <li :class="{ disabled: !hasPrevious }" class="join-item btn" @click="goToPage(currentPage - 1)">
+            <li class="join-item btn" @click="goToPage(currentPage - 1)">
                 <a href="#">Previous</a>
             </li>
-            <li :class="{ disabled: !hasNext }" class="join-item btn" @click="goToPage(currentPage + 1)">
+            <li class="join-item btn" @click="goToPage(currentPage + 1)">
                 <a href="#">Next</a>
             </li>
-            <li :class="{ disabled: !hasNext }" class="join-item btn" @click="goToPage(totalPages)">
+            <li class="join-item btn" @click="goToPage(totalPages)">
                 <a href="#">Last</a>
             </li>
         </ul>
@@ -20,29 +20,27 @@
   
 <script setup lang="ts" generic="T">
 import { PageWith } from '@/types';
-import { ref, computed, PropType } from 'vue';
+import { ref, computed, PropType, onMounted, onBeforeMount, watch } from 'vue';
 
 type Props = {
     itemsPerPage: number,
     paginationData: PageWith<T>
+    totalPages:number
 };
 
-const props = withDefaults(defineProps<Props>(), {
-    itemsPerPage: 5
-});
+const props = defineProps<Props>()
 const emit = defineEmits(['page-change'])
-const currentPage = ref(1);
-
-const totalPages = computed(() => Math.ceil(props.paginationData!.count / props.itemsPerPage));
-const hasPrevious = computed(() => props.paginationData!.previous !== null);
-const hasNext = computed(() => props.paginationData!.next !== null);
-
+const currentPage = ref<number>(1);
 const goToPage = (page: number) => {
-    if (page >= 1 && page <= totalPages.value) {
+
+    console.log(props.totalPages);
+    
+    if (page >= 1 && page <= props.totalPages) {
         currentPage.value = page;
-        // Emit the page-change event with the selected page number
         emit('page-change', page);
     }
 };
+
+
 </script>
   

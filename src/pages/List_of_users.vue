@@ -3,38 +3,8 @@
         <template v-if="isLoading">
             <Spinner />
         </template>
-        <template v-else>
-            <table class="table table-zebra">
-                <thead>
-                    <tr>
-                        <th v-for="(value, index) in Object.keys(userList[0])" :key="index">{{ value }}</th>
-                        <th>Edit</th>
-                        <th>Delete</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(value, index) in  userList " :key="index">
-                        <Custom_td :edit="editIndex === index" :data="value" @input="handleInputChange" />
-                        <td>
-                            <Edit_Button :edit-function="() => updateUser(value)" :edit-index="editIndex"
-                                @edit-user="handleEditClick" :index="index" />
-                        </td>
-                        <td>
-                            <ModalWindow :btn-open-text="'Delete'" :title="'Delete user?'"
-                                :text="'If you delete user all data will be lost!'">
-                                <div class="flex flex-col gap-2">
-                                    <label for="confirm_pass_input">Write your password</label>
-                                    <input class="input input-accent" name="confirm_pass_input" v-model="userPassword" />
-                                    <Delete_Button :delete-function="() => deleteUser(value.id, userPassword)" />
-                                </div>
-
-                            </ModalWindow>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <Pagination :items-per-page="2" :items="userList" @page-change="handlePageChange" :pagination-data="pageData" />
-        </template>
+        <Table_With_Pagination :delete-func="deleteUser" :update-func="updateUser" :data="userList"
+            :page-change-func="handlePageChange" :page-data="pageData" :pages="4" />
     </section>
 </template>
 <script setup lang="ts">
@@ -48,6 +18,7 @@ import useStoreTyped from '@/store/store';
 import Edit_Button from '@/components/buttons/Edit_Button.vue';
 import Custom_td from '@/components/Custom_td.vue';
 import ModalWindow from '@/components/ModalWindow.vue';
+import Table_With_Pagination from '@/components/Table_With_Pagination.vue';
 const store = useStoreTyped()
 const isLoading = ref(true)
 const editIndex = ref<number | null>(null)
@@ -65,7 +36,6 @@ const handleInputChange = (key: string, value: any) => {
     userData.value[key] = value
 }
 const handlePageChange = async (page: number) => {
-
     const fetchedData = await GetAllUsers(page)
     if (fetchedData) {
         await store.dispatch("changeUserList", fetchedData.results)
