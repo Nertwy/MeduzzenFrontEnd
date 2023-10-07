@@ -28,13 +28,8 @@ const pageData = ref<PageWith<User>>({
     results: [],
     previous: null
 })
-// const paginatedList = computed(() => userList.value.slice(startIndex.value, endIndex.value));
 const userList = computed(() => store.state.usersList)
-const userPassword = ref("")
-const userData = ref<Record<string, any>>({})
-const handleInputChange = (key: string, value: any) => {
-    userData.value[key] = value
-}
+
 const handlePageChange = async (page: number) => {
     const fetchedData = await GetAllUsers(page)
     if (fetchedData) {
@@ -51,23 +46,15 @@ const deleteUser = async (id: number | undefined, password: string) => {
     if (result) store.commit("removeUserFromList", id)
 }
 const updateUser = async (user: User) => {
-    const newUser: User = {
-        ...user,
-        ...userData.value
-    }
-    if (!user) return
-    const result = await updateReqAxios("api/users/", user.id ?? -1, userData.value)
-    if (result) await store.dispatch("updateUserFromList", newUser)
+    const result = await updateReqAxios("api/users/", user.id ?? -1, user)
+    if (result) await store.dispatch("updateUserFromList", user)
 }
-const handleEditClick = (clickedIndex: number | null) => {
-    editIndex.value = clickedIndex;
-};
+
 const fetch = async () => {
     const fetchedData = await GetAllUsers()
     if (!fetchedData) return
     fetchedData?.results.forEach((user) => {
         store.commit('addUserToList', user)
-        // userList.value.push(user)
     })
     isLoading.value = false
     pageData.value = fetchedData

@@ -18,7 +18,7 @@
 type Props = {
     index: number
     editIndex: number | null
-    editFunction: () => void
+    editFunctionSubmit: () => void
 }
 const props = withDefaults(defineProps<Props>(), {
     editIndex: null,
@@ -32,7 +32,7 @@ const editCancel = () => {
     emit("editUser", null)
 }
 const editSubmit = () => {
-    props.editFunction()
+    props.editFunctionSubmit()
     emit("editUser", null)
 
 }

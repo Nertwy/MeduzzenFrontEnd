@@ -12,7 +12,7 @@
                 <tr v-for="(value, index) in  props.data" :key="index">
                     <Custom_td :edit="editIndex === index" :data="value" @input="handleInputChange" />
                     <td>
-                        <Edit_Button :edit-function="() => updateFunc(value)" :edit-index="editIndex"
+                        <Edit_Button :edit-function-submit="() => handleEditChange(value)" :edit-index="editIndex"
                             @edit-user="handleEditClick" :index="index" />
                     </td>
                     <td>
@@ -29,7 +29,8 @@
                 </tr>
             </tbody>
         </table>
-        <Pagination :items-per-page="2" :items="props.data" @page-change="handlePageChange" :pagination-data="pageData" :total-pages="pages"/>
+        <Pagination :items-per-page="2" :items="props.data" @page-change="handlePageChange" :pagination-data="pageData"
+            :total-pages="pages" />
     </section>
 </template>
 <script setup lang='ts' generic="T extends {id?:number}">
@@ -40,18 +41,17 @@ import Edit_Button from './buttons/Edit_Button.vue';
 import ModalWindow from './ModalWindow.vue';
 import Pagination from './Pagination.vue';
 import { PageWith } from '@/types';
-import { key } from '@/store/store';
 type Props = {
-    pages:number,
+    pages: number,
     deleteFunc: (id: number, password: string) => Promise<void>
     updateFunc: (data: T) => Promise<void>
     data: T[]
-    pageChangeFunc: (page:number) => Promise<void>
+    pageChangeFunc: (page: number) => Promise<void>
 }
 const props = defineProps<Props>()
 const keys = ref<string[]>([])
 const editIndex = ref<number | null>(null)
-const handleDataRef = ref<Record<string, any>>({})
+const handleDataRef = ref<Record<string, T>>({})
 const userPassword = ref("")
 const pageData = ref<PageWith<T>>({
     count: 0,
@@ -59,14 +59,21 @@ const pageData = ref<PageWith<T>>({
     results: [],
     previous: null
 })
-
+const handleEditChange = (data: T) => {
+    const newData: T = {
+        ...data,
+        ...handleDataRef.value
+    }
+    if (!newData) return
+    props.updateFunc(newData)
+}
 const handleInputChange = (key: string, value: any) => {
     handleDataRef.value[key] = value
 }
 const handleEditClick = (clickedIndex: number | null) => {
     editIndex.value = clickedIndex;
 };
-const handlePageChange = async (page:number) => {
+const handlePageChange = async (page: number) => {
     await props.pageChangeFunc(page)
 }
 watchEffect(() => {

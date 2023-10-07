@@ -33,7 +33,6 @@ const emit = defineEmits(['page-change'])
 const currentPage = ref<number>(1);
 const goToPage = (page: number) => {
 
-    console.log(props.totalPages);
     
     if (page >= 1 && page <= props.totalPages) {
         currentPage.value = page;
