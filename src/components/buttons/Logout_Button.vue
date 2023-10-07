@@ -1,5 +1,5 @@
 <template>
-    <button @click="LogoutUser"></button>
+    <button class="btn btn-ghost normal-case text-xl" @click="LogoutUser">Logout</button>
 </template>
 <script setup lang='ts'>
 import router from '@/router';

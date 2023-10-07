@@ -1,21 +1,30 @@
 <template>
-    <section class="nav-bar__buttons">
+    <nav class="navbar bg-base-100">
         <header>
-            <nav>
-                Navbar
-                {{ data?.email }} {{ data?.first_name }}
-                <!-- <button @click="handleClick">Click me</button> -->
-            </nav>
+            <a class="btn btn-ghost normal-case text-xl">{{ data?.email }} {{ data?.first_name }}</a>
+            <Logout_Button />
         </header>
-    </section>
+    </nav>
 </template>
 <script setup lang="ts">
 import useStoreTyped from '@/store/store';
 import { User } from '@/types';
-import { ref, watch, onMounted, computed } from 'vue';
+import { fetchUserInfo } from '@/utils/functions';
+import { onMounted, computed } from 'vue';
+import Logout_Button from './buttons/Logout_Button.vue';
 const store = useStoreTyped()
 const data = computed(() => store.state.user)
+const fetchUser = async () => {
+    const result = await fetchUserInfo()
+    if (!result) return
+    store.dispatch("setUser", result)
+}
+
+onMounted(() => {
+    fetchUser()
+})
 </script>
+
 <style lang="">
-    
+
 </style>

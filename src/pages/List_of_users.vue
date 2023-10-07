@@ -1,5 +1,6 @@
 <template>
     <section>
+        <NavBar/>
         <template v-if="isLoading">
             <Spinner />
         </template>
@@ -19,6 +20,7 @@ import Edit_Button from '@/components/buttons/Edit_Button.vue';
 import Custom_td from '@/components/Custom_td.vue';
 import ModalWindow from '@/components/ModalWindow.vue';
 import Table_With_Pagination from '@/components/Table_With_Pagination.vue';
+import NavBar from '@/components/NavBar.vue';
 const store = useStoreTyped()
 const isLoading = ref(true)
 const editIndex = ref<number | null>(null)

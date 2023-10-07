@@ -197,6 +197,6 @@ export const updateReqAxios = async (url: string, id: number, data: any) => {
   }
 };
 export const logout = () => {
-  localStorage.removeItem("accessToken");
+  localStorage.removeItem("access");
   localStorage.removeItem("refreshToken");
 };
