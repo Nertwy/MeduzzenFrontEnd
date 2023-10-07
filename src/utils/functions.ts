@@ -129,7 +129,21 @@ export const fetchUserInfo = async () => {
     console.error(error);
   }
 };
+export const deleteUser = async (password: string) => {
+  const token = localStorage.getItem("access");
+  if (!token) throw new Error("No token where found!");
 
+  const result = await axiosInstance.delete("api/auth/users/me/", {
+    headers: {
+      Authorization: `Token ${token}`,
+    },
+    data: {
+      current_password: password,
+    },
+  });
+  if (result.status === 204) return true;
+  return result.data;
+};
 export const GetAllUsers = async (page: number = 1) => {
   try {
     const result = await axiosInstance.get<PageWith<User>>("api/users/", {
@@ -187,9 +201,7 @@ export const deleteReqAxios = async (
 export const updateReqAxios = async (url: string, id: number, data: any) => {
   const token = localStorage.getItem("access");
   if (!token) return false;
-  const responce = await axiosInstance.put(url + id + "/", data, {
-    
-  });
+  const responce = await axiosInstance.put(url + id + "/", data, {});
   if (responce.status === 200) {
     return true;
   } else {

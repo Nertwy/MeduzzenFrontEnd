@@ -1,14 +1,16 @@
 <template lang="html">
-    <form>
+    <form class="card w-1/4 bg-base-100 shadow-xl border-white bordered p-4 justify-between space-y-3">
+        <h1 class="text-white text-4xl self-center">Register</h1>
         <InputWithValidation :regex="/^[^\s@]+@[^\s@]+\.[^\s@]+$/" :type="'email'" v-model="data.email"
             placeholder="Enter your email" required />
-        <input v-model="data.password" placeholder="Enter your password" required type="password" />
-        <input v-model="data.re_password" placeholder="Confirm password" required type="password" />
-        <input v-model="data.first_name" placeholder="Enter your first name" required />
-        <input v-model="data.last_name" placeholder="Enter your last name" required />
-        <input v-model="data.username" placeholder="Enter your last name" required />
-        <button type="submit" @click.stop.prevent="handleSubmit">Register!</button>
-        <RouterLink to="/Auth">Have an account?</RouterLink>
+        <input class="input input-bordered" v-model="data.password" placeholder="Enter your password" required type="password" />
+        <input class="input input-bordered" v-model="data.re_password" placeholder="Confirm password" required type="password" />
+        <input class="input input-bordered" v-model="data.first_name" placeholder="Enter your first name" required />
+        <input class="input input-bordered" v-model="data.last_name" placeholder="Enter your last name" required />
+        <input class="input input-bordered" v-model="data.username" placeholder="Enter your last name" required />
+        <button class="btn btn-accent" type="submit" @click.stop.prevent="handleSubmit">Register!</button>
+        <RouterLink to="/Auth" class="btn btn-link">Have an account?</RouterLink>
+        <slot></slot>
     </form>
 </template>
 <script setup lang="ts">

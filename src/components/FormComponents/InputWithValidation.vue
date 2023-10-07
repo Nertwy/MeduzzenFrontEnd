@@ -1,5 +1,5 @@
 <template>
-    <input v-model="data" class="border-2 valid:border-green-600 invalid:border-red-600" :pattern="props.regex.source" />
+    <input v-model="data" class="input border-2 valid:input-success invalid:input-error" :pattern="props.regex.source" />
 </template>
 <script setup lang="ts">
 import { ref } from 'vue';
