@@ -1,5 +1,6 @@
 import { PageWith, RegisterUser, User } from "../types";
 import axiosInstance from "../axios-instance";
+import { access } from "fs";
 /**
  * If healthy returns true else false on error logs error
  */
@@ -198,6 +199,21 @@ export const deleteReqAxios = async (
     return false;
   }
 };
+export const postReqAxios = async (
+  url: string,
+  axiosReqSettings: axiosProps
+) => {
+  const token = localStorage.getItem("access");
+  if (!token) return false;
+  const result = await axiosInstance.post(url, {
+    headers: {
+      Authorization: `Token ${token}`,
+    },
+    ...axiosReqSettings,
+  });
+  if (result.status >= 200 && result.status < 300) return true;
+  return false;
+};
 export const updateReqAxios = async (url: string, id: number, data: any) => {
   const token = localStorage.getItem("access");
   if (!token) return false;
@@ -208,6 +224,7 @@ export const updateReqAxios = async (url: string, id: number, data: any) => {
     return false;
   }
 };
+
 export const logout = () => {
   localStorage.removeItem("access");
   localStorage.removeItem("refreshToken");
