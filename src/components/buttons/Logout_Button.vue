@@ -6,7 +6,7 @@ import router from '@/router';
 import { logout } from '@/utils/functions';
 const LogoutUser = () => {
     logout()
-    router.push("/login")
+    router.push("/Auth")
 }
 </script>
 <style lang='scss'></style>

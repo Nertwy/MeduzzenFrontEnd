@@ -60,12 +60,6 @@ const router = createRouter({
       component: () => import("./pages/List_of_companies.vue"),
     },
     {
-      path: "/Companies_List",
-      name: "List_of_companies",
-      meta: { requiresAuth: true },
-      component: () => import("./pages/List_of_companies.vue"),
-    },
-    {
       path: "/Company_profile",
       name: "Company_profile",
       meta: { requiresAuth: true },

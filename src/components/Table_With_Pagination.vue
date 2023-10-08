@@ -21,7 +21,7 @@
                             <div class="flex flex-col gap-2">
                                 <label for="confirm_pass_input">Write your password</label>
                                 <input class="input input-accent" name="confirm_pass_input" v-model="userPassword" />
-                                <Delete_Button :delete-function="() => deleteFunc(value.id ?? -1, userPassword)" />
+                                <Delete_Button :delete-function="() => deleteFunc?.(value.id ?? -1, userPassword)" />
                             </div>
 
                         </ModalWindow>
@@ -43,7 +43,7 @@ import Pagination from './Pagination.vue';
 import { PageWith } from '@/types';
 type Props = {
     pages: number,
-    deleteFunc: (id: number, password: string) => Promise<void>
+    deleteFunc?: (id: number, password: string) => Promise<void>
     updateFunc: (data: T) => Promise<void>
     data: T[]
     pageChangeFunc: (page: number) => Promise<void>

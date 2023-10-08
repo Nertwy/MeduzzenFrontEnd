@@ -23,7 +23,6 @@ import Table_With_Pagination from '@/components/Table_With_Pagination.vue';
 import NavBar from '@/components/NavBar.vue';
 const store = useStoreTyped()
 const isLoading = ref(true)
-const editIndex = ref<number | null>(null)
 const pageData = ref<PageWith<User>>({
     count: 0,
     next: null,

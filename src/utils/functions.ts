@@ -1,4 +1,4 @@
-import { PageWith, RegisterUser, User } from "../types";
+import { Company, PageWith, RegisterUser, User } from "../types";
 import axiosInstance from "../axios-instance";
 import { access } from "fs";
 /**
@@ -205,11 +205,11 @@ export const postReqAxios = async (
 ) => {
   const token = localStorage.getItem("access");
   if (!token) return false;
-  const result = await axiosInstance.post(url, {
+  const result = await axiosInstance.post(url, axiosReqSettings.data,{
     headers: {
       Authorization: `Token ${token}`,
     },
-    ...axiosReqSettings,
+    params:axiosReqSettings.params
   });
   if (result.status >= 200 && result.status < 300) return true;
   return false;
@@ -225,7 +225,33 @@ export const updateReqAxios = async (url: string, id: number, data: any) => {
   }
 };
 
-export const logout = () => {
+export const GetAllCompanies = async (page: number = 1) => {
+  try {
+    const result = await axiosInstance.get<PageWith<Company>>(
+      "api/companies/",
+      {
+        params: {
+          page,
+        },
+      }
+    );
+    if (result.status === 200) {
+      return result.data;
+    } else {
+      throw new Error("Cant fetch companies!");
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+export const logout = async () => {
+  const token = localStorage.getItem("access");
+  if (!token) return;
+  await axiosInstance.post("api/auth/token/logout/", undefined, {
+    headers: {
+      Authorization: `Token ${token}`,
+    },
+  });
   localStorage.removeItem("access");
   localStorage.removeItem("refreshToken");
 };
