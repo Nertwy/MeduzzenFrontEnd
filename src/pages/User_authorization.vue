@@ -7,12 +7,12 @@
             <button class="btn btn-primary" @click.prevent="handleLogin">Login</button>
             <p>or</p>
             <Google_Button />
-
+            <button class="btn btn-link" type="button" @click="()=>router.push('/Register')">Register a new accout</button>
         </form>
     </section>
 </template>
 <script lang="ts" setup>
-import InputWithValidation from '@/components/FormComponents/InputWithValidation.vue';
+import InputWithValidation from '@/components/Inputs/InputWithValidation.vue';
 import useStoreTyped from '@/store/store';
 import { Login, fetchUserInfo } from '@/utils/functions';
 import { ref } from 'vue';

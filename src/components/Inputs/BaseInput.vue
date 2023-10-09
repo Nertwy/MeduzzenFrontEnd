@@ -14,6 +14,10 @@ defineProps({
         type: [String, Boolean],
         default: ""
     },
+    validation: {
+        type: [RegExp],
+        default: /""/
+    }
 })
 
 </script>
