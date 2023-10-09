@@ -6,7 +6,7 @@
     </form>
 </template>
 <script lang="ts" setup>
-import InputWithValidation from '@/components/FormComponents/InputWithValidation.vue';
+
 import useStoreTyped from '@/store/store';
 import { Login, fetchUserInfo } from '@/utils/functions';
 import { ref } from 'vue';
@@ -28,6 +28,3 @@ const handleLogin = async () => {
     }
 }
 </script>
-<style lang="">
-    
-</style>

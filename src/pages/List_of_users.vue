@@ -7,5 +7,3 @@
 import { ref } from 'vue';
 
 </script>
-<style lang="">
-</style>
