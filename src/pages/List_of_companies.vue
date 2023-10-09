@@ -17,7 +17,7 @@ import NavBar from '@/components/NavBar.vue';
 import { GetAllCompanies, updateReqAxios } from '@/utils/functions';
 import useStoreTyped from '@/store/store';
 import { computed, onMounted, ref } from 'vue';
-import { ActionKeys, Company, PageWith, TypedDispatchAndAction, TypedDispatchOrCommit } from '@/types';
+import { ActionKeys, Company, PageWith } from '@/types';
 import { Store } from 'vuex';
 import CompanyForm from '@/components/FormComponents/CompanyForm.vue';
 const store = useStoreTyped()

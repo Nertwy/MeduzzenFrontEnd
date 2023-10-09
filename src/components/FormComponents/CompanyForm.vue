@@ -17,7 +17,7 @@
 <script setup lang='ts'>
 import { ref } from 'vue';
 import ModalWindow from '../ModalWindow.vue';
-import BaseInput from './BaseInput.vue';
+import BaseInput from '@/components/Inputs/BaseInput.vue';
 import { postReqAxios } from '@/utils/functions';
 import { Company } from '@/types';
 import Toast from '../Toast.vue';

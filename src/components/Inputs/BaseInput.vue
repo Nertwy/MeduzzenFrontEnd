@@ -14,10 +14,6 @@ defineProps({
         type: [String, Boolean],
         default: ""
     },
-    // required: {
-    //     type: [Boolean],
-    //     default: false
-    // }
 })
 
 </script>
