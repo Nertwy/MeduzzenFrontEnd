@@ -10,7 +10,7 @@ defineProps({
         type: [RegExp],
         default: /''/,
         required: true
-    }
+    },
 })
 const data = ref('')
 
