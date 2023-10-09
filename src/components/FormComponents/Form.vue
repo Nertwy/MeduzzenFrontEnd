@@ -16,7 +16,7 @@
         <InputWithValidation class="input input-bordered" v-model="data.username" placeholder="Enter your last name"
             required :regex="dataRegex" />
         <button class="btn btn-accent" type="submit">Register!</button>
-        <RouterLink to="/Auth" class="btn btn-link">Have an account?</RouterLink>
+        <RouterLink to="/Login" class="btn btn-link">Have an account?</RouterLink>
         <slot></slot>
     </form>
 </template>

@@ -4,10 +4,11 @@
         <template v-if="isLoading">
             <Spinner />
         </template>
+        <input class="checkbox" type="checkbox" v-model="your_companies" />
         <Table_With_Pagination :update-func="(user) => updateUser(user, 'api/companies/', 'updateCompanyFromList')"
-            :data="companyList" :page-change-func="handlePageChange" :page-data="pageData" :pages="4" />
-
-            <CompanyForm />
+            :data="companyList" :page-change-func="handlePageChange" :page-data="pageData" :pages="4"
+            :delete-title="'Delete company?'" :delete-text="'All data about company will be lost!'" />
+        <CompanyForm />
     </section>
 </template>
 <script setup lang="ts">
@@ -16,10 +17,20 @@ import Spinner from '@/components/Spinner.vue';
 import NavBar from '@/components/NavBar.vue';
 import { GetAllCompanies, updateReqAxios } from '@/utils/functions';
 import useStoreTyped from '@/store/store';
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { ActionKeys, Company, PageWith } from '@/types';
 import { Store } from 'vuex';
 import CompanyForm from '@/components/FormComponents/CompanyForm.vue';
+import BaseInput from '@/components/Inputs/BaseInput.vue';
+type TableCompany = {
+    id: number,
+    name: string,
+    description: string,
+    members: number,
+    is_visible: boolean
+}
+const your_companies = ref(false)
+
 const store = useStoreTyped()
 const isLoading = ref(true)
 const pageData = ref<PageWith<Company>>({
@@ -28,18 +39,26 @@ const pageData = ref<PageWith<Company>>({
     results: [],
     previous: null
 })
-const companyList = computed(() => store.state.companyList)
+
+const companyList = computed<TableCompany[]>(() => store.state.companyList.filter((company) => {
+    if (your_companies.value) return company.owner === store.state.user?.id
+    return true
+}).map(company => ({
+    id: company.id,
+    name: company.name,
+    description: company.description,
+    members: company.members.length,
+    is_visible: company.is_visible
+})))
 const handlePageChange = async (page: number) => {
     const fetchedData = await GetAllCompanies(page)
     if (fetchedData) {
         await store.dispatch("changeCompanyList", fetchedData.results)
     }
 }
-// 
-// const updateUser = async (user: User) => {
-//     const result = await updateReqAxios("api/users/", user.id ?? -1, user)
-//     if (result) await store.dispatch("updateUserFromList", user)
-// }
+const handleCheck = () => {
+    your_companies.value = !your_companies.value
+}
 
 const updateUser = async <T extends { id?: number }>(data: T, url: string, action: ActionKeys) => {
     const result = await updateReqAxios(url, data.id ?? -1, data)
@@ -54,10 +73,13 @@ const fetch = async () => {
     isLoading.value = false
     pageData.value = fetchedData
 }
+
+watch(your_companies, (newValue) => {
+    console.log("Change");
+
+    your_companies.value = newValue
+})
 onMounted(() => {
     fetch()
 })
 </script>
-<style lang="">
-    
-</style>

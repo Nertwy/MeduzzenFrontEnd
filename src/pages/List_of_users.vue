@@ -1,11 +1,12 @@
 <template>
     <section>
-        <NavBar/>
+        <NavBar />
         <template v-if="isLoading">
             <Spinner />
         </template>
         <Table_With_Pagination :delete-func="deleteUser" :update-func="updateUser" :data="userList"
-            :page-change-func="handlePageChange" :page-data="pageData" :pages="4" />
+            :page-change-func="handlePageChange" :page-data="pageData" :pages="4"
+            :delete-text="'All the data about user will be lost '" :delete-title="'Delete user ?'" />
     </section>
 </template>
 <script setup lang="ts">

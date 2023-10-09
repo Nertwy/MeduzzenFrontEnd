@@ -21,7 +21,7 @@ type Company = {
   id: number;
   name: string;
   description: string;
-  owner: User | null;
+  owner: number | null;
   is_visible: boolean;
   members: User[];
 };

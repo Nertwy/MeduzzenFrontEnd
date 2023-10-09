@@ -4,8 +4,12 @@
     </div>
 </template>
 <script setup lang="ts">
+import { onMounted } from 'vue';
 
-</script>
-<style lang="">
+const fetch = async () => {
     
-</style>
+}
+onMounted(() => {
+    fetch()
+})
+</script>

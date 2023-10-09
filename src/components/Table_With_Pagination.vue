@@ -16,8 +16,7 @@
                             @edit-user="handleEditClick" :index="index" />
                     </td>
                     <td>
-                        <ModalWindow :btn-open-text="'Delete'" :title="'Delete user?'"
-                            :text="'If you delete user all data will be lost!'">
+                        <ModalWindow :btn-open-text="'Delete'" :title="deleteTitle" :text="deleteText">
                             <div class="flex flex-col gap-2">
                                 <label for="confirm_pass_input">Write your password</label>
                                 <input class="input input-accent" name="confirm_pass_input" v-model="userPassword" />
@@ -47,6 +46,8 @@ type Props = {
     updateFunc: (data: T) => Promise<void>
     data: T[]
     pageChangeFunc: (page: number) => Promise<void>
+    deleteTitle: string
+    deleteText: string
 }
 const props = defineProps<Props>()
 const keys = ref<string[]>([])

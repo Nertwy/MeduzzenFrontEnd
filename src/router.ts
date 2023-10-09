@@ -37,8 +37,8 @@ const router = createRouter({
       beforeEnter: authGuardReverse,
     },
     {
-      path: "/Auth",
-      name: "Authorization",
+      path: "/Login",
+      name: "Login",
       component: () => import("./pages/User_authorization.vue"),
       beforeEnter: authGuardReverse,
     },
@@ -75,7 +75,7 @@ router.beforeEach((to, _from, next) => {
     const accessToken = localStorage.getItem("access");
     if (!accessToken) {
       // User is not authenticated, redirect to login page
-      next({ path: "/Auth" });
+      next({ path: "/Login" });
     } else {
       // User is authenticated, proceed to the route
       next();
