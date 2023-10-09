@@ -6,7 +6,7 @@
         </template>
         <input class="checkbox" type="checkbox" v-model="your_companies" />
         <Table_With_Pagination :update-func="(user) => updateUser(user, 'api/companies/', 'updateCompanyFromList')"
-            :data="companyList" :page-change-func="handlePageChange" :page-data="pageData" :pages="4"
+            :data="companyList" :page-change-func="handlePageChange" :page-data="pageData" :pages="4" :delete-func="deleteFunc"
             :delete-title="'Delete company?'" :delete-text="'All data about company will be lost!'" />
         <CompanyForm />
     </section>
@@ -15,7 +15,7 @@
 import Table_With_Pagination from '@/components/Table_With_Pagination.vue';
 import Spinner from '@/components/Spinner.vue';
 import NavBar from '@/components/NavBar.vue';
-import { GetAllCompanies, updateReqAxios } from '@/utils/functions';
+import { GetAllCompanies, deleteReqAxios, updateReqAxios } from '@/utils/functions';
 import useStoreTyped from '@/store/store';
 import { computed, onMounted, ref, watch } from 'vue';
 import { ActionKeys, Company, PageWith } from '@/types';
@@ -56,8 +56,14 @@ const handlePageChange = async (page: number) => {
         await store.dispatch("changeCompanyList", fetchedData.results)
     }
 }
-const handleCheck = () => {
-    your_companies.value = !your_companies.value
+const deleteFunc = async (id: number | undefined, password: string) => {
+    if (!id) return
+    const result = await deleteReqAxios(`api/companies/${id}`, {
+        data: {
+            current_password: password
+        }
+    })
+    if (result) store.commit("removeUserFromList", id)
 }
 
 const updateUser = async <T extends { id?: number }>(data: T, url: string, action: ActionKeys) => {

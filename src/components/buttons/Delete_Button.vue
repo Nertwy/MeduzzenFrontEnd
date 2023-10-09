@@ -5,6 +5,8 @@
 
 type Props = {
     deleteFunction: () => void
+    itToDel?: number
+    confirm_pass?: string
 }
 const props = defineProps<Props>()
 </script>

@@ -60,7 +60,7 @@ const router = createRouter({
       component: () => import("./pages/List_of_companies.vue"),
     },
     {
-      path: "/Company_profile",
+      path: "/Company_profile/:id/",
       name: "Company_profile",
       meta: { requiresAuth: true },
       component: () => import("./pages/Company_profie.vue"),

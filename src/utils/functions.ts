@@ -1,6 +1,7 @@
 import { Company, PageWith, RegisterUser, User } from "../types";
 import axiosInstance from "../axios-instance";
 import { access } from "fs";
+import { AxiosRequestConfig } from "axios";
 /**
  * If healthy returns true else false on error logs error
  */
@@ -161,12 +162,12 @@ export const GetAllUsers = async (page: number = 1) => {
     console.error(error);
   }
 };
-async function axiosRequest<T>(
+export async function axiosRequest<T>(
   url: string,
-  params?: Record<string, any>
+  config?: AxiosRequestConfig<any>
 ): Promise<T> {
   try {
-    const response = await axiosInstance.get<T>(url, { params });
+    const response = await axiosInstance.get<T>(url, config);
     if (response.status === 200) {
       return response.data;
     } else {
@@ -205,11 +206,11 @@ export const postReqAxios = async (
 ) => {
   const token = localStorage.getItem("access");
   if (!token) return false;
-  const result = await axiosInstance.post(url, axiosReqSettings.data,{
+  const result = await axiosInstance.post(url, axiosReqSettings.data, {
     headers: {
       Authorization: `Token ${token}`,
     },
-    params:axiosReqSettings.params
+    params: axiosReqSettings.params,
   });
   if (result.status >= 200 && result.status < 300) return true;
   return false;
