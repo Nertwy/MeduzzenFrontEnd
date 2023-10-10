@@ -1,8 +1,9 @@
 <template>
-    <div id="gSignInWrapper">
+    <div class="custom-btn">
         <span class="label">Sign in with:</span>
         <div id="customBtn" class="customGPlusSignIn" @click="googleBtnPress">
-            <span class="icon w-fit h-fit"><svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 48 48">
+            <span class="icon w-fit h-fit">
+                <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 48 48">
                     <path fill="#fbc02d"
                         d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12	s5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24s8.955,20,20,20	s20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z">
                     </path>
@@ -29,7 +30,6 @@ import { useRouter } from 'vue-router';
 const googleBtnPress = async () => {
     try {
         const url = await googlePress()
-        // window.open(url, "_blank")
         document.location.href = url
     } catch (error) {
         console.error(error);
@@ -38,8 +38,16 @@ const googleBtnPress = async () => {
 }
 </script>
 <style>
-#customBtn {
-    display: inline-block;
+.custom-btn {
+    font-size: 14px;
+    font-weight: bold;
+    font-family: 'Roboto', sans-serif;
+}
+
+.customGPlusSignIn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: white;
     color: #444;
     width: 190px;
@@ -49,7 +57,7 @@ const googleBtnPress = async () => {
     white-space: nowrap;
 }
 
-#customBtn:hover {
+.customGPlusSignIn:hover {
     cursor: pointer;
 }
 
@@ -66,13 +74,9 @@ span.icon {
 }
 
 span.buttonText {
-    display: inline-block;
+    display: flex;
     vertical-align: middle;
     padding-left: 42px;
     padding-right: 42px;
-    font-size: 14px;
-    font-weight: bold;
-    /* Use the Roboto font that is loaded in the <head> */
-    font-family: 'Roboto', sans-serif;
 }
 </style>

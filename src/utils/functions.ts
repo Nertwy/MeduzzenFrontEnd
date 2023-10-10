@@ -1,5 +1,6 @@
 import { PageWith, RegisterUser, User } from "../types";
 import axiosInstance from "../axios-instance";
+import store from "@/store/store";
 /**
  * If healthy returns true else false on error logs error
  */
@@ -20,12 +21,11 @@ const checkHealth = async () => {
 export const register = async (userData: RegisterUser) => {
   try {
     const responce = await axiosInstance.post("/api/auth/users/", userData);
-    if (responce.status === 400) throw new Error("Could not register user");
+    if (responce.status === 400)
+      throw new Error(`Could not register user: ${responce.data}`);
     else if (responce.status === 201) return responce.data;
   } catch (error) {
     console.error(error);
-  } finally {
-    return false;
   }
 };
 
@@ -79,7 +79,10 @@ export const googleGetToken = async (url: URL) => {
   }
 };
 
-export const Login = async (email: string, password: string) => {
+export const Login = async (
+  email: string,
+  password: string
+): Promise<User | Error> => {
   try {
     const result = await axiosInstance.post(
       "api/auth/token/login/",
@@ -94,11 +97,18 @@ export const Login = async (email: string, password: string) => {
       }
     );
 
-    if (result.status === 200) return result.data;
-    else throw new Error("Login failed");
+    if (result.status === 200) {
+      const { auth_token } = result!.data;
+      localStorage.setItem("access", auth_token);
+      const userInfo = await fetchUserInfo();
+      if (!userInfo) throw new Error("No user info was provided!");
+      return userInfo;
+    } else {
+      throw new Error("Login failed");
+    }
   } catch (error) {
     console.error(error);
-    return null;
+    return error as Error;
   }
 };
 export const RefreshToken = async (refreshToken: string) => {

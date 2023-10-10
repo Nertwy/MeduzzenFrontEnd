@@ -65,5 +65,3 @@ onMounted(() => {
     fetch()
 })
 </script>
-<style lang="">
-</style>

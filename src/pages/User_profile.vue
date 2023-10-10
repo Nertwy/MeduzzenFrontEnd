@@ -6,6 +6,3 @@
 <script lang="ts">
 
 </script>
-<style lang="">
-    
-</style>

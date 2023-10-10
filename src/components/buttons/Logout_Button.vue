@@ -9,4 +9,3 @@ const LogoutUser = () => {
     router.push("/login")
 }
 </script>
-<style lang='scss'></style>

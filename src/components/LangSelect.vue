@@ -45,7 +45,3 @@ const onSelectItem = (e: Event) => {
     </section>
   </main>
 </template>
-
-<style lang="">
-    
-</style>
