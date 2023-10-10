@@ -1,13 +1,8 @@
 <template lang="">
     <div>
-        
+        List Of companies
     </div>
 </template>
-<script>
-export default {
-    
-}
+<script setup lang="ts">
+
 </script>
-<style lang="">
-    
-</style>

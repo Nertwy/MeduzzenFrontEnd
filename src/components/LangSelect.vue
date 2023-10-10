@@ -1,6 +1,7 @@
 <script setup lang="ts" generic="T extends Language | string">
 import { onMounted, ref } from 'vue';
 import i18n from '../i18n';
+import { Language, LanguageAndFlag } from '@/types';
 
 type Props = {
   items: Array<T>
@@ -44,7 +45,3 @@ const onSelectItem = (e: Event) => {
     </section>
   </main>
 </template>
-
-<style lang="">
-    
-</style>

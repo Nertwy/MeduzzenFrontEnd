@@ -1,47 +1,63 @@
+import { User } from "../types";
 import { InjectionKey } from "vue";
-import {
-  ActionTree,
-  GetterTree,
-  MutationTree,
-  Store,
-  createStore,
-  useStore as baseUseStore,
-} from "vuex";
+
+import { Store, createStore, useStore as baseStore, ActionContext } from "vuex";
+import { TypedDispatchAndAction } from "../types";
 
 type State = {
   count: number;
   test: string;
+  user: User | null;
 };
 
-export const key: InjectionKey<Store<State>> = Symbol();
 export const MutationTypes = {
   increment: "increment",
   changeString: "changeString",
+  userLogin: "userLogin",
+  userLogout: "userLogout",
 };
-const getters = <GetterTree<State, any>>{
-  //For getting data with some filtration or sort
+export const GetterTypes = {
+  getUser: "getUser",
+  stringUpper: "stringUpper",
+};
+export const getters = {
   stringUpper: (state: State) => state.test.toUpperCase(),
+  getUser: (state: State) => state.user,
 };
-const mutations = <MutationTree<State>>{
+const mutations = {
   //only sync operations here
-  [MutationTypes.increment](state: State) {
+  increment(state: State) {
     state.count++;
   },
+  userLogin(state: State, payload: User) {
+    state.user = payload;
+  },
+  userLogout(state: State) {
+    state.user = null;
+  },
 };
-
-const actions = <ActionTree<State, any>>{
-  //This is Async mutations
+export const actions = {
+  setUser({ commit }: ActionContext<State, State>, payload: User) {
+    commit("userLogin", payload);
+  },
 };
-const store = createStore<State>({
+export const storeInitializer = {
   state: {
     count: 0,
     test: "test String",
-  },
-  mutations: mutations,
-  actions: actions,
-  getters: getters,
-});
-export const useStore = () => {
-  return baseUseStore(key);
+    user: null,
+  } as State,
+  mutations,
+  actions,
+  getters,
 };
-export default store;
+export const key: InjectionKey<Store<State>> = Symbol();
+
+export const store = createStore<State>(storeInitializer);
+
+export const useStoreTyped = () => {
+  const keyedStore = baseStore(key);
+  return keyedStore as Omit<typeof keyedStore, "dispatch" | "commit"> &
+    TypedDispatchAndAction<typeof storeInitializer>;
+};
+export default useStoreTyped;

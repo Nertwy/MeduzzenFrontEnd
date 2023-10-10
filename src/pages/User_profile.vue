@@ -3,11 +3,6 @@
         User Profile
     </div>
 </template>
-<script>
-export default {
-    
-}
+<script lang="ts">
+
 </script>
-<style lang="">
-    
-</style>

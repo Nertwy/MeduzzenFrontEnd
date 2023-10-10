@@ -4,10 +4,6 @@
     </section>
 </template>
 <script lang="ts">
-export default {
-
-}
+import { onMounted } from 'vue';
+import useStoreTyped from '../store/store';
 </script>
-<style lang="">
-    
-</style>
