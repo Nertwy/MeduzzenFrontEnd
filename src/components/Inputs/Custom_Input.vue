@@ -1,6 +1,4 @@
 <template>
-    <input class="input" />
+  <input class="input" />
 </template>
-<script setup lang='ts'>
-</script>
-<style lang='scss'></style>
+<script setup lang="ts"></script>

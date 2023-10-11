@@ -1,18 +1,40 @@
 <template>
-    <ModalWindow>
-        <h1 class="text-4xl text-white mb-6">Create Company</h1>
-        <form class="flex flex-col">
-            <BaseInput type="text" placeholder="Company Name" class="input input-bordered" :label="'Company name'"
-                v-model:model-value="companyModalData.name" required />
-            <BaseInput type="text" placeholder="description" class="input input-bordered" :label="'Company description'"
-                v-model:model-value="companyModalData.description" required />
-            <BaseInput type="checkbox" placeholder="visibility" :label="'Is company visible to others?'" class="checkbox"
-                v-model:model-value="companyModalData.is_visible" />
-            <button class="btn btn-accent w-1/2 self-center" @click.prevent="handleSubmitCompany"
-                type="submit">Create</button>
-        </form>
-    </ModalWindow>
-    <Toast :text="'Company created successfully!'" :is-showing="showToast" />
+  <ModalWindow>
+    <h1 class="text-4xl text-white mb-6">Create Company</h1>
+    <form class="flex flex-col">
+      <BaseInput
+        type="text"
+        placeholder="Company Name"
+        class="input input-bordered"
+        :label="'Company name'"
+        v-model:model-value="companyModalData.name"
+        required
+      />
+      <BaseInput
+        type="text"
+        placeholder="description"
+        class="input input-bordered"
+        :label="'Company description'"
+        v-model:model-value="companyModalData.description"
+        required
+      />
+      <BaseInput
+        type="checkbox"
+        placeholder="visibility"
+        :label="'Is company visible to others?'"
+        class="checkbox"
+        v-model:model-value="companyModalData.is_visible"
+      />
+      <button
+        class="btn btn-accent w-1/2 self-center"
+        @click.prevent="handleSubmitCompany"
+        type="submit"
+      >
+        Create
+      </button>
+    </form>
+  </ModalWindow>
+  <Toast :text="'Company created successfully!'" :is-showing="showToast" />
 </template>
 <script setup lang='ts'>
 import { ref } from 'vue';
@@ -42,4 +64,3 @@ const handleSubmitCompany = async () => {
     }
 }
 </script>
-<style lang='scss'></style>
