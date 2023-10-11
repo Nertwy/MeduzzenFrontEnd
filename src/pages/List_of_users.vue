@@ -34,7 +34,7 @@ const pageData = ref<PageWith<User>>({
   previous: null,
 });
 const userList = computed(() => store.state.usersList);
-
+const pages = ref(1);
 const handlePageChange = async (page: number) => {
   const fetchedData = await GetAllUsers(page);
   if (fetchedData) {
@@ -43,29 +43,43 @@ const handlePageChange = async (page: number) => {
 };
 const deleteUser = async (id: number | undefined, password: string) => {
   if (!id) return;
-  const result = await deleteReqAxios("api/auth/users/me/", {
-    data: {
-      current_password: password,
-    },
-  });
-  if (result) store.commit("removeUserFromList", id);
+  try {
+    await deleteReqAxios("api/auth/users/me/", {
+      data: {
+        current_password: password,
+      },
+    });
+
+    store.commit("removeUserFromList", id);
+  } catch (error) {
+    console.error(error);
+  }
 };
 const updateUser = async (user: User) => {
-  const result = await updateReqAxios("api/users/", user.id ?? -1, user);
-  if (result) await store.dispatch("updateUserFromList", user);
+  try {
+    await updateReqAxios("api/users/", user.id ?? -1, user);
+    await store.dispatch("updateUserFromList", user);
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 const fetch = async () => {
-  const fetchedData = await GetAllUsers();
-  if (!fetchedData) return;
-  fetchedData?.results.forEach((user) => {
-    store.commit("addUserToList", user);
-  });
-  isLoading.value = false;
-  pageData.value = fetchedData;
+  try {
+    const fetchedData = await GetAllUsers();
+    fetchedData?.results.forEach((user) => {
+      store.commit("addUserToList", user);
+    });
+    isLoading.value = false;
+    pageData.value = fetchedData;
+    pages.value = Math.ceil(
+      pageData.value.count / pageData.value.results.length
+    );
+  } catch (error) {
+    console.error(error);
+  }
 };
 onMounted(() => {
   fetch();
 });
 </script>
-<style lang=""></style>

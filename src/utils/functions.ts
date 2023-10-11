@@ -1,33 +1,27 @@
 import { Company, PageWith, RegisterUser, User } from "../types";
 import axiosInstance from "../axios-instance";
-import { access } from "fs";
 import { AxiosRequestConfig } from "axios";
+
 /**
  * If healthy returns true else false on error logs error
  */
 const checkHealth = async () => {
   try {
     const responce = await axiosInstance.get("/");
-    if (responce.status === 200) {
-      return true;
-    } else {
-      console.error("Back End is not Healthy status:", responce.status);
-      return false;
-    }
+    return true;
   } catch (error) {
     console.error("Error at checkHealth, Error:", error);
+    throw error;
   }
 };
 
 export const register = async (userData: RegisterUser) => {
   try {
     const responce = await axiosInstance.post("/api/auth/users/", userData);
-    if (responce.status === 400) throw new Error("Could not register user");
-    else if (responce.status === 201) return responce.data;
+    return responce.data;
   } catch (error) {
     console.error(error);
-  } finally {
-    return false;
+    throw error;
   }
 };
 
@@ -45,6 +39,7 @@ export const googlePress = async () => {
     return responce.data.authorization_url;
   } catch (error) {
     console.error(error);
+    throw error;
   }
 };
 export const googleGetToken = async (url: URL) => {
@@ -56,7 +51,7 @@ export const googleGetToken = async (url: URL) => {
   try {
     const responce = await axiosInstance.post(
       "api/auth/social/o/google-oauth2/",
-      undefined,
+      null,
       {
         params: {
           state,
@@ -72,12 +67,13 @@ export const googleGetToken = async (url: URL) => {
     );
     const { access, refresh, user } = responce.data;
     return {
-      access,
-      refresh,
+      accessToken: access,
+      refreshToken: refresh,
       user,
     };
   } catch (error) {
     console.error(error);
+    throw error;
   }
 };
 
@@ -96,11 +92,13 @@ export const Login = async (email: string, password: string) => {
       }
     );
 
-    if (result.status === 200) return result.data;
-    else throw new Error("Login failed");
+    const { auth_token } = result!.data;
+    localStorage.setItem("accessToken", auth_token);
+    const userInfo = await fetchUserInfo();
+    return userInfo;
   } catch (error) {
     console.error(error);
-    return null;
+    throw error;
   }
 };
 export const RefreshToken = async (refreshToken: string) => {
@@ -108,17 +106,15 @@ export const RefreshToken = async (refreshToken: string) => {
     const result = await axiosInstance.post("api/auth/jwt/refresh/", {
       refresh: refreshToken,
     });
-    if (result.status === 200) return result.data.access;
-    throw new Error(
-      `Couldnt refresh token status code: ${result.status}, text: ${result.statusText}`
-    );
+    return result.data.access;
   } catch (error) {
     console.error(error);
+    throw error;
   }
 };
 export const fetchUserInfo = async () => {
   try {
-    const token = localStorage.getItem("access");
+    const token = localStorage.getItem("accessToken");
     if (!token) throw new Error("No token where found!");
 
     const result = await axiosInstance.get<User>("api/auth/users/me/", {
@@ -126,25 +122,30 @@ export const fetchUserInfo = async () => {
         Authorization: `Token ${token}`,
       },
     });
-    if (result.status === 200) return result.data;
+    return result.data;
   } catch (error) {
     console.error(error);
+    throw error;
   }
 };
 export const deleteUser = async (password: string) => {
-  const token = localStorage.getItem("access");
-  if (!token) throw new Error("No token where found!");
+  try {
+    const token = localStorage.getItem("accessToken");
+    if (!token) throw new Error("No token where found!");
 
-  const result = await axiosInstance.delete("api/auth/users/me/", {
-    headers: {
-      Authorization: `Token ${token}`,
-    },
-    data: {
-      current_password: password,
-    },
-  });
-  if (result.status === 204) return true;
-  return result.data;
+    const result = await axiosInstance.delete("api/auth/users/me/", {
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+      data: {
+        current_password: password,
+      },
+    });
+    return result.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };
 export const GetAllUsers = async (page: number = 1) => {
   try {
@@ -153,31 +154,25 @@ export const GetAllUsers = async (page: number = 1) => {
         page,
       },
     });
-    if (result.status === 200) {
-      return result.data;
-    } else {
-      throw new Error("Cant fetch users!");
-    }
+
+    return result.data;
   } catch (error) {
     console.error(error);
+    throw error;
   }
 };
-export async function axiosRequest<T>(
+export const axiosRequest = async <T>(
   url: string,
-  config?: AxiosRequestConfig<any>
-): Promise<T> {
+  params?: Record<string, any>
+): Promise<T> => {
   try {
-    const response = await axiosInstance.get<T>(url, config);
-    if (response.status === 200) {
-      return response.data;
-    } else {
-      throw new Error("Request failed with status code " + response.status);
-    }
+    const response = await axiosInstance.get<T>(url, { params });
+    return response.data;
   } catch (error) {
     console.error(error);
-    throw error; // Re-throw the error for handling at a higher level, if needed
+    throw error;
   }
-}
+};
 type axiosProps = {
   params?: any;
   data?: any;
@@ -186,18 +181,18 @@ export const deleteReqAxios = async (
   url: string,
   axiosReqSettings: axiosProps
 ) => {
-  const token = localStorage.getItem("access");
-  if (!token) return false;
-  const responce = await axiosInstance.delete(url, {
-    headers: {
-      Authorization: `Token ${token}`,
-    },
-    ...axiosReqSettings,
-  });
-  if (responce.status === 204) {
-    return true;
-  } else {
-    return false;
+  try {
+    const token = localStorage.getItem("accessToken");
+    if (!token) throw new Error("No accessToken where Found!");
+    await axiosInstance.delete(url, {
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+      ...axiosReqSettings,
+    });
+  } catch (error) {
+    console.error(error);
+    throw error;
   }
 };
 export const getReqAxios = async (
@@ -210,30 +205,35 @@ export const getReqAxios = async (
   if (result.status === 200) return result.data;
   return false;
 };
-export const updateReqAxios = async (url: string, id: number, data: any) => {
-  const token = localStorage.getItem("access");
-  if (!token) return false;
-  const responce = await axiosInstance.put(url + id + "/", data, {});
-  if (responce.status === 200) {
-    return true;
-  } else {
-    return false;
-  }
-};
+
 export const postReqAxios = async (
   url: string,
   axiosReqSettings: axiosProps
 ) => {
-  const token = localStorage.getItem("access");
-  if (!token) return false;
-  const result = await axiosInstance.post(url, axiosReqSettings.data, {
-    headers: {
-      Authorization: `Token ${token}`,
-    },
-    params: axiosReqSettings.params,
-  });
-  if (result.status >= 200 && result.status < 300) return true;
-  return false;
+  try {
+    const token = localStorage.getItem("accessToken");
+    if (!token) throw new Error("No Token Provided");
+
+    await axiosInstance.post(url, axiosReqSettings.data, {
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+      params: axiosReqSettings.params,
+    });
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+export const updateReqAxios = async (url: string, id: number, data: any) => {
+  try {
+    const token = localStorage.getItem("accessToken");
+    if (!token) throw new Error("No accessToken Provided");
+    await axiosInstance.put(url + id + "/", data, {});
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };
 
 export const GetAllCompanies = async (page: number = 1) => {
@@ -252,23 +252,24 @@ export const GetAllCompanies = async (page: number = 1) => {
         },
       }
     );
-    if (result.status === 200) {
-      return result.data;
-    } else {
-      throw new Error("Cant fetch companies!");
-    }
+    return result.data;
   } catch (error) {
     console.error(error);
+    throw error;
   }
 };
 export const logout = async () => {
-  const token = localStorage.getItem("access");
-  if (!token) return;
-  await axiosInstance.post("api/auth/token/logout/", undefined, {
-    headers: {
-      Authorization: `Token ${token}`,
-    },
-  });
-  localStorage.removeItem("access");
-  localStorage.removeItem("refreshToken");
+  try {
+    const token = localStorage.getItem("accessToken");
+    if (!token) return;
+    await axiosInstance.post("api/auth/token/logout/", undefined, {
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+    });
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+  } catch (error) {
+    throw error;
+  }
 };

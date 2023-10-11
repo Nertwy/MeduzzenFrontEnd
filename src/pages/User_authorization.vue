@@ -46,12 +46,8 @@ const store = useStoreTyped();
 const router = useRouter();
 const handleLogin = async () => {
   try {
-    const token = await Login(data.value.email, data.value.password);
-    if (!token.auth_token) throw new Error("No token in responce");
-    localStorage.setItem("access", token.auth_token);
-    const userInfo = await fetchUserInfo();
-    if (!userInfo) throw new Error("No user info was provided!");
-    store.commit("userLogin", userInfo);
+    const result = await Login(data.value.email, data.value.password);
+    store.commit("userLogin", result);
     router.replace("/");
   } catch (error) {
     console.error(error);

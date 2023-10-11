@@ -1,10 +1,10 @@
 import { Url } from "url";
 import { actions } from "./store/store";
 
-type Flag = "🇺🇸" | "🇺🇦";
 type Language = "en" | "uk";
 type LanguageAndFlag = [Language, Flag];
 
+type Flag = "🇺🇸" | "🇺🇦";
 type User = {
   id?: number;
   first_name: string;

@@ -7,7 +7,7 @@
 </template>
 <script setup lang="ts">
 import { ref } from "vue";
-import BaseInput from "./BaseInput.vue";
+import BaseInput from "@/components/Inputs/BaseInput.vue";
 
 defineProps({
   regex: {

@@ -52,17 +52,21 @@ const companyModalData = ref<Omit<Company, "members" | "id" | "owner">>({
   is_visible: false,
 });
 const handleSubmitCompany = async () => {
-  const owner_id = store.state.user?.id;
+  try {
+    const owner_id = store.state.user?.id;
 
-  const result = await postReqAxios("api/companies/", {
-    data: {
-      ...companyModalData.value,
-      owner: owner_id,
-    },
-  });
-  if (result) {
+    postReqAxios("api/companies/", {
+      data: {
+        ...companyModalData.value,
+        owner: owner_id,
+      },
+    });
     showToast.value = true;
+    setTimeout(() => {
+      showToast.value = false;
+    }, 5000);
+  } catch (error) {
+    console.error(error);
   }
 };
 </script>
-<style lang="scss"></style>

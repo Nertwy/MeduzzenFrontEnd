@@ -37,19 +37,19 @@
   </template>
 </template>
 <script setup lang="ts">
-import ModalWindow from "@/components/ModalWindow.vue";
-import Card from "@/components/Card.vue";
-import Delete_Button from "@/components/buttons/Delete_Button.vue";
-import useStoreTyped from "@/store/store";
-import { Company } from "@/types";
-import { axiosRequest, deleteReqAxios } from "@/utils/functions";
-import { onMounted, ref } from "vue";
-import { useRouter } from "vue-router";
-import BaseInput from "@/components/Inputs/BaseInput.vue";
-import NavBar from "@/components/NavBar.vue";
-const router = useRouter();
-const store = useStoreTyped();
-const pass = ref("");
+import ModalWindow from '@/components/ModalWindow.vue';
+import Card from '@/components/Card.vue';
+import Delete_Button from '@/components/buttons/Delete_Button.vue';
+import useStoreTyped from '@/store/store';
+import { Company } from '@/types';
+import { axiosRequest, deleteReqAxios } from '@/utils/functions';
+import { onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
+import BaseInput from '@/components/Inputs/BaseInput.vue';
+import NavBar from '@/components/NavBar.vue';
+const router = useRouter()
+const store = useStoreTyped()
+const pass = ref("")
 const company = ref<Company>({
   id: -1,
   description: "",
@@ -76,14 +76,18 @@ const fetch = async () => {
 };
 const deleteFunc = async (id: number | undefined, pass: string) => {
   if (!id) return;
-  const result = await deleteReqAxios(`api/companies/${id}`, {
-    data: {
-      current_password: pass,
-    },
-  });
-  if (result) store.commit("removeUserFromList", id);
+  try {
+    await deleteReqAxios(`api/companies/${id}`, {
+      data: {
+        current_password: pass,
+      },
+    });
+    store.commit("removeUserFromList", id);
+  } catch (error) {
+    console.error(error);
+  }
 };
 onMounted(() => {
-  fetch();
-});
+    fetch()
+})
 </script>

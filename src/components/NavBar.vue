@@ -17,14 +17,15 @@ import Logout_Button from "./buttons/Logout_Button.vue";
 const store = useStoreTyped();
 const data = computed(() => store.state.user);
 const fetchUser = async () => {
-  const result = await fetchUserInfo();
-  if (!result) return;
-  store.dispatch("setUser", result);
+  try {
+    const result = await fetchUserInfo();
+    if (result) store.dispatch("setUser", result);
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 onMounted(() => {
   fetchUser();
 });
 </script>
-
-<style lang=""></style>
