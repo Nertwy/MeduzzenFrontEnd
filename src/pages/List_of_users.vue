@@ -1,65 +1,71 @@
 <template>
-    <section>
-        <NavBar />
-        <template v-if="isLoading">
-            <Spinner />
-        </template>
-        <Table_With_Pagination :delete-func="deleteUser" :update-func="updateUser" :data="userList"
-            :page-change-func="handlePageChange" :page-data="pageData" :pages="4"
-            :delete-text="'All the data about user will be lost '" :delete-title="'Delete user ?'" />
-    </section>
+  <section>
+    <NavBar />
+    <template v-if="isLoading">
+      <Spinner />
+    </template>
+    <Table_With_Pagination
+      :delete-func="deleteUser"
+      :update-func="updateUser"
+      :data="userList"
+      :page-change-func="handlePageChange"
+      :page-data="pageData"
+      :pages="4"
+      :delete-text="'All the data about user will be lost '"
+      :delete-title="'Delete user ?'"
+    />
+  </section>
 </template>
 <script setup lang="ts">
-import { PageWith, User } from '@/types';
-import { GetAllUsers, deleteReqAxios, updateReqAxios } from '@/utils/functions';
-import { computed, onMounted, ref } from 'vue';
-import Spinner from '@/components/Spinner.vue';
-import useStoreTyped from '@/store/store';
+import { PageWith, User } from "@/types";
+import { GetAllUsers, deleteReqAxios, updateReqAxios } from "@/utils/functions";
+import { computed, onMounted, ref } from "vue";
+import Spinner from "@/components/Spinner.vue";
+import useStoreTyped from "@/store/store";
 
-import Table_With_Pagination from '@/components/Table_With_Pagination.vue';
-import NavBar from '@/components/NavBar.vue';
-const store = useStoreTyped()
-const isLoading = ref(true)
+import Table_With_Pagination from "@/components/Table_With_Pagination.vue";
+import NavBar from "@/components/NavBar.vue";
+const store = useStoreTyped();
+const isLoading = ref(true);
 const pageData = ref<PageWith<User>>({
-    count: 0,
-    next: null,
-    results: [],
-    previous: null
-})
-const userList = computed(() => store.state.usersList)
+  count: 0,
+  next: null,
+  results: [],
+  previous: null,
+});
+const userList = computed(() => store.state.usersList);
 
 const handlePageChange = async (page: number) => {
-    const fetchedData = await GetAllUsers(page)
-    if (fetchedData) {
-        await store.dispatch("changeUserList", fetchedData.results)
-    }
-}
+  const fetchedData = await GetAllUsers(page);
+  if (fetchedData) {
+    await store.dispatch("changeUserList", fetchedData.results);
+  }
+};
 const deleteUser = async (id: number | undefined, password: string) => {
-    if (!id) return
-    const result = await deleteReqAxios("api/auth/users/me/", {
-        data: {
-            current_password: password
-        }
-    })
-    if (result) store.commit("removeUserFromList", id)
-}
+  if (!id) return;
+  const result = await deleteReqAxios("api/auth/users/me/", {
+    data: {
+      current_password: password,
+    },
+  });
+  if (result) store.commit("removeUserFromList", id);
+};
 const updateUser = async (user: User) => {
-    const result = await updateReqAxios("api/users/", user.id ?? -1, user)
-    if (result) await store.dispatch("updateUserFromList", user)
-}
+  const result = await updateReqAxios("api/users/", user.id ?? -1, user);
+  if (result) await store.dispatch("updateUserFromList", user);
+};
 
 const fetch = async () => {
-    const fetchedData = await GetAllUsers()
-    if (!fetchedData) return
-    fetchedData?.results.forEach((user) => {
-        store.commit('addUserToList', user)
-    })
-    isLoading.value = false
-    pageData.value = fetchedData
-}
+  const fetchedData = await GetAllUsers();
+  if (!fetchedData) return;
+  fetchedData?.results.forEach((user) => {
+    store.commit("addUserToList", user);
+  });
+  isLoading.value = false;
+  pageData.value = fetchedData;
+};
 onMounted(() => {
-    fetch()
-})
+  fetch();
+});
 </script>
-<style lang="">
-</style>
+<style lang=""></style>

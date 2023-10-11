@@ -1,13 +1,6 @@
 <template lang="">
-    <div>
-        <h1 >Start page component!</h1>
-    </div>
+  <div>
+    <h1>Start page component!</h1>
+  </div>
 </template>
-<script lang="ts">
-export default {
-    
-}
-</script>
-<style lang="">
-    
-</style>
+<script lang="ts"></script>

@@ -1,40 +1,60 @@
 <template>
-    <section class="h-screen flex items-center justify-center">
-        <form class="card w-1/4 bg-base-100 shadow-xl border-white bordered p-4 justify-between space-y-3">
-            <h1 class="text-white text-4xl self-center">Login</h1>
-            <input class="input input-bordered" v-model="data.email" required placeholder="email" />
-            <input class="input input-bordered" v-model="data.password" required placeholder="password" />
-            <button class="btn btn-primary" @click.prevent="handleLogin">Login</button>
-            <p>or</p>
-            <Google_Button />
-            <button class="btn btn-link" type="button" @click="()=>router.push('/Register')">Register a new accout</button>
-        </form>
-    </section>
+  <section class="h-screen flex items-center justify-center">
+    <form
+      class="card w-1/4 bg-base-100 shadow-xl border-white bordered p-4 justify-between space-y-3"
+    >
+      <h1 class="text-white text-4xl self-center">Login</h1>
+      <input
+        class="input input-bordered"
+        v-model="data.email"
+        required
+        placeholder="email"
+      />
+      <input
+        class="input input-bordered"
+        v-model="data.password"
+        required
+        placeholder="password"
+      />
+      <button class="btn btn-primary" @click.prevent="handleLogin">
+        Login
+      </button>
+      <p>or</p>
+      <Google_Button />
+      <button
+        class="btn btn-link"
+        type="button"
+        @click="() => router.push('/Register')"
+      >
+        Register a new accout
+      </button>
+    </form>
+  </section>
 </template>
 <script lang="ts" setup>
-import InputWithValidation from '@/components/Inputs/InputWithValidation.vue';
-import useStoreTyped from '@/store/store';
-import { Login, fetchUserInfo } from '@/utils/functions';
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import Google_Button from '@/components/buttons/Google_Button.vue';
-const data = ref<{ email: string, password: string }>({ password: "", email: "" })
-const store = useStoreTyped()
-const router = useRouter()
+import InputWithValidation from "@/components/Inputs/InputWithValidation.vue";
+import useStoreTyped from "@/store/store";
+import { Login, fetchUserInfo } from "@/utils/functions";
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import Google_Button from "@/components/buttons/Google_Button.vue";
+const data = ref<{ email: string; password: string }>({
+  password: "",
+  email: "",
+});
+const store = useStoreTyped();
+const router = useRouter();
 const handleLogin = async () => {
-    try {
-        const token = await Login(data.value.email, data.value.password)
-        if (!token.auth_token) throw new Error("No token in responce");
-        localStorage.setItem('access', token.auth_token)
-        const userInfo = await fetchUserInfo()
-        if (!userInfo) throw new Error("No user info was provided!");
-        store.commit('userLogin', userInfo)
-        router.replace('/')
-    } catch (error) {
-        console.error(error);
-    }
-}
+  try {
+    const token = await Login(data.value.email, data.value.password);
+    if (!token.auth_token) throw new Error("No token in responce");
+    localStorage.setItem("access", token.auth_token);
+    const userInfo = await fetchUserInfo();
+    if (!userInfo) throw new Error("No user info was provided!");
+    store.commit("userLogin", userInfo);
+    router.replace("/");
+  } catch (error) {
+    console.error(error);
+  }
+};
 </script>
-<style lang="">
-    
-</style>

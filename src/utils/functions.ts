@@ -239,13 +239,13 @@ export const postReqAxios = async (
 export const GetAllCompanies = async (page: number = 1) => {
   try {
     const token = localStorage.getItem("access");
-    if(!token) throw new Error("No token");
-    
+    if (!token) throw new Error("No token");
+
     const result = await axiosInstance.get<PageWith<Company>>(
       "api/companies/",
       {
-        headers:{
-          Authorization:`Token ${token}`
+        headers: {
+          Authorization: `Token ${token}`,
         },
         params: {
           page,
