@@ -5,7 +5,6 @@
     class="border-2 valid:input-success invalid:input-error"
   />
 </template>
-
 <script setup lang="ts">
 import { ref } from "vue";
 import BaseInput from "@/components/Inputs/BaseInput.vue";

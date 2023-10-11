@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <form @submit.prevent="handleLogin">
     <InputWithValidation v-model="data.email" required placeholder="email" />
     <InputWithValidation

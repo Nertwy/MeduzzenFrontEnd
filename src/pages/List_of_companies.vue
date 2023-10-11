@@ -53,8 +53,12 @@ const updateUser = async <T extends { id?: number }>(
   url: string,
   action: ActionKeys
 ) => {
-  const result = await updateReqAxios(url, data.id ?? -1, data);
-  if (result) await store.dispatch(action, data as any);
+  try {
+    await updateReqAxios(url, data.id ?? -1, data);
+    await store.dispatch(action, data as any);
+  } catch (error) {
+    console.log(error);
+  }
 };
 const fetch = async () => {
   const fetchedData = await GetAllCompanies();
