@@ -19,7 +19,7 @@
 
           <button
             class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-            @click="closeModal"
+            @click="toggleModal"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

@@ -94,12 +94,16 @@ const handleEditClick = (index: number | null) => {
 };
 const deleteFunc = async (id: number | undefined, password: string) => {
   if (!id) return;
-  const result = await deleteReqAxios(`api/companies/${id}`, {
-    data: {
-      current_password: password,
-    },
-  });
-  if (result) store.commit("removeUserFromList", id);
+  try {
+    await deleteReqAxios(`api/companies/${id}`, {
+      data: {
+        current_password: password,
+      },
+    });
+    store.commit("removeUserFromList", id);
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 const fetch = async () => {

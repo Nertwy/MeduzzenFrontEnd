@@ -69,31 +69,29 @@ const triggerToast = (infoType: boolean) => {
 };
 const handleClick = async (id?: number) => {
   if (!id) return;
-  const result = await postReqAxios(`api/companies/${id}/request_to_join/`, {});
-  if (!result) {
-    text.value = "Error in sending request";
-    triggerToast(result);
-  }
-  text.value = "Request send";
-  Requests.value?.push({ company: id });
+  try {
+    await postReqAxios(`api/companies/${id}/request_to_join/`, {});
+    text.value = "Request send";
+    Requests.value?.push({ company: id });
 
-  triggerToast(result);
+    triggerToast(true);
+  } catch (error) {
+    triggerToast(false);
+    console.error(error);
+  }
 };
 const handleCancel = async (id?: number) => {
   if (!id) return;
-  const result = await postReqAxios(
-    `api/companies/${id}/cancel_join_request/`,
-    {}
-  );
-  if (result) console.log("Cancel Successfull");
-  if (!result) {
-    text.value = "Error in invoking request";
-    triggerToast(result);
+  try {
+    await postReqAxios(`api/companies/${id}/cancel_join_request/`, {});
+    text.value = "Request revoked";
+    Requests.value =
+      Requests.value?.filter((item) => item.company !== id) ?? null;
+    triggerToast(true);
+  } catch (error) {
+    triggerToast(false);
+    console.error(error);
   }
-  text.value = "Request revoked";
-  Requests.value =
-    Requests.value?.filter((item) => item.company !== id) ?? null;
-  triggerToast(result);
 };
 const fetch = async () => {
   const result = await GetAllCompanies();

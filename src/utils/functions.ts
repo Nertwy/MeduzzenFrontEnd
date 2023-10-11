@@ -199,11 +199,16 @@ export const getReqAxios = async (
   url: string,
   config?: AxiosRequestConfig<any>
 ) => {
-  const token = localStorage.getItem("access");
-  if (!token) return false;
-  const result = await axiosInstance.get(url, config);
-  if (result.status === 200) return result.data;
-  return false;
+  try {
+    const token = localStorage.getItem("accessToken");
+    if (!token) throw new Error("No token provided");
+    const result = await axiosInstance.get(url, config);
+    return result.data;
+  } catch (error) {
+    console.error(error);
+
+    throw error;
+  }
 };
 
 export const postReqAxios = async (
