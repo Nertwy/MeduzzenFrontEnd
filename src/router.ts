@@ -4,8 +4,7 @@ import {
   createRouter,
   createWebHistory,
 } from "vue-router";
-import AppVue from "./App.vue";
-import { RouteLocation } from "vue-router";
+
 import useStoreTyped, { store, storeInitializer } from "./store/store";
 
 const authGuardReverse = (
