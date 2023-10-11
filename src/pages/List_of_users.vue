@@ -1,6 +1,6 @@
 <template>
     <section>
-        <NavBar/>
+        <NavBar />
         <template v-if="isLoading">
             <Spinner />
         </template>
@@ -53,13 +53,17 @@ const updateUser = async (user: User) => {
 }
 
 const fetch = async () => {
-    const fetchedData = await GetAllUsers()
-    if (!fetchedData) return
-    fetchedData?.results.forEach((user) => {
-        store.commit('addUserToList', user)
-    })
-    isLoading.value = false
-    pageData.value = fetchedData
+    try {
+        const fetchedData = await GetAllUsers()
+        fetchedData?.results.forEach((user) => {
+            store.commit('addUserToList', user)
+        })
+        isLoading.value = false
+        pageData.value = fetchedData
+    } catch (error) {
+        console.error(error);
+    }
+
 }
 onMounted(() => {
     fetch()

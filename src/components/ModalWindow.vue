@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button class="btn" @click="openModal">{{ props.btnOpenText }}</button>
+    <button class="btn" @click="toggleModal">{{ props.btnOpenText }}</button>
     <dialog :open="isOpen" class="modal">
       <article class="modal-box">
         <header class="modal-header">
@@ -12,7 +12,9 @@
         <footer class="modal-action">
           <form method="dialog">
             <slot></slot>
-            <button class="btn" @click="closeModal">{{ props.btnInModalText }}</button>
+            <button class="btn" @click="toggleModal">
+              {{ props.btnInModalText }}
+            </button>
           </form>
         </footer>
       </article>
@@ -21,29 +23,25 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref } from "vue";
 
 type Props = {
   title?: string;
   text?: string;
   btnInModalText?: string;
-  btnOpenText: string
+  btnOpenText: string;
 };
 
 const props = withDefaults(defineProps<Props>(), {
-  title: '',
-  text: '',
-  btnInModalText: 'Close',
-  btnOpenText: 'Open'
+  title: "",
+  text: "",
+  btnInModalText: "Close",
+  btnOpenText: "Open",
 });
 
 const isOpen = ref(false);
 
-function closeModal() {
-  isOpen.value = false;
-}
-
-function openModal() {
-  isOpen.value = true;
+function toggleModal() {
+  isOpen.value = !isOpen.value;
 }
 </script>

@@ -75,19 +75,14 @@ const router = createRouter({
 });
 
 router.beforeEach((to, _from, next) => {
-  // Check if the route requires authentication
   if (to.matched.some((record) => record.meta.requiresAuth)) {
-    // Check if the user is authenticated (e.g., by checking the access token)
-    const accessToken = localStorage.getItem("access");
+    const accessToken = localStorage.getItem("accessToken");
     if (!accessToken) {
-      // User is not authenticated, redirect to login page
       next({ path: "/Auth" });
     } else {
-      // User is authenticated, proceed to the route
       next();
     }
   } else {
-    // Route does not require authentication, proceed
     next();
   }
 });

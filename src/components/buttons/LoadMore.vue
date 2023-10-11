@@ -1,6 +1,4 @@
 <template>
-    <button class="btn btn-primary">Load More</button>
+  <button class="btn btn-primary">Load More</button>
 </template>
-<script setup lang='ts'>
-</script>
-<style lang='scss'></style>
+<script setup lang="ts"></script>
