@@ -9,12 +9,9 @@
         <section class="modal-content">
           <p class="py-4">{{ props.text }}</p>
         </section>
-        <footer class="modal-action">
+        <footer class="modal-action items-center justify-center">
           <form method="dialog">
             <slot></slot>
-            <button class="btn" @click="toggleModal">
-              {{ props.btnInModalText }}
-            </button>
           </form>
 
           <button
@@ -48,7 +45,6 @@ import { ref } from "vue";
 type Props = {
   title?: string;
   text?: string;
-  btnInModalText?: string;
   btnOpenText: string;
 };
 

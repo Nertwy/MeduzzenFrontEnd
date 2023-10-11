@@ -1,16 +1,13 @@
 <template>
-  <button @click="(event) => onClickFunc(event)">{{ buttonText }}</button>
+  <button class="btn" @click="emit('click')"><slot></slot></button>
 </template>
 <script setup lang="ts">
 defineProps({
-  buttonText: {
+  buttonType: {
     type: [String],
-    required: true,
-  },
-  onClickFunc: {
-    type: [Function],
-    required: false,
-    default: () => {},
+    default: "button",
   },
 });
+const emit = defineEmits(["click"])
+
 </script>

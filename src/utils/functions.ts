@@ -257,6 +257,8 @@ export const GetAllCompanies = async (page: number = 1) => {
         },
       }
     );
+    console.log(result);
+
     return result.data;
   } catch (error) {
     console.error(error);

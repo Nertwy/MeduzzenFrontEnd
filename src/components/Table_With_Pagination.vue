@@ -36,7 +36,7 @@
                   name="confirm_pass_input"
                   v-model="userPassword"
                 />
-                <Delete_Button
+                <Basic_button
                   :delete-function="
                     () => deleteFunc?.(value.id ?? -1, userPassword)
                   "
@@ -59,11 +59,11 @@
 <script setup lang="ts" generic="T extends {id?:number}">
 import { onMounted, ref, watchEffect } from "vue";
 import Custom_td from "./Custom_td.vue";
-import Delete_Button from "./buttons/Delete_Button.vue";
 import Edit_Button from "./buttons/Edit_Button.vue";
 import ModalWindow from "./ModalWindow.vue";
 import Pagination from "./Pagination.vue";
 import { PageWith } from "@/types";
+import Basic_button from "./buttons/Basic_button.vue";
 type Props = {
   pages: number;
   deleteFunc?: (id: number, password: string) => Promise<void>;

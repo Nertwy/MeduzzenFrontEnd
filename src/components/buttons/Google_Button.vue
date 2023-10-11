@@ -32,7 +32,6 @@
   <div id="name"></div>
 </template>
 <script setup lang="ts">
-
 import useStoreTyped from "@/store/store";
 import { googlePress } from "@/utils/functions";
 import { useRouter } from "vue-router";
@@ -46,7 +45,7 @@ const googleBtnPress = async () => {
   }
 };
 </script>
-<style>
+<style lang="css">
 .custom-btn {
   font-size: 14px;
   font-weight: bold;
@@ -76,7 +75,7 @@ span.label {
 }
 
 span.icon {
-  display: inline-block;
+  display: flex;
   vertical-align: middle;
   width: 42px;
   height: 42px;

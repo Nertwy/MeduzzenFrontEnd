@@ -4,17 +4,18 @@
       <a class="btn btn-ghost normal-case text-xl"
         >{{ data?.email }} {{ data?.first_name }}</a
       >
-      <Logout_Button />
+      <Basic_button @click="LogoutUser">Logout</Basic_button>
     </header>
   </nav>
 </template>
 <script setup lang="ts">
 import useStoreTyped from "@/store/store";
-import { User } from "@/types";
-import { fetchUserInfo } from "@/utils/functions";
+import { fetchUserInfo, logout } from "@/utils/functions";
 import { onMounted, computed } from "vue";
-import Logout_Button from "./buttons/Logout_Button.vue";
+import { useRouter } from "vue-router";
+import Basic_button from "./buttons/Basic_button.vue";
 const store = useStoreTyped();
+const router = useRouter();
 const data = computed(() => store.state.user);
 const fetchUser = async () => {
   try {
@@ -25,6 +26,14 @@ const fetchUser = async () => {
   }
 };
 
+const LogoutUser = async () => {
+  try {
+    await logout();
+    router.push("/Login");
+  } catch (error) {
+    console.error(error);
+  }
+};
 onMounted(() => {
   fetchUser();
 });

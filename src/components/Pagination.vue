@@ -19,7 +19,7 @@
 
 <script setup lang="ts" generic="T">
 import { PageWith } from "@/types";
-import { ref, computed, PropType, onMounted, onBeforeMount, watch } from "vue";
+import { ref } from "vue";
 
 type Props = {
   itemsPerPage: number;

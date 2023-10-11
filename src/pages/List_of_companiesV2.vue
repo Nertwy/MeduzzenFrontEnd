@@ -7,7 +7,7 @@
     <template v-else>
       <Basic_Table
         :keys="keys"
-        :data="pageData.results"
+        :data="store.state.companyList"
         class="table table-zebra"
         :td-layout="Edit_Input"
         v-model="handleDataRef"
@@ -21,6 +21,7 @@
           <td>
             <Edit_Button
               button-text="Edit"
+              @submit-user="() => updateFunc(id ?? -1, handleDataRef)"
               @edit-click="() => handleEditClick(index)"
               @edit-cancel="() => handleEditClick(null)"
               :edit="edit === index"
@@ -38,9 +39,11 @@
                   >Write your password to confirm deletion</label
                 >
                 <BaseInput class="input input-accent" v-model="userPassword" />
-                <Delete_Button
-                  :delete-function="() => deleteFunc?.(id ?? -1, userPassword)"
-                />
+                <Basic_button
+                  :class="'btn-error'"
+                  @click="() => deleteFunc(id, userPassword)"
+                  >Delete</Basic_button
+                >
               </div>
             </ModalWindow>
           </td>
@@ -50,7 +53,7 @@
     </template>
   </section>
 </template>
-<script setup lang="ts" generic="T">
+<script setup lang="ts" generic="T extends Record<string,Company>">
 import Edit_Button from "@/components/buttons/Edit_Button.vue";
 import Spinner from "@/components/Spinner.vue";
 import NavBar from "@/components/NavBar.vue";
@@ -60,13 +63,14 @@ import {
   updateReqAxios,
 } from "@/utils/functions";
 import useStoreTyped from "@/store/store";
-import { defineComponent, onMounted, ref, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { Company, PageWith } from "@/types";
 import BaseInput from "@/components/Inputs/BaseInput.vue";
-import Delete_Button from "@/components/buttons/Delete_Button.vue";
 import Basic_Table from "@/components/BasicTable/Basic_Table.vue";
 import ModalWindow from "@/components/ModalWindow.vue";
 import Edit_Input from "@/components/Inputs/Edit_Input.vue";
+import Basic_button from "@/components/buttons/Basic_button.vue";
+import { url } from "inspector";
 
 type TableCompany = {
   id: number;
@@ -76,7 +80,7 @@ type TableCompany = {
   is_visible: boolean;
 };
 const userPassword = ref("");
-const your_companies = ref(false);
+
 const keys = ref<string[]>([]);
 const store = useStoreTyped();
 const isLoading = ref(true);
@@ -90,36 +94,51 @@ const edit = ref<number | null>(null);
 const handleDataRef = ref<Record<string, Company>>({});
 const handleEditClick = (index: number | null) => {
   edit.value = index;
-  console.log(edit.value);
+  // handleDataRef.value = {};
+};
+const updateFunc = async (id: number, data: Record<string, Company>) => {
+  try {
+    const newCompany: Partial<Company> = {
+      ...data,
+    };
+    await updateReqAxios("api/companies/", id, newCompany);
+    await store.dispatch("updateCompanyFromList", newCompany);
+    handleEditClick(null);
+  } catch (error) {
+    console.error(error);
+  }
 };
 const deleteFunc = async (id: number | undefined, password: string) => {
   if (!id) return;
+  console.log("Delete ");
+
   try {
     await deleteReqAxios(`api/companies/${id}`, {
       data: {
         current_password: password,
       },
     });
-    store.commit("removeUserFromList", id);
+    await store.dispatch("removeCompanyFromList", id);
   } catch (error) {
     console.error(error);
   }
 };
 
 const fetch = async () => {
-  const fetchedData = await GetAllCompanies();
-  if (!fetchedData) return;
-  fetchedData?.results.forEach((company) => {
-    store.commit("addCompanyToList", company);
-  });
-  pageData.value = fetchedData;
-  keys.value = Object.keys(fetchedData?.results[0]);
-  isLoading.value = false;
+  try {
+    const fetchedData = await GetAllCompanies();
+    if (!fetchedData) throw new Error("No data");
+    fetchedData?.results.forEach((company) => {
+      store.commit("addCompanyToList", company);
+    });
+    pageData.value = fetchedData;
+    keys.value = Object.keys(fetchedData.results[0]);
+    isLoading.value = false;
+  } catch (error) {
+    console.error(error);
+  }
 };
 
-watch(your_companies, (newValue) => {
-  your_companies.value = newValue;
-});
 onMounted(() => {
   fetch();
 });

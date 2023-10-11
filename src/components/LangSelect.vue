@@ -1,3 +1,19 @@
+<template lang="">
+  <main>
+    <nav>
+      <select v-model="selectedItems" @change="onSelectItem">
+        <option v-for="item in items" :value="item">{{ item }}</option>
+      </select>
+    </nav>
+
+    <section>
+      <h1>Selected items</h1>
+      <ul>
+        <li>{{ item }}</li>
+      </ul>
+    </section>
+  </main>
+</template>
 <script setup lang="ts" generic="T extends Language | string">
 import { onMounted, ref } from "vue";
 import i18n from "../i18n";
@@ -27,19 +43,3 @@ const onSelectItem = (e: Event) => {
   localStorage.setItem("lang", target.value);
 };
 </script>
-<template lang="">
-  <main>
-    <nav>
-      <select v-model="selectedItems" @change="onSelectItem">
-        <option v-for="item in items" :value="item">{{ item }}</option>
-      </select>
-    </nav>
-
-    <section>
-      <h1>Selected items</h1>
-      <ul>
-        <li>{{ item }}</li>
-      </ul>
-    </section>
-  </main>
-</template>
