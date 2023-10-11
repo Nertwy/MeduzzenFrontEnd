@@ -77,10 +77,7 @@ export const googleGetToken = async (url: URL) => {
   }
 };
 
-export const Login = async (
-  email: string,
-  password: string
-): Promise<User | Error> => {
+export const Login = async (email: string, password: string) => {
   try {
     const result = await axiosInstance.post(
       "api/auth/token/login/",

@@ -15,7 +15,7 @@
   </section>
 </template>
 <script setup lang="ts">
-import { PageWith, User } from "./../types";
+import { PageWith, User } from "@/types";
 import { GetAllUsers, deleteReqAxios, updateReqAxios } from "@/utils/functions";
 import { computed, onMounted, ref } from "vue";
 import Spinner from "@/components/Spinner.vue";
