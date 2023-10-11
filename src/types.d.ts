@@ -34,6 +34,18 @@ type RegisterUser = {
   email: string;
 };
 
+type InvitationRequest = {
+  id: number;
+  sender: number;
+  receiver: number;
+  company: number;
+  invitation_type: "invitation" | "request";
+  accepted: boolean;
+  declined: boolean;
+  created_at: string;
+  updated_at: string;
+};
+
 //Store Types
 type ActionKeys = keyof typeof actions;
 

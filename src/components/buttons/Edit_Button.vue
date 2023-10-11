@@ -1,6 +1,6 @@
 <template>
-    <template v-if="editIndex !== index">
-        <button class="btn btn-info" @click="editRow" :disabled="isEditButtonDisabled">Edit</button>
+    <template v-if="!edit">
+        <button class="btn btn-info" @click="editRow">Edit</button>
     </template>
     <template v-else>
         <div class="join">
@@ -16,26 +16,23 @@
 <script setup lang='ts'>
 
 type Props = {
-    index: number
-    editIndex: number | null
+    edit: boolean,
     editFunctionSubmit: () => void
 }
 const props = withDefaults(defineProps<Props>(), {
-    editIndex: null,
+    edit: false
 })
-const isEditButtonDisabled = props.editIndex !== null && props.editIndex !== props.index;
-const emit = defineEmits(["editUser", "submitUser"])
+
+const emit = defineEmits(["editCancel", "submitUser", "editClick"])
 const editRow = () => {
-    emit("editUser", props.index)
+    emit("editClick")
 }
 const editCancel = () => {
-    emit("editUser", null)
+    emit("editCancel", null)
 }
 const editSubmit = () => {
     props.editFunctionSubmit()
-    emit("editUser", null)
+    emit("submitUser", null)
 
 }
 </script>
-
-<style lang='scss'></style>

@@ -14,12 +14,8 @@ import { PageWith, User } from '@/types';
 import { GetAllUsers, deleteReqAxios, updateReqAxios } from '@/utils/functions';
 import { computed, onMounted, ref } from 'vue';
 import Spinner from '@/components/Spinner.vue';
-import Pagination from '@/components/Pagination.vue';
-import Delete_Button from '@/components/buttons/Delete_Button.vue';
 import useStoreTyped from '@/store/store';
-import Edit_Button from '@/components/buttons/Edit_Button.vue';
-import Custom_td from '@/components/Custom_td.vue';
-import ModalWindow from '@/components/ModalWindow.vue';
+
 import Table_With_Pagination from '@/components/Table_With_Pagination.vue';
 import NavBar from '@/components/NavBar.vue';
 const store = useStoreTyped()

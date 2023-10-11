@@ -36,9 +36,6 @@ const handleSubmitCompany = async () => {
     })
     if (result) {
         showToast.value = true
-        setTimeout(() => {
-            showToast.value = false
-        }, 5000)
     }
 }
 </script>

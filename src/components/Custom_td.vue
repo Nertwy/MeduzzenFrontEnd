@@ -19,7 +19,7 @@ import { computed, ref } from 'vue';
 import BaseInputVue from './Inputs/BaseInput.vue';
 
 type Props = {
-   edit: boolean
+   edit?: boolean
    data: T
 }
 const props = withDefaults(defineProps<Props>(), {
@@ -31,7 +31,6 @@ const inputVal = ref<Record<string, any>>({ ...props.data })
 const data = computed(() => Object.values(props.data))
 const dataKeys = Object.keys(props.data as object)
 const getInputType = (key: string, value: {}) => {
-   console.log(key, value);
 
    switch (true) {
       case key.toLowerCase().includes("email"):
@@ -39,7 +38,6 @@ const getInputType = (key: string, value: {}) => {
       case key.toLowerCase().includes("id"):
          return "number"
       case value === true || value === false:
-         console.log("Yes");
 
          return "checkbox"
       default:

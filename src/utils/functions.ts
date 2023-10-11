@@ -200,6 +200,26 @@ export const deleteReqAxios = async (
     return false;
   }
 };
+export const getReqAxios = async (
+  url: string,
+  config?: AxiosRequestConfig<any>
+) => {
+  const token = localStorage.getItem("access");
+  if (!token) return false;
+  const result = await axiosInstance.get(url, config);
+  if (result.status === 200) return result.data;
+  return false;
+};
+export const updateReqAxios = async (url: string, id: number, data: any) => {
+  const token = localStorage.getItem("access");
+  if (!token) return false;
+  const responce = await axiosInstance.put(url + id + "/", data, {});
+  if (responce.status === 200) {
+    return true;
+  } else {
+    return false;
+  }
+};
 export const postReqAxios = async (
   url: string,
   axiosReqSettings: axiosProps
@@ -215,22 +235,18 @@ export const postReqAxios = async (
   if (result.status >= 200 && result.status < 300) return true;
   return false;
 };
-export const updateReqAxios = async (url: string, id: number, data: any) => {
-  const token = localStorage.getItem("access");
-  if (!token) return false;
-  const responce = await axiosInstance.put(url + id + "/", data, {});
-  if (responce.status === 200) {
-    return true;
-  } else {
-    return false;
-  }
-};
 
 export const GetAllCompanies = async (page: number = 1) => {
   try {
+    const token = localStorage.getItem("access");
+    if(!token) throw new Error("No token");
+    
     const result = await axiosInstance.get<PageWith<Company>>(
       "api/companies/",
       {
+        headers:{
+          Authorization:`Token ${token}`
+        },
         params: {
           page,
         },

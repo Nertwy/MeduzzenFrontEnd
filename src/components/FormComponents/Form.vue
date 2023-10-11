@@ -27,7 +27,7 @@ import { register } from '../../utils/functions';
 import { type RegisterUser } from "@/types"
 const dataRegex = ref<RegExp>(/.{3,}/)
 const emailRegex = ref<RegExp>(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)
-const passRegex = ref<RegExp>(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/)
+const passRegex = ref<RegExp>(/^(?=.*[A-Za-z\d])(?=.*[\W_]).{8,}$/)
 const data = ref<RegisterUser>({
     email: "",
     password: "",

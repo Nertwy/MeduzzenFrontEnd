@@ -4,10 +4,11 @@
         <template v-if="isLoading">
             <Spinner />
         </template>
-        <input class="checkbox" type="checkbox" v-model="your_companies" />
+        <BaseInput :label="'Show your companies'" class="checkbox" type="checkbox" v-model="your_companies"/>
         <Table_With_Pagination :update-func="(user) => updateUser(user, 'api/companies/', 'updateCompanyFromList')"
-            :data="companyList" :page-change-func="handlePageChange" :page-data="pageData" :pages="4" :delete-func="deleteFunc"
-            :delete-title="'Delete company?'" :delete-text="'All data about company will be lost!'" />
+            :data="companyList" :page-change-func="handlePageChange" :page-data="pageData" :pages="4"
+            :delete-func="deleteFunc" :delete-title="'Delete company?'"
+            :delete-text="'All data about company will be lost!'"  @pass-id=""/>
         <CompanyForm />
     </section>
 </template>
@@ -85,7 +86,5 @@ watch(your_companies, (newValue) => {
 
     your_companies.value = newValue
 })
-onMounted(() => {
-    fetch()
-})
+fetch()
 </script>

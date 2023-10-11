@@ -60,6 +60,7 @@ const pageData = ref<PageWith<T>>({
     results: [],
     previous: null
 })
+const emit = defineEmits(["passId"])
 const handleEditChange = (data: T) => {
     const newData: T = {
         ...data,
@@ -81,4 +82,3 @@ watchEffect(() => {
     keys.value = Object.keys(props.data[0] ?? {})
 })
 </script>
-<style lang='scss'></style>
