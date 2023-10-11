@@ -1,6 +1,6 @@
 <template lang="">
   <section>
-    <h1>this is About page (Settings)</h1>
+    <h1>this is About page</h1>
   </section>
 </template>
 <script lang="ts">
@@ -31,4 +31,3 @@ const deleteUser = async (password: string) => {
   return "User was not deleted!";
 };
 </script>
-<style lang=""></style>

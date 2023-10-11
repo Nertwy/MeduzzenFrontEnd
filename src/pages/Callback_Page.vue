@@ -12,7 +12,7 @@ onMounted(() => {
   const url = new URL(document.location.href);
   googleGetToken(url).then((val) => {
     if (val) {
-      localStorage.setItem("access", val.access);
+      localStorage.setItem("accessToken", val.accessToken);
     } else {
       console.error("No tokens where given from server");
     }

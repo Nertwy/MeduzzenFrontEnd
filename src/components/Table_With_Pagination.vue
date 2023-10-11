@@ -38,7 +38,7 @@
                 />
                 <Delete_Button
                   :delete-function="
-                    () => deleteFunc?.(value.id ?? -1, userPassword)
+                    () => deleteFunc(value.id ?? -1, userPassword)
                   "
                 />
               </div>
@@ -66,7 +66,7 @@ import Pagination from "./Pagination.vue";
 import { PageWith } from "@/types";
 type Props = {
   pages: number;
-  deleteFunc?: (id: number, password: string) => Promise<void>;
+  deleteFunc: (id: number, password: string) => Promise<void>;
   updateFunc: (data: T) => Promise<void>;
   data: T[];
   pageChangeFunc: (page: number) => Promise<void>;

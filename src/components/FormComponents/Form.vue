@@ -72,12 +72,9 @@ const data = ref<RegisterUser>({
   username: "",
 });
 
-const handleSubmit = async (e: Event) => {
-  e.preventDefault();
+const handleSubmit = async () => {
   if (
-    data.value.password.localeCompare(data.value.re_password, undefined, {
-      sensitivity: "case",
-    }) !== 0
+    data.value.password.toLowerCase() !== data.value.re_password.toLowerCase()
   ) {
     console.error("Password isn`t confirmed ");
     return;

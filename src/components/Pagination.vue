@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!-- Display paginated items -->
     <ul class="join">
       <li class="join-item btn" @click="goToPage(1)">
         <a href="#">First</a>
