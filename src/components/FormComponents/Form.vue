@@ -79,8 +79,11 @@ const handleSubmit = async () => {
     console.error("Password isn`t confirmed ");
     return;
   }
-
-  await register(data.value);
-  console.log("Registration Successful");
+  try {
+    await register(data.value);
+    console.log("Registration Successful");
+  } catch (error) {
+    console.error(error);
+  }
 };
 </script>

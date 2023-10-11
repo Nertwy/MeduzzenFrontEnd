@@ -36,31 +36,37 @@
   </ModalWindow>
   <Toast :text="'Company created successfully!'" :is-showing="showToast" />
 </template>
-<script setup lang='ts'>
-import { ref } from 'vue';
-import ModalWindow from '../ModalWindow.vue';
-import BaseInput from '@/components/Inputs/BaseInput.vue';
-import { postReqAxios } from '@/utils/functions';
-import { Company } from '@/types';
-import Toast from '../Toast.vue';
-import useStoreTyped from '@/store/store';
-const showToast = ref(false)
-const store = useStoreTyped()
-const companyModalData = ref<Omit<Company, "members" | "id" | "owner">>({ name: "", description: "", is_visible: false })
+<script setup lang="ts">
+import { ref } from "vue";
+import ModalWindow from "../ModalWindow.vue";
+import BaseInput from "@/components/Inputs/BaseInput.vue";
+import { postReqAxios } from "@/utils/functions";
+import { Company } from "@/types";
+import Toast from "../Toast.vue";
+import useStoreTyped from "@/store/store";
+const showToast = ref(false);
+const store = useStoreTyped();
+const companyModalData = ref<Omit<Company, "members" | "id" | "owner">>({
+  name: "",
+  description: "",
+  is_visible: false,
+});
 const handleSubmitCompany = async () => {
-    const owner_id = store.state.user?.id
+  try {
+    const owner_id = store.state.user?.id;
 
-    const result = await postReqAxios("api/companies/", {
-        data: {
-            ...companyModalData.value,
-            owner: owner_id
-        }
-    })
-    if (result) {
-        showToast.value = true
-        setTimeout(() => {
-            showToast.value = false
-        }, 5000)
-    }
-}
+    postReqAxios("api/companies/", {
+      data: {
+        ...companyModalData.value,
+        owner: owner_id,
+      },
+    });
+    showToast.value = true;
+    setTimeout(() => {
+      showToast.value = false;
+    }, 5000);
+  } catch (error) {
+    console.error(error);
+  }
+};
 </script>

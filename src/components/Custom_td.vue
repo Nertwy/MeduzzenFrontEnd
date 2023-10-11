@@ -34,13 +34,13 @@ type Props = {
   data: T;
 };
 const props = withDefaults(defineProps<Props>(), {
-   edit: false
-})
-const style = ref("input text-white input-primary")
-const emit = defineEmits(["input"])
-const inputVal = ref<Record<string, any>>({ ...props.data })
-const data = computed(() => Object.values(props.data))
-const dataKeys = Object.keys(props.data as object)
+  edit: false,
+});
+const style = ref("input text-white input-primary");
+const emit = defineEmits(["input"]);
+const inputVal = ref<Record<string, any>>({ ...props.data });
+const data = computed(() => Object.values(props.data));
+const dataKeys = Object.keys(props.data as object);
 const getInputType = (key: string, value: {}) => {
   console.log(key, value);
 
