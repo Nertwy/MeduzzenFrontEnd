@@ -22,9 +22,9 @@
             <Edit_Button
               button-text="Edit"
               @submit-user="() => updateFunc(id ?? -1, handleDataRef)"
-              @edit-click="() => handleEditClick(index)"
+              @edit-click="() => handleEditClick(value.id)"
               @edit-cancel="() => handleEditClick(null)"
-              :edit="edit === index"
+              :edit="edit === value.id"
               :edit-function-submit="() => {}"
             />
           </td>
@@ -53,7 +53,7 @@
     </template>
   </section>
 </template>
-<script setup lang="ts" generic="T extends Record<string,Company>">
+<script setup lang="ts" generic="T">
 import Edit_Button from "@/components/buttons/Edit_Button.vue";
 import Spinner from "@/components/Spinner.vue";
 import NavBar from "@/components/NavBar.vue";
@@ -70,7 +70,6 @@ import Basic_Table from "@/components/BasicTable/Basic_Table.vue";
 import ModalWindow from "@/components/ModalWindow.vue";
 import Edit_Input from "@/components/Inputs/Edit_Input.vue";
 import Basic_button from "@/components/buttons/Basic_button.vue";
-import { url } from "inspector";
 
 type TableCompany = {
   id: number;
@@ -91,12 +90,14 @@ const pageData = ref<PageWith<Company>>({
   previous: null,
 });
 const edit = ref<number | null>(null);
-const handleDataRef = ref<Record<string, Company>>({});
-const handleEditClick = (index: number | null) => {
-  edit.value = index;
-  // handleDataRef.value = {};
+const handleDataRef = ref<T>();
+const handleEditClick = (id: number | null) => {
+  const company = store.state.companyList.find((company) => company.id === id);
+
+  handleDataRef.value = company as T;
+  edit.value = id;
 };
-const updateFunc = async (id: number, data: Record<string, Company>) => {
+const updateFunc = async (id: number, data?: Partial<T>) => {
   try {
     const newCompany: Partial<Company> = {
       ...data,
@@ -126,10 +127,10 @@ const deleteFunc = async (id: number | undefined, password: string) => {
 
 const fetch = async () => {
   try {
-    const fetchedData = await GetAllCompanies();
+    const fetchedData = await GetAllCompanies<PageWith<Company>>();
     if (!fetchedData) throw new Error("No data");
     fetchedData?.results.forEach((company) => {
-      store.commit("addCompanyToList", company);
+      store.commit("addCompanyToList", company as Company);
     });
     pageData.value = fetchedData;
     keys.value = Object.keys(fetchedData.results[0]);

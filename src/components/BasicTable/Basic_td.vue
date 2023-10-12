@@ -27,7 +27,7 @@ const props = withDefaults(defineProps<Props>(), {
     edit: false
 })
 const componentPropsData = ref<Record<string, T>>(props.data)
-const modelValue = defineModel<Record<string, any>>({ default: {} })
+const modelValue = defineModel<Record<string, T>>({ default: {} })
 
 onMounted(() => {
     componentPropsData.value = props.data

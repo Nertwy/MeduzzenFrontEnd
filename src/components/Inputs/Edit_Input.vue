@@ -1,6 +1,7 @@
 <template>
   <template v-if="edit">
     <td v-for="(key, index) in keys" :key="index">
+      <!-- {{ console.log(modelValue[key]) }} -->
       <BaseInput
         :class="style"
         :disabled="key === 'id' || key === 'email'"
@@ -32,12 +33,12 @@
 import { onMounted, ref } from "vue";
 import BaseInput from "./BaseInput.vue";
 type Props = {
-  data: Record<string, any>;
+  data: Record<string, T>;
   edit?: boolean;
   style?: string;
 };
 const keys = ref<string[]>([]);
-const modelValue = defineModel<Record<string, typeof props.data>>({
+const modelValue = defineModel<Record<string, T>>({
   required: true,
   local: true,
 });
@@ -47,6 +48,6 @@ const props = withDefaults(defineProps<Props>(), {
 });
 onMounted(() => {
   modelValue.value = props.data;
-  if (modelValue.value) keys.value = Object.keys(modelValue.value);
+  keys.value = Object.keys(props.data);
 });
 </script>
