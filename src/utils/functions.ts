@@ -254,8 +254,6 @@ export const GetAllCompanies = async <T>(page: number = 1): Promise<T> => {
         page,
       },
     });
-    console.log(result);
-
     return result.data;
   } catch (error) {
     console.error(error);
