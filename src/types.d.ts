@@ -1,9 +1,9 @@
 import { Url } from "url";
 
-type Flag = "🇺🇸" | "🇺🇦";
 type Language = "en" | "uk";
 type LanguageAndFlag = [Language, Flag];
 
+type Flag = "🇺🇸" | "🇺🇦";
 type User = {
   id?: number;
   first_name: string;

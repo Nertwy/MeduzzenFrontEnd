@@ -1,8 +1,4 @@
 <template lang="">
-    <div>
-        User Profile
-    </div>
+  <div>User Profile</div>
 </template>
-<script lang="ts">
-
-</script>
+<script lang="ts"></script>

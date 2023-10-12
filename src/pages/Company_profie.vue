@@ -1,11 +1,4 @@
 <template lang="">
-    <div>
-        Company Profile
-    </div>
+  <div>Company Profile</div>
 </template>
-<script setup lang="ts">
-
-</script>
-<style lang="">
-    
-</style>
+<script setup lang="ts"></script>

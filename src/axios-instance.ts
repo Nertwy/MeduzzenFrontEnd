@@ -30,7 +30,7 @@ axiosInstance.interceptors.response.use(
                 refresh: refreshToken,
               }
             );
-            const newAccessToken = responce.data.access;
+            const newAccessToken = responce.data.accessToken;
             localStorage.setItem("accessToken", newAccessToken);
             return axiosInstance(error.config);
           } catch (error) {

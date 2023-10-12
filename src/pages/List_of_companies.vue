@@ -1,8 +1,4 @@
 <template lang="">
-    <div>
-        List Of companies
-    </div>
+  <div>List Of companies</div>
 </template>
-<script setup lang="ts">
-
-</script>
+<script setup lang="ts"></script>
