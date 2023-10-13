@@ -20,9 +20,9 @@
                 :type="'pass'"
                 :class="'input input-secondary'"
               />
-              <Delete_Button
+              <Basic_button
                 :delete-function="() => deleteFunc(company.id, pass)"
-              />
+              >Delete</Basic_button>
             </div>
           </ModalWindow>
         </template>
@@ -39,7 +39,6 @@
 <script setup lang="ts">
 import ModalWindow from "@/components/ModalWindow.vue";
 import Card from "@/components/Card.vue";
-import Delete_Button from "@/components/buttons/Delete_Button.vue";
 import useStoreTyped from "@/store/store";
 import { Company } from "@/types";
 import { axiosRequest, deleteReqAxios } from "@/utils/functions";
@@ -47,6 +46,7 @@ import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import BaseInput from "@/components/Inputs/BaseInput.vue";
 import NavBar from "@/components/NavBar.vue";
+import Basic_button from "@/components/buttons/Basic_button.vue";
 const router = useRouter();
 const store = useStoreTyped();
 const pass = ref("");

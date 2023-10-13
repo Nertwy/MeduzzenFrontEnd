@@ -54,12 +54,11 @@ import {
   postReqAxios,
 } from "@/utils/functions";
 import { onMounted, ref } from "vue";
-import Toast from "@/components/Toast.vue";
 import Basic_button from "@/components/buttons/Basic_button.vue";
 import NavBar from "@/components/NavBar.vue";
 import useStoreTyped from "@/store/store";
 import UserInvitationWindow from "@/components/Actioncomponensts/UserInvitationWindow.vue";
-
+import Toast from "@/components/Toast.vue";
 type ToastInfo = {
   alertInfoType: boolean;
   isShowing: boolean;
@@ -68,6 +67,7 @@ type Invitation = {
   id?: number;
   company: number;
 };
+
 type CompanyWithMembers = Omit<Company, "members"> & { members: number };
 const keys = ref<string[]>([
   "id",
@@ -129,7 +129,7 @@ const fetch = async () => {
     }));
     pageData.value = { ...result, results: modifiedResults };
     const token = localStorage.getItem("accessToken");
-    const pendingInvites = await getReqAxios(
+    const pendingInvites = await getReqAxios<any>(
       "api/companies/get_pending_join_requests/",
       {
         headers: {

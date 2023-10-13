@@ -5,7 +5,7 @@ import {
   createWebHistory,
 } from "vue-router";
 
-import useStoreTyped, { store, storeInitializer } from "./store/store";
+import { store} from "./store/store";
 
 const authGuardReverse = (
   _to: RouteLocationNormalized,
@@ -56,7 +56,7 @@ const router = createRouter({
       path: "/Companies_List",
       name: "List_of_companies",
       meta: { requiresAuth: true },
-      component: () => import("./pages/List_of_companiesV2.vue"),
+      component: () => import("./pages/List_of_companies.vue"),
     },
     {
       path: "/Company_profile/:id/",
