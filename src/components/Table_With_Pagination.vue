@@ -1,4 +1,7 @@
 <template>
+  
+</template>
+<!-- <template>
   <section>
     <table class="table table-zebra">
       <thead>
@@ -103,4 +106,4 @@ watchEffect(() => {
   keys.value = Object.keys(props.data[0] ?? {});
 });
 </script>
-<style lang="scss"></style>
+<style lang="scss"></style> -->

@@ -34,7 +34,7 @@
       </button>
     </form>
   </ModalWindow>
-  <Toast :text="'User created successfully!'" :is-showing="showToast" />
+  <Toast :text="'Company created successfully!'" :is-showing="showToast" />
 </template>
 <script setup lang="ts">
 import { ref } from "vue";
@@ -43,22 +43,30 @@ import BaseInput from "@/components/Inputs/BaseInput.vue";
 import { postReqAxios } from "@/utils/functions";
 import { Company } from "@/types";
 import Toast from "../Toast.vue";
+import useStoreTyped from "@/store/store";
 const showToast = ref(false);
-const companyModalData = ref<Omit<Company, "members" | "owner" | "id">>({
+const store = useStoreTyped();
+const companyModalData = ref<Omit<Company, "members" | "id" | "owner">>({
   name: "",
   description: "",
   is_visible: false,
 });
 const handleSubmitCompany = async () => {
-  const result = await postReqAxios("api/companies/", {
-    data: companyModalData.value,
-  });
-  if (result) {
+  try {
+    const owner_id = store.state.user?.id;
+
+    postReqAxios("api/companies/", {
+      data: {
+        ...companyModalData.value,
+        owner: owner_id,
+      },
+    });
     showToast.value = true;
     setTimeout(() => {
       showToast.value = false;
     }, 5000);
+  } catch (error) {
+    console.error(error);
   }
 };
 </script>
-<style lang="scss"></style>

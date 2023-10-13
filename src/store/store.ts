@@ -74,6 +74,11 @@ const mutations = {
       };
     }
   },
+  removeCompanyFromList(state: State, company_id: number) {
+    state.companyList = state.companyList.filter(
+      (val) => val.id !== company_id
+    );
+  },
 };
 export const actions = {
   removeUserFromList({ commit }: ActionContext<State, State>, payload: User) {
@@ -102,9 +107,15 @@ export const actions = {
   },
   updateCompanyFromList(
     { commit }: ActionContext<State, State>,
-    payload: Company
+    payload: Partial<Company>
   ) {
     commit("updateCompanyFromList", payload);
+  },
+  removeCompanyFromList(
+    { commit }: ActionContext<State, State>,
+    payload: number
+  ) {
+    commit("removeCompanyFromList", payload);
   },
 };
 export const storeInitializer = {

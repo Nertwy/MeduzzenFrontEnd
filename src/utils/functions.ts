@@ -227,16 +227,19 @@ export const updateReqAxios = async (url: string, id: number, data: any) => {
   }
 };
 
-export const GetAllCompanies = async (page: number = 1) => {
+export const GetAllCompanies = async <T>(page: number = 1): Promise<T> => {
   try {
-    const result = await axiosInstance.get<PageWith<Company>>(
-      "api/companies/",
-      {
-        params: {
-          page,
-        },
-      }
-    );
+    const token = localStorage.getItem("access");
+    if (!token) throw new Error("No token");
+
+    const result = await axiosInstance.get<T>("api/companies/", {
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+      params: {
+        page,
+      },
+    });
     return result.data;
   } catch (error) {
     console.error(error);
