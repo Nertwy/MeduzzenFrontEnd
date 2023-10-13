@@ -1,14 +1,12 @@
 <template>
   <template v-if="edit">
-    <td v-for="(key, index) in keys" :key="index">
-      <!-- {{ console.log(modelValue[key]) }} -->
-      <BaseInput
-        :class="style"
-        :disabled="key === 'id' || key === 'email'"
-        v-model="modelValue[key]"
-        :type="typeof data[key] === 'boolean' ? 'checkbox' : ''"
-      />
-    </td>
+    <MutliInput
+      :data="data"
+      v-model="modelValue"
+      :wrapper-tag="'td'"
+      :disable-inputs-by-keys="['id', 'email']"
+      :class="'input input-accent'"
+    />
   </template>
   <template v-else>
     <template v-for="item in data">
@@ -32,6 +30,7 @@
 <script setup lang="ts" generic="T">
 import { onMounted, ref } from "vue";
 import BaseInput from "./BaseInput.vue";
+import MutliInput from "./MutliInput.vue";
 type Props = {
   data: Record<string, T>;
   edit?: boolean;

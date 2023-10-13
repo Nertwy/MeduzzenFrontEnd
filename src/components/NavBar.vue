@@ -1,10 +1,13 @@
 <template>
-  <nav class="navbar bg-base-100">
+  <nav class="navbar bg-base-100 flex-1">
     <header>
       <a class="btn btn-ghost normal-case text-xl"
         >{{ data?.email }} {{ data?.first_name }}</a
       >
-      <Basic_button @click="LogoutUser">Logout</Basic_button>
+      <div class="flex-none">
+        <Basic_button class="float-right">Home</Basic_button>
+        <Basic_button @click="LogoutUser">Logout</Basic_button>
+      </div>
     </header>
   </nav>
 </template>

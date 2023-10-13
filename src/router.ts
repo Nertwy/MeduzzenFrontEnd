@@ -65,10 +65,15 @@ const router = createRouter({
       component: () => import("./pages/Company_profie.vue"),
     },
     {
-      path:"/Invitations",
-      name:"Invitations",
-      component:()=>import("@/pages/Actions_Page.vue")
-    }
+      path: "/Invitations",
+      name: "Invitations",
+      component: () => import("@/pages/Actions_Page.vue"),
+    },
+    {
+      path: "/Profile",
+      name: "Profile",
+      component: () => import("@/pages/User_profile.vue"),
+    },
   ],
 });
 

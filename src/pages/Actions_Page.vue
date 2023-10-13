@@ -20,19 +20,7 @@
           >
         </td>
         <td v-else-if="value.owner === store.state.user?.id">
-          <ModalWindow :btn-open-text="'Invite Users'">
-            <Basic_Table
-              :keys="['id', 'name', 'last name']"
-              :data="usersPageData?.results ?? []"
-            >
-              <template #th-slot>
-                <th>Invite User</th>
-              </template>
-              <template #td-slot>
-                <Basic_button @click="" class="btn-secondary"> Invite User </Basic_button>
-              </template>
-            </Basic_Table>
-          </ModalWindow>
+          <UserInvitationWindow :company-id="value.id"></UserInvitationWindow>
         </td>
         <td v-else>
           <Basic_button
@@ -70,8 +58,8 @@ import Toast from "@/components/Toast.vue";
 import Basic_button from "@/components/buttons/Basic_button.vue";
 import NavBar from "@/components/NavBar.vue";
 import useStoreTyped from "@/store/store";
-import ModalWindow from "@/components/ModalWindow.vue";
-type UserMiniList = Pick<User, "first_name" | "id" | "last_name">;
+import UserInvitationWindow from "@/components/Actioncomponensts/UserInvitationWindow.vue";
+
 type ToastInfo = {
   alertInfoType: boolean;
   isShowing: boolean;
@@ -94,7 +82,7 @@ const keys = ref<string[]>([
 const store = useStoreTyped();
 const ToastInfo = ref<ToastInfo>({ isShowing: false, alertInfoType: true });
 const loaded = ref(false);
-const usersPageData = ref<PageWith<UserMiniList> | null>(null);
+
 const pageData = ref<PageWith<CompanyWithMembers> | null>(null);
 const Requests = ref<Invitation[] | null>(null);
 const text = ref("");
@@ -131,22 +119,7 @@ const handleCancel = async (id?: number) => {
     console.error(error);
   }
 };
-const fetchUsers = async () => {
-  try {
-    const result = await axiosRequest<PageWith<User>>("api/users/");
-    const properData = result.results.map<UserMiniList>((user) => ({
-      id: user.id,
-      first_name: user.first_name,
-      last_name: user.last_name,
-    }));
-    usersPageData.value = {
-      ...result,
-      results: properData,
-    };
-  } catch (error) {
-    console.error(error);
-  }
-};
+
 const fetch = async () => {
   try {
     const result = await GetAllCompanies<PageWith<Company>>();
@@ -172,6 +145,5 @@ const fetch = async () => {
 };
 onMounted(() => {
   fetch();
-  fetchUsers();
 });
 </script>

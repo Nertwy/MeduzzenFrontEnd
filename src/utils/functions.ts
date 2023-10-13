@@ -179,7 +179,7 @@ type axiosProps = {
 };
 export const deleteReqAxios = async (
   url: string,
-  axiosReqSettings: axiosProps
+  axiosReqSettings?: AxiosRequestConfig<any>
 ) => {
   try {
     const token = localStorage.getItem("accessToken");

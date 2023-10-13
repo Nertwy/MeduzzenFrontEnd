@@ -63,7 +63,7 @@ import {
   updateReqAxios,
 } from "@/utils/functions";
 import useStoreTyped from "@/store/store";
-import { onMounted, ref, watch } from "vue";
+import { onMounted, ref } from "vue";
 import { Company, PageWith } from "@/types";
 import BaseInput from "@/components/Inputs/BaseInput.vue";
 import Basic_Table from "@/components/BasicTable/Basic_Table.vue";
