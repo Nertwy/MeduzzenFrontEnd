@@ -12,6 +12,7 @@
         :td-layout="Edit_Input"
         v-model="handleDataRef"
         :edit="edit"
+        :exclude-id="true"
       >
         <template #th-slot>
           <th>Edit</th>
@@ -22,9 +23,9 @@
             <Edit_Button
               button-text="Edit"
               @submit-user="() => updateFunc(id ?? -1, handleDataRef)"
-              @edit-click="() => handleEditClick(value.id)"
+              @edit-click="() => handleEditClick(index)"
               @edit-cancel="() => handleEditClick(null)"
-              :edit="edit === value.id"
+              :edit="edit === index"
               :edit-function-submit="() => {}"
             />
           </td>
@@ -84,11 +85,15 @@ const pageData = ref<PageWith<Company>>({
 });
 const edit = ref<number | null>(null);
 const handleDataRef = ref<T>();
-const handleEditClick = (id: number | null) => {
-  const company = store.state.companyList.find((company) => company.id === id);
+const handleEditClick = (index: number | null) => {
+  if (index === null) {
+    edit.value = null;
+    return;
+  }
+  const company = store.state.companyList[index];
 
   handleDataRef.value = company as T;
-  edit.value = id;
+  edit.value = index;
 };
 const updateFunc = async (id: number, data?: Partial<T>) => {
   try {

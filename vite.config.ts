@@ -10,7 +10,11 @@ export default defineConfig({
     host: "0.0.0.0",
     port: 3000,
   },
-  plugins: [vue()],
+  plugins: [
+    vue({
+      script: { defineModel: true },
+    }),
+  ],
   resolve: {
     alias: [
       {

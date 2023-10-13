@@ -34,6 +34,11 @@ type RegisterUser = {
   email: string;
 };
 
+type ResetPassword = {
+  current_password: string;
+  re_new_password: string;
+  new_password: string;
+};
 //Store Types
 type ActionKeys = keyof typeof actions;
 

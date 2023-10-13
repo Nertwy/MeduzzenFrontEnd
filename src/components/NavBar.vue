@@ -6,7 +6,7 @@
       >
     </div>
     <div class="flex-none gap-2">
-      <Basic_button class="btn-ghost float-right" @click="router.push('/Profile')">Home</Basic_button>
+      <Basic_button class="btn-ghost" @click="router.push('/Profile')">Home</Basic_button>
       <Basic_button class="btn-ghost" @click="LogoutUser">Logout</Basic_button>
     </div>
   </nav>

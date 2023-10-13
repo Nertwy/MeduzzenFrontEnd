@@ -27,6 +27,8 @@ export const getters = {
   stringUpper: (state: State) => state.test.toUpperCase(),
   getUser: (state: State) => state.user,
   getUsersList: (state: State) => state.usersList,
+  getCompanyList: (state: State) =>
+    state.companyList.map(({ id, ...rest }) => rest),
 };
 const mutations = {
   //only sync operations here
@@ -81,7 +83,7 @@ const mutations = {
   },
 };
 export const actions = {
-  removeUserFromList({ commit }: ActionContext<State, State>, payload: User) {
+  removeUserFromList({ commit }: ActionContext<State, State>, payload: number) {
     commit("removeUserFromList", payload);
   },
   addUserToList({ commit }: ActionContext<State, State>, payload: User) {
@@ -93,7 +95,10 @@ export const actions = {
   setUser({ commit }: ActionContext<State, State>, payload: User) {
     commit("userLogin", payload);
   },
-  updateUserFromList({ commit }: ActionContext<State, State>, payload: User) {
+  updateUserFromList(
+    { commit }: ActionContext<State, State>,
+    payload: Partial<User>
+  ) {
     commit("updateUserFromList", payload);
   },
   changeUserList({ commit }: ActionContext<State, State>, payload: User[]) {

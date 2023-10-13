@@ -9,8 +9,6 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref } from "vue";
-
 defineProps({
   showTime: {
     type: [Number],
@@ -18,6 +16,7 @@ defineProps({
     required: false,
   },
   alertInfoType: {
+    type: [Boolean],
     default: true,
     required: false,
   },
@@ -33,4 +32,3 @@ defineProps({
   },
 });
 </script>
-<style lang="scss"></style>
