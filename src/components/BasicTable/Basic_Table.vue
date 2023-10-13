@@ -33,7 +33,7 @@ const props = withDefaults(defineProps<Props>(), {
   edit: null,
 });
 
-const modelValue = defineModel();
+const modelValue = defineModel({});
 onMounted(() => {
   modelValue.value = props.data;
 });
