@@ -195,18 +195,17 @@ export const deleteReqAxios = async (
     throw error;
   }
 };
-export const getReqAxios = async (
+export const getReqAxios = async <T>(
   url: string,
   config?: AxiosRequestConfig<any>
 ) => {
   try {
     const token = localStorage.getItem("accessToken");
     if (!token) throw new Error("No token provided");
-    const result = await axiosInstance.get(url, config);
+    const result = await axiosInstance.get<T>(url, config);
     return result.data;
   } catch (error) {
     console.error(error);
-
     throw error;
   }
 };
