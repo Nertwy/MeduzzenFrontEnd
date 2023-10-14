@@ -33,6 +33,7 @@
       </template>
     </Basic_Table>
     <Toast
+      ref="toastRef"
       :alert-info-type="ToastInfo.alertInfoType"
       :is-showing="ToastInfo.isShowing"
       :text="text"
@@ -43,7 +44,6 @@
   </template>
 </template>
 <script setup lang="ts" generic="T">
-import { User } from "@/types";
 import Spinner from "@/components/Spinner.vue";
 import Basic_Table from "@/components/BasicTable/Basic_Table.vue";
 import { Company, PageWith } from "@/types";
@@ -69,6 +69,8 @@ type Invitation = {
 };
 
 type CompanyWithMembers = Omit<Company, "members"> & { members: number };
+const toastRef = ref<InstanceType<typeof Toast> | null>(null);
+
 const keys = ref<string[]>([
   "id",
   "created at",
@@ -86,23 +88,17 @@ const loaded = ref(false);
 const pageData = ref<PageWith<CompanyWithMembers> | null>(null);
 const Requests = ref<Invitation[] | null>(null);
 const text = ref("");
-const triggerToast = (infoType: boolean) => {
-  ToastInfo.value.isShowing = true;
-  ToastInfo.value.alertInfoType = infoType;
-  setTimeout(() => {
-    ToastInfo.value.isShowing = false;
-  }, 5000);
-};
+
 const handleClick = async (id?: number) => {
   if (!id) return;
   try {
     await postReqAxios(`api/companies/${id}/request_to_join/`, {});
     text.value = "Request send";
     Requests.value?.push({ company: id });
-
-    triggerToast(true);
+    toastRef.value?.triggerToast(true);
   } catch (error) {
-    triggerToast(false);
+    toastRef.value?.triggerToast(false);
+
     console.error(error);
   }
 };
@@ -113,9 +109,9 @@ const handleCancel = async (id?: number) => {
     text.value = "Request revoked";
     Requests.value =
       Requests.value?.filter((item) => item.company !== id) ?? null;
-    triggerToast(true);
+    toastRef.value?.triggerToast(true);
   } catch (error) {
-    triggerToast(false);
+    toastRef.value?.triggerToast(false);
     console.error(error);
   }
 };
