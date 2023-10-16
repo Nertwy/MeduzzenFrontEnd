@@ -1,6 +1,6 @@
 <template>
   <template v-if="!edit">
-    <Basic_button class="btn-info" @click="editRow">Edit</Basic_button>
+    <BasicButton class="btn-info" @click="editRow">Edit</BasicButton>
   </template>
   <template v-else>
     <div class="join">

@@ -20,7 +20,7 @@
         </template>
         <template #td-slot="{ id, index, value }">
           <td>
-            <Edit_Button
+            <EditButton
               button-text="Edit"
               @submit-user="() => updateFunc(id ?? -1, handleDataRef)"
               @edit-click="() => handleEditClick(index)"
@@ -55,7 +55,7 @@
   </section>
 </template>
 <script setup lang="ts" generic="T">
-import Edit_Button from "@/components/buttons/EditButton.vue";
+import EditButton from "@/components/buttons/EditButton.vue";
 import Spinner from "@/components/Spinner.vue";
 import NavBar from "@/components/NavBar.vue";
 import {

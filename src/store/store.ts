@@ -11,6 +11,7 @@ type State = {
   userById: User | null;
   usersList: User[];
   companyList: Company[];
+  selectedCompany: Company;
 };
 
 export const MutationTypes = {
@@ -81,6 +82,9 @@ const mutations = {
       (val) => val.id !== company_id
     );
   },
+  setSelectedCompany(state: State, payload: Company) {
+    state.selectedCompany = payload;
+  },
 };
 export const actions = {
   removeUserFromList({ commit }: ActionContext<State, State>, payload: number) {
@@ -122,6 +126,12 @@ export const actions = {
   ) {
     commit("removeCompanyFromList", payload);
   },
+  setSelectedCompany(
+    { commit }: ActionContext<State, State>,
+    payload: Company
+  ) {
+    commit("setSelectedCompany", payload);
+  },
 };
 export const storeInitializer = {
   state: {
@@ -131,6 +141,14 @@ export const storeInitializer = {
     userById: null,
     usersList: [],
     companyList: [],
+    selectedCompany: {
+      id: -1,
+      description: "",
+      is_visible: false,
+      name: "",
+      owner: null,
+      members: [],
+    },
   } as State,
   mutations,
   actions,
