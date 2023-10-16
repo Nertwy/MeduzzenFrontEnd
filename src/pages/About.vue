@@ -4,8 +4,6 @@
   </section>
 </template>
 <script lang="ts">
-import { onMounted } from "vue";
-import useStoreTyped from "../store/store";
 import { deleteReqAxios, postReqAxios } from "@/utils/functions";
 const handleChangePass = async (
   current_password: string,

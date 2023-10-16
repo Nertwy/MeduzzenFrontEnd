@@ -5,7 +5,7 @@
       <Spinner />
     </template>
     <template v-else>
-      <Basic_Table
+      <BasicTableWrapper
         :keys="keys"
         :data="store.state.usersList"
         class="table table-zebra"
@@ -20,7 +20,7 @@
         </template>
         <template #td-slot="{ id, index, value }">
           <td>
-            <Edit_Button
+            <EditButton
               button-text="Edit"
               @submit-user="() => updateFunc(id ?? -1, handleDataRef)"
               @edit-click="() => handleEditClick(index)"
@@ -93,13 +93,13 @@
             </template>
           </td>
         </template>
-      </Basic_Table>
+      </BasicTableWrapper>
       <!-- <Toast :alert-info-type="ToastInfo.alertInfoType" :is-showing="ToastInfo.isShowing" :text="text" /> -->
     </template>
   </section>
 </template>
 <script setup lang="ts" generic="T">
-import Edit_Button from "@/components/buttons/EditButton.vue";
+import EditButton from "@/components/buttons/EditButton.vue";
 import Spinner from "@/components/Spinner.vue";
 import NavBar from "@/components/NavBar.vue";
 import {
@@ -112,7 +112,7 @@ import useStoreTyped from "@/store/store";
 import { onMounted, ref } from "vue";
 import { Company, PageWith, ResetPassword, User } from "@/types";
 import BaseInput from "@/components/Inputs/BaseInput.vue";
-import Basic_Table from "@/components/BasicTable/BasicTableWrapper.vue";
+import BasicTableWrapper from "@/components/BasicTable/BasicTableWrapper.vue";
 import ModalWindow from "@/components/ModalWindow.vue";
 import Edit_Input from "@/components/Inputs/EditInput.vue";
 import Basic_button from "@/components/buttons/BasicButton.vue";

@@ -1,12 +1,12 @@
 <template>
   <table>
     <thead>
-      <Basic_th :keys="keys" :excludeId="props.excludeId" />
+      <BasicTh :keys="keys" :excludeId="props.excludeId" />
       <slot name="th-slot"></slot>
     </thead>
     <tbody>
       <tr v-for="(item, index) in data" :key="index" class="">
-        <Basic_td
+        <BasicTd
           :data="filteredData[index]"
           :custom-td-component="tdLayout"
           v-model="modelValue"
@@ -18,9 +18,9 @@
   </table>
 </template>
 <script setup lang="ts" generic="T extends {id?:number}">
-import Basic_th from "./BasicTh.vue";
-import Basic_td from "./BasicTd.vue";
+import BasicTh from "./BasicTh.vue";
 import { computed, onMounted } from "vue";
+import BasicTd from "./BasicTd.vue";
 
 type Props = {
   data: T[];

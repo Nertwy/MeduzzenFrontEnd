@@ -5,11 +5,11 @@
       <Spinner />
     </template>
     <template v-else>
-      <Basic_Table
+      <BasicTableWrapper
         :keys="keys"
         :data="store.state.companyList"
         class="table table-zebra"
-        :td-layout="Edit_Input"
+        :td-layout="EditInput"
         v-model="handleDataRef"
         :edit="edit"
         :exclude-id="true"
@@ -40,16 +40,16 @@
                   >Write your password to confirm deletion</label
                 >
                 <BaseInput class="input input-accent" v-model="userPassword" />
-                <Basic_button
+                <BasicButton
                   :class="'btn-error'"
                   @click="() => deleteFunc(id, userPassword)"
-                  >Delete</Basic_button
+                  >Delete</BasicButton
                 >
               </div>
             </ModalWindow>
           </td>
         </template>
-      </Basic_Table>
+      </BasicTableWrapper>
       <!-- <Toast :alert-info-type="ToastInfo.alertInfoType" :is-showing="ToastInfo.isShowing" :text="text" /> -->
     </template>
   </section>
@@ -67,10 +67,10 @@ import useStoreTyped from "@/store/store";
 import { onMounted, ref } from "vue";
 import { Company, PageWith } from "@/types";
 import BaseInput from "@/components/Inputs/BaseInput.vue";
-import Basic_Table from "@/components/BasicTable/BasicTableWrapper.vue";
+import BasicTableWrapper from "@/components/BasicTable/BasicTableWrapper.vue";
 import ModalWindow from "@/components/ModalWindow.vue";
-import Edit_Input from "@/components/Inputs/EditInput.vue";
-import Basic_button from "@/components/buttons/BasicButton.vue";
+import EditInput from "@/components/Inputs/EditInput.vue";
+import BasicButton from "@/components/buttons/BasicButton.vue";
 
 const userPassword = ref("");
 

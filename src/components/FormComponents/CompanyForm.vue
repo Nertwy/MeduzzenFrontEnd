@@ -34,7 +34,11 @@
       </button>
     </form>
   </ModalWindow>
-  <Toast :text="'Company created successfully!'" :is-showing="showToast" ref="ToastRef"/>
+  <Toast
+    :text="'Company created successfully!'"
+    :is-showing="showToast"
+    ref="ToastRef"
+  />
 </template>
 <script setup lang="ts">
 import { ref } from "vue";
@@ -46,7 +50,7 @@ import Toast from "../Toast.vue";
 import useStoreTyped from "@/store/store";
 const showToast = ref(false);
 const store = useStoreTyped();
-
+const ToastRef = ref<InstanceType<typeof Toast> | null>(null);
 const companyModalData = ref<Omit<Company, "members" | "id" | "owner">>({
   name: "",
   description: "",
@@ -62,12 +66,10 @@ const handleSubmitCompany = async () => {
         owner: owner_id,
       },
     });
-    showToast.value = true;
-    setTimeout(() => {
-      showToast.value = false;
-    }, 5000);
+    ToastRef.value?.triggerToast(true);
   } catch (error) {
     console.error(error);
+    ToastRef.value?.triggerToast(false);
   }
 };
 </script>

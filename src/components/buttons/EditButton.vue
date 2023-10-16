@@ -4,17 +4,17 @@
   </template>
   <template v-else>
     <div class="join">
-      <Basic_button class="btn-primary join-item" @click="editSubmit">
+      <BasicButton class="btn-primary join-item" @click="editSubmit">
         Submit
-      </Basic_button>
-      <Basic_button class="btn-secondary join-item" @click="editCancel">
+      </BasicButton>
+      <BasicButton class="btn-secondary join-item" @click="editCancel">
         Cancel
-      </Basic_button>
+      </BasicButton>
     </div>
   </template>
 </template>
 <script setup lang="ts">
-import Basic_button from "./BasicButton.vue";
+import BasicButton from "./BasicButton.vue";
 
 type Props = {
   edit: boolean;
