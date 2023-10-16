@@ -5,7 +5,7 @@ import {
   createWebHistory,
 } from "vue-router";
 
-import { store} from "./store/store";
+import useStoreTyped, { store, storeInitializer } from "./store/store";
 
 const authGuardReverse = (
   _to: RouteLocationNormalized,
@@ -32,47 +32,48 @@ const router = createRouter({
     {
       path: "/Register",
       name: "Register",
-      component: () => import("./pages/User_registration.vue"),
+      component: () => import("./pages/UserRegistration.vue"),
       beforeEnter: authGuardReverse,
     },
     {
-      path: "/Login",
-      name: "Login",
-      component: () => import("./pages/User_authorization.vue"),
+      path: "/Auth",
+      name: "Authorization",
+      component: () => import("./pages/UserAuthorization.vue"),
       beforeEnter: authGuardReverse,
     },
     {
       path: "/callback",
       name: "callback",
-      component: () => import("./pages/Callback_Page.vue"),
+      component: () => import("./pages/CallbackPage.vue"),
     },
     {
       path: "/Users_List",
       name: "List_of_users",
       meta: { requiresAuth: true },
-      component: () => import("./pages/List_of_users.vue"),
+      component: () => import("./pages/ListOfUsers.vue"),
     },
     {
       path: "/Companies_List",
       name: "List_of_companies",
       meta: { requiresAuth: true },
-      component: () => import("./pages/List_of_companies.vue"),
+      component: () => import("./pages/ListOfCompanies.vue"),
     },
+
     {
       path: "/Company_profile/:id/",
       name: "Company_profile",
       meta: { requiresAuth: true },
-      component: () => import("./pages/Company_profie.vue"),
+      component: () => import("./pages/CompanyProfie.vue"),
     },
     {
       path: "/Invitations",
       name: "Invitations",
-      component: () => import("@/pages/Actions_Page.vue"),
+      component: () => import("@/pages/ActionsPage.vue"),
     },
     {
       path: "/Profile",
       name: "Profile",
-      component: () => import("@/pages/User_profile.vue"),
+      component: () => import("@/pages/UserProfile.vue"),
     },
   ],
 });

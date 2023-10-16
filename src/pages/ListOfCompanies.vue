@@ -5,13 +5,14 @@
       <Spinner />
     </template>
     <template v-else>
-      <Basic_Table
+      <BasicTableWrapper
         :keys="keys"
         :data="store.state.companyList"
         class="table table-zebra"
-        :td-layout="Edit_Input"
+        :td-layout="EditInput"
         v-model="handleDataRef"
         :edit="edit"
+        :exclude-id="true"
       >
         <template #th-slot>
           <th>Edit</th>
@@ -19,12 +20,12 @@
         </template>
         <template #td-slot="{ id, index, value }">
           <td>
-            <Edit_Button
+            <EditButton
               button-text="Edit"
               @submit-user="() => updateFunc(id ?? -1, handleDataRef)"
-              @edit-click="() => handleEditClick(value.id)"
+              @edit-click="() => handleEditClick(index)"
               @edit-cancel="() => handleEditClick(null)"
-              :edit="edit === value.id"
+              :edit="edit === index"
               :edit-function-submit="() => {}"
             />
           </td>
@@ -39,22 +40,22 @@
                   >Write your password to confirm deletion</label
                 >
                 <BaseInput class="input input-accent" v-model="userPassword" />
-                <Basic_button
+                <BasicButton
                   :class="'btn-error'"
                   @click="() => deleteFunc(id, userPassword)"
-                  >Delete</Basic_button
+                  >Delete</BasicButton
                 >
               </div>
             </ModalWindow>
           </td>
         </template>
-      </Basic_Table>
+      </BasicTableWrapper>
       <!-- <Toast :alert-info-type="ToastInfo.alertInfoType" :is-showing="ToastInfo.isShowing" :text="text" /> -->
     </template>
   </section>
 </template>
 <script setup lang="ts" generic="T">
-import Edit_Button from "@/components/buttons/Edit_Button.vue";
+import EditButton from "@/components/buttons/EditButton.vue";
 import Spinner from "@/components/Spinner.vue";
 import NavBar from "@/components/NavBar.vue";
 import {
@@ -66,18 +67,11 @@ import useStoreTyped from "@/store/store";
 import { onMounted, ref } from "vue";
 import { Company, PageWith } from "@/types";
 import BaseInput from "@/components/Inputs/BaseInput.vue";
-import Basic_Table from "@/components/BasicTable/Basic_Table.vue";
+import BasicTableWrapper from "@/components/BasicTable/BasicTableWrapper.vue";
 import ModalWindow from "@/components/ModalWindow.vue";
-import Edit_Input from "@/components/Inputs/Edit_Input.vue";
-import Basic_button from "@/components/buttons/Basic_button.vue";
+import EditInput from "@/components/Inputs/EditInput.vue";
+import BasicButton from "@/components/buttons/BasicButton.vue";
 
-type TableCompany = {
-  id: number;
-  name: string;
-  description: string;
-  members: number;
-  is_visible: boolean;
-};
 const userPassword = ref("");
 
 const keys = ref<string[]>([]);
@@ -91,11 +85,15 @@ const pageData = ref<PageWith<Company>>({
 });
 const edit = ref<number | null>(null);
 const handleDataRef = ref<T>();
-const handleEditClick = (id: number | null) => {
-  const company = store.state.companyList.find((company) => company.id === id);
+const handleEditClick = (index: number | null) => {
+  if (index === null) {
+    edit.value = null;
+    return;
+  }
+  const company = store.state.companyList[index];
 
   handleDataRef.value = company as T;
-  edit.value = id;
+  edit.value = index;
 };
 const updateFunc = async (id: number, data?: Partial<T>) => {
   try {
@@ -111,7 +109,6 @@ const updateFunc = async (id: number, data?: Partial<T>) => {
 };
 const deleteFunc = async (id: number | undefined, password: string) => {
   if (!id) return;
-  console.log("Delete ");
 
   try {
     await deleteReqAxios(`api/companies/${id}`, {

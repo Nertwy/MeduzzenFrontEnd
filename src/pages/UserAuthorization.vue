@@ -34,7 +34,7 @@
 <script lang="ts" setup>
 import InputWithValidation from "@/components/Inputs/InputWithValidation.vue";
 import useStoreTyped from "@/store/store";
-import { Login, fetchUserInfo } from "@/utils/functions";
+import { Login} from "@/utils/functions";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import Google_Button from "@/components/buttons/Google_Button.vue";

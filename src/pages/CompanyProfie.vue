@@ -16,13 +16,13 @@
             <div class="flex flex-col gap-2">
               <BaseInput
                 v-model:model-value="pass"
-                :label="pass"
+                :label="'Type password to delete!'"
                 :type="'pass'"
                 :class="'input input-secondary'"
               />
-              <Basic_button
-                :delete-function="() => deleteFunc(company.id, pass)"
-              >Delete</Basic_button>
+              <BasicButton :delete-function="() => deleteFunc(company.id, pass)"
+                >Delete</BasicButton
+              >
             </div>
           </ModalWindow>
         </template>
@@ -46,7 +46,7 @@ import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import BaseInput from "@/components/Inputs/BaseInput.vue";
 import NavBar from "@/components/NavBar.vue";
-import Basic_button from "@/components/buttons/Basic_button.vue";
+import BasicButton from "@/components/buttons/BasicButton.vue";
 const router = useRouter();
 const store = useStoreTyped();
 const pass = ref("");
