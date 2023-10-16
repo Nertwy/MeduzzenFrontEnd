@@ -1,7 +1,7 @@
 <template>
-  <template v-if="tdLayout">
+  <template v-if="customTdComponent">
     <component
-      :is="tdLayout"
+      :is="customTdComponent"
       :data="componentPropsData"
       v-model="modelValue"
       :edit="edit"
@@ -25,10 +25,10 @@
 <script setup lang="ts" generic="T extends {}">
 import BaseInputVue from "@/components/Inputs/BaseInput.vue";
 import { computed, onMounted, ref } from "vue";
-import Edit_Input from "../Inputs/Edit_Input.vue";
+import Edit_Input from "../Inputs/EditInput.vue";
 type Props = {
   data: T;
-  tdLayout?: typeof Edit_Input;
+  customTdComponent?: typeof Edit_Input;
   callback?: (id?: number) => void;
   edit: boolean;
 };

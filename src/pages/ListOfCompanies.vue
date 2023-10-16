@@ -55,7 +55,7 @@
   </section>
 </template>
 <script setup lang="ts" generic="T">
-import Edit_Button from "@/components/buttons/Edit_Button.vue";
+import Edit_Button from "@/components/buttons/EditButton.vue";
 import Spinner from "@/components/Spinner.vue";
 import NavBar from "@/components/NavBar.vue";
 import {
@@ -67,10 +67,10 @@ import useStoreTyped from "@/store/store";
 import { onMounted, ref } from "vue";
 import { Company, PageWith } from "@/types";
 import BaseInput from "@/components/Inputs/BaseInput.vue";
-import Basic_Table from "@/components/BasicTable/Basic_Table.vue";
+import Basic_Table from "@/components/BasicTable/BasicTableWrapper.vue";
 import ModalWindow from "@/components/ModalWindow.vue";
-import Edit_Input from "@/components/Inputs/Edit_Input.vue";
-import Basic_button from "@/components/buttons/Basic_button.vue";
+import Edit_Input from "@/components/Inputs/EditInput.vue";
+import Basic_button from "@/components/buttons/BasicButton.vue";
 
 const userPassword = ref("");
 
@@ -109,7 +109,6 @@ const updateFunc = async (id: number, data?: Partial<T>) => {
 };
 const deleteFunc = async (id: number | undefined, password: string) => {
   if (!id) return;
-  console.log("Delete ");
 
   try {
     await deleteReqAxios(`api/companies/${id}`, {

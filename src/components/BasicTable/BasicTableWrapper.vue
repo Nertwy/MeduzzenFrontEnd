@@ -8,7 +8,7 @@
       <tr v-for="(item, index) in data" :key="index" class="">
         <Basic_td
           :data="filteredData[index]"
-          :td-layout="tdLayout"
+          :custom-td-component="tdLayout"
           v-model="modelValue"
           :edit="edit === index"
         />
@@ -18,8 +18,8 @@
   </table>
 </template>
 <script setup lang="ts" generic="T extends {id?:number}">
-import Basic_th from "./Basic_th.vue";
-import Basic_td from "./Basic_td.vue";
+import Basic_th from "./BasicTh.vue";
+import Basic_td from "./BasicTd.vue";
 import { computed, onMounted } from "vue";
 
 type Props = {

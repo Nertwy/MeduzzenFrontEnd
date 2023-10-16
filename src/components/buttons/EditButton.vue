@@ -14,7 +14,7 @@
   </template>
 </template>
 <script setup lang="ts">
-import Basic_button from "./Basic_button.vue";
+import Basic_button from "./BasicButton.vue";
 
 type Props = {
   edit: boolean;

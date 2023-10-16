@@ -16,7 +16,7 @@ import useStoreTyped from "@/store/store";
 import { fetchUserInfo, logout } from "@/utils/functions";
 import { onMounted, computed } from "vue";
 import { useRouter } from "vue-router";
-import Basic_button from "./buttons/Basic_button.vue";
+import Basic_button from "./buttons/BasicButton.vue";
 const store = useStoreTyped();
 const router = useRouter();
 const data = computed(() => store.state.user);
