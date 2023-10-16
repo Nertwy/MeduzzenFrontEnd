@@ -1,4 +1,5 @@
 import { Url } from "url";
+import { actions } from "./store/store";
 
 type Language = "en" | "uk";
 type LanguageAndFlag = [Language, Flag];
@@ -16,7 +17,14 @@ type PageWith<T> = {
   previous: Url | null;
   results: Array<T>;
 };
-
+type Company = {
+  id: number;
+  name: string;
+  description: string;
+  owner: User | null;
+  is_visible: boolean;
+  members: User[];
+};
 type RegisterUser = {
   first_name: string;
   last_name: string;
@@ -26,7 +34,14 @@ type RegisterUser = {
   email: string;
 };
 
+type ResetPassword = {
+  current_password: string;
+  re_new_password: string;
+  new_password: string;
+};
 //Store Types
+type ActionKeys = keyof typeof actions;
+
 type Length<L extends any[]> = L["length"];
 
 type Function<P extends any[] = any, R extends any = any> = (...args: P) => R;

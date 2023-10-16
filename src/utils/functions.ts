@@ -1,4 +1,4 @@
-import { PageWith, RegisterUser, User } from "../types";
+import { Company, PageWith, RegisterUser, User } from "../types";
 import axiosInstance from "../axios-instance";
 import store from "@/store/store";
 import { AxiosError } from "axios";
@@ -128,7 +128,25 @@ export const fetchUserInfo = async () => {
     throw error;
   }
 };
+export const deleteUser = async (password: string) => {
+  try {
+    const token = localStorage.getItem("accessToken");
+    if (!token) throw new Error("No token where found!");
 
+    const result = await axiosInstance.delete("api/auth/users/me/", {
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+      data: {
+        current_password: password,
+      },
+    });
+    return result.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
 export const GetAllUsers = async (page: number = 1) => {
   try {
     const result = await axiosInstance.get<PageWith<User>>("api/users/", {
@@ -172,8 +190,27 @@ export const deleteReqAxios = async (
       },
       ...axiosReqSettings,
     });
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
 
-    return true;
+//This
+export const postReqAxios = async (
+  url: string,
+  axiosReqSettings: axiosProps
+) => {
+  try {
+    const token = localStorage.getItem("accessToken");
+    if (!token) throw new Error("No Token Provided");
+
+    await axiosInstance.post(url, axiosReqSettings.data, {
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+      params: axiosReqSettings.params,
+    });
   } catch (error) {
     console.error(error);
     throw error;
@@ -183,16 +220,44 @@ export const updateReqAxios = async (url: string, id: number, data: any) => {
   try {
     const token = localStorage.getItem("accessToken");
     if (!token) throw new Error("No accessToken Provided");
-
     await axiosInstance.put(url + id + "/", data, {});
-
-    return true;
   } catch (error) {
     console.error(error);
     throw error;
   }
 };
-export const logout = () => {
-  localStorage.removeItem("accessToken");
-  localStorage.removeItem("refreshToken");
+
+export const GetAllCompanies = async <T>(page: number = 1): Promise<T> => {
+  try {
+    const token = localStorage.getItem("access");
+    if (!token) throw new Error("No token");
+
+    const result = await axiosInstance.get<T>("api/companies/", {
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+      params: {
+        page,
+      },
+    });
+    return result.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+export const logout = async () => {
+  try {
+    const token = localStorage.getItem("accessToken");
+    if (!token) return;
+    await axiosInstance.post("api/auth/token/logout/", undefined, {
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+    });
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+  } catch (error) {
+    throw error;
+  }
 };

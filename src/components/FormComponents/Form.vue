@@ -1,4 +1,4 @@
-<template>
+<template lang="html">
   <form
     class="card w-1/4 bg-base-100 shadow-xl border-white bordered p-4 justify-between space-y-3"
     @submit.prevent="handleSubmit"
@@ -56,11 +56,10 @@
   </form>
 </template>
 <script setup lang="ts">
-import InputWithValidation from "@/components/Inputs/InputWithValidation.vue";
-import { RegisterUser } from "@/types";
-import { register } from "../../utils/functions";
 import { ref } from "vue";
-
+import InputWithValidation from "@/components/Inputs/InputWithValidation.vue";
+import { register } from "../../utils/functions";
+import { type RegisterUser } from "@/types";
 const dataRegex = ref<RegExp>(/.{3,}/);
 const emailRegex = ref<RegExp>(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
 const passRegex = ref<RegExp>(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/);

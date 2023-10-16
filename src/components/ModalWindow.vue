@@ -9,13 +9,30 @@
         <section class="modal-content">
           <p class="py-4">{{ props.text }}</p>
         </section>
-        <footer class="modal-action">
+        <footer class="modal-action items-center justify-center">
           <form method="dialog">
             <slot></slot>
-            <button class="btn" @click="toggleModal">
-              {{ props.btnInModalText }}
-            </button>
           </form>
+
+          <button
+            class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+            @click="toggleModal"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
         </footer>
       </article>
     </dialog>
@@ -28,7 +45,6 @@ import { ref } from "vue";
 type Props = {
   title?: string;
   text?: string;
-  btnInModalText?: string;
   btnOpenText: string;
 };
 
