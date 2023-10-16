@@ -1,7 +1,7 @@
 <template>
   <template v-if="loaded && usersPageData">
     <ModalWindow :btn-open-text="'Invite Users'">
-      <Basic_Table
+      <BasicTableWrapper
         :keys="['id', 'name', 'last name']"
         :data="usersPageData?.results ?? []"
       >
@@ -11,37 +11,37 @@
         <template #td-slot="{ id, index, value }">
           <div class="">
             <template v-if="usersInvites.find((user) => value.id === user.id)">
-              <Basic_button
+              <BasicButton
                 class="btn-error w-full"
                 @click="revoke_invitation(value.id ?? -1)"
               >
                 Revoke Invitation
-              </Basic_button>
+              </BasicButton>
             </template>
             <template v-else>
-              <Basic_button
+              <BasicButton
                 @click="handleInviteUser(value.id ?? -1, companyId)"
                 class="btn-success w-full"
               >
                 Invite User
-              </Basic_button>
+              </BasicButton>
             </template>
           </div>
           <slot></slot>
         </template>
-      </Basic_Table>
+      </BasicTableWrapper>
     </ModalWindow>
   </template>
   <template v-else><Spinner /></template>
 </template>
 <script setup lang="ts">
 import Spinner from "../Spinner.vue";
-import Basic_Table from "../BasicTable/Basic_Table.vue";
 import { onMounted, ref } from "vue";
-import Basic_button from "@/components/buttons/Basic_button.vue";
+import BasicButton from "@/components/buttons/BasicButton.vue";
 import { PageWith, User } from "@/types";
 import ModalWindow from "@/components/ModalWindow.vue";
 import { axiosRequest, deleteReqAxios, postReqAxios } from "@/utils/functions";
+import BasicTableWrapper from "../BasicTable/BasicTableWrapper.vue";
 type UserMiniList = Pick<User, "first_name" | "id" | "last_name">;
 const props = defineProps({
   companyId: {

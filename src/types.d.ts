@@ -46,7 +46,6 @@ type InvitationRequest = {
   updated_at: string;
 };
 
-<<<<<<< HEAD
 type InvitationRequest = {
   id: number;
   sender: number;
@@ -59,13 +58,11 @@ type InvitationRequest = {
   updated_at: string;
 };
 
-=======
 type ResetPassword = {
   current_password: string;
   re_new_password: string;
   new_password: string;
 };
->>>>>>> FE-9-Validation
 //Store Types
 type ActionKeys = keyof typeof actions;
 

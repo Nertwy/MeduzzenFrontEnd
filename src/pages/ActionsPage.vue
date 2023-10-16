@@ -1,7 +1,7 @@
 <template>
   <NavBar />
   <template v-if="loaded && pageData">
-    <Basic_Table
+    <BasicTableWrapper
       :keys="keys"
       :data="pageData.results"
       class="table table-zebra"
@@ -12,26 +12,26 @@
       </template>
       <template #td-slot="{ id, index, value }">
         <td v-if="Requests?.find((requests) => requests.company === id)">
-          <Basic_button
+          <BasicButton
             button-text="Cancel Request"
             class="btn btn-error"
             @click="handleCancel(id)"
-            >Cancel request</Basic_button
+            >Cancel request</BasicButton
           >
         </td>
         <td v-else-if="value.owner === store.state.user?.id">
           <UserInvitationWindow :company-id="value.id"></UserInvitationWindow>
         </td>
         <td v-else>
-          <Basic_button
+          <BasicButton
             button-text="Request to join"
             class="btn btn-success"
             @click="handleClick(id)"
-            >Send Request</Basic_button
+            >Send Request</BasicButton
           >
         </td>
       </template>
-    </Basic_Table>
+    </BasicTableWrapper>
     <Toast
       ref="toastRef"
       :alert-info-type="ToastInfo.alertInfoType"
@@ -45,16 +45,11 @@
 </template>
 <script setup lang="ts" generic="T">
 import Spinner from "@/components/Spinner.vue";
-import Basic_Table from "@/components/BasicTable/Basic_Table.vue";
+import BasicTableWrapper from "@/components/BasicTable/BasicTableWrapper.vue";
 import { Company, PageWith } from "@/types";
-import {
-  GetAllCompanies,
-  axiosRequest,
-  getReqAxios,
-  postReqAxios,
-} from "@/utils/functions";
+import { GetAllCompanies, getReqAxios, postReqAxios } from "@/utils/functions";
 import { onMounted, ref } from "vue";
-import Basic_button from "@/components/buttons/Basic_button.vue";
+import BasicButton from "@/components/buttons/BasicButton.vue";
 import NavBar from "@/components/NavBar.vue";
 import useStoreTyped from "@/store/store";
 import UserInvitationWindow from "@/components/Actioncomponensts/UserInvitationWindow.vue";
