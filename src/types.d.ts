@@ -46,16 +46,23 @@ type InvitationRequest = {
   updated_at: string;
 };
 
-type InvitationRequest = {
+type Members = {
+  id:number
+  email: string;
+  firstName: string;
+  lastName: string;
+};
+type InvitationToCompany = {
   id: number;
-  sender: number;
-  receiver: number;
-  company: number;
-  invitation_type: "invitation" | "request";
-  accepted: boolean;
-  declined: boolean;
-  created_at: string;
-  updated_at: string;
+  senderFirstName: string;
+  senderLastName: string;
+  company_id: number;
+};
+type InvitationToUser = {
+  id: number;
+  company_name: string;
+  senderLastName: string;
+  company_id: number;
 };
 
 type ResetPassword = {

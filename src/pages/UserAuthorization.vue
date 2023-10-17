@@ -20,7 +20,7 @@
         Login
       </button>
       <p>or</p>
-      <Google_Button />
+      <GoogleButton />
       <button
         class="btn btn-link"
         type="button"
@@ -37,7 +37,7 @@ import useStoreTyped from "@/store/store";
 import { Login} from "@/utils/functions";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import Google_Button from "@/components/buttons/Google_Button.vue";
+import GoogleButton from "@/components/buttons/GoogleButton.vue";
 const data = ref<{ email: string; password: string }>({
   password: "",
   email: "",
