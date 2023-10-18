@@ -11,7 +11,7 @@
         <th>Join Group</th>
       </template>
       <template #td-slot="{ id, index, value }">
-        <td v-if="Requests?.find((requests) => requests.company === id)">
+        <td v-if="findRequests(id)">
           <BasicButton
             button-text="Cancel Request"
             class="btn btn-error"
@@ -54,6 +54,7 @@ import NavBar from "@/components/NavBar.vue";
 import useStoreTyped from "@/store/store";
 import UserInvitationWindow from "@/components/Actioncomponensts/UserInvitationWindow.vue";
 import Toast from "@/components/Toast.vue";
+import { findByKey } from "@/utils/helpers";
 type ToastInfo = {
   alertInfoType: boolean;
   isShowing: boolean;
@@ -81,13 +82,15 @@ const ToastInfo = ref<ToastInfo>({ isShowing: false, alertInfoType: true });
 const loaded = ref(false);
 
 const pageData = ref<PageWith<CompanyWithMembers> | null>(null);
-const Requests = ref<Invitation[] | null>(null);
+const Requests = ref<Invitation[]>([]);
 const text = ref("");
-
+const findRequests = (id: number | undefined) => {
+  return findByKey(Requests.value, id, "company") > -1;
+};
 const handleClick = async (id?: number) => {
   if (!id) return;
   try {
-    await postReqAxios(`api/companies/${id}/request_to_join/`, {});
+    await postReqAxios(`api/companies/${id}/request_to_join/`);
     text.value = "Request send";
     Requests.value?.push({ company: id });
     toastRef.value?.triggerToast(true);
@@ -100,7 +103,7 @@ const handleClick = async (id?: number) => {
 const handleCancel = async (id?: number) => {
   if (!id) return;
   try {
-    await postReqAxios(`api/companies/${id}/cancel_join_request/`, {});
+    await postReqAxios(`api/companies/${id}/cancel_join_request/`);
     text.value = "Request revoked";
     Requests.value =
       Requests.value?.filter((item) => item.company !== id) ?? null;

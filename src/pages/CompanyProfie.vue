@@ -64,7 +64,7 @@ const fetch = async () => {
   try {
     const result = await axiosRequest<Company>(`api/companies/${id}`, {
       headers: {
-        Authorization: `Token ${localStorage.getItem("access")}`,
+        Authorization: `Token ${localStorage.getItem("accessToken")}`,
       },
     });
     company.value = result;

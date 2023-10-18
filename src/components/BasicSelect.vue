@@ -3,19 +3,11 @@
   <select
     class="select select-bordered w-full max-w-xs"
     v-model="selectedId"
-    @change="onSelect()"
+    @change="onSelect"
   >
     <option disabled selected>{{ defaultText }}</option>
-    <option
-      v-if="isArray"
-      v-for="(item, index) in data"
-      :key="item.id"
-      :value="item.id"
-    >
+    <option v-for="(item, index) in data" :key="item.id" :value="item.id">
       {{ item[keyToShow] }}
-    </option>
-    <option v-else>
-      {{ data[keyToShow] }}
     </option>
   </select>
 </template>
@@ -24,7 +16,7 @@ import { ref } from "vue";
 
 type Props = {
   label?: string;
-  data: any;
+  data: T[];
   keyToShow: string;
   defaultText?: string;
 };

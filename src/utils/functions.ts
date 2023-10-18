@@ -1,4 +1,4 @@
-import { Company, PageWith, RegisterUser, User } from "../types";
+import { Company, GoogleUser, PageWith, RegisterUser, User } from "../types";
 import axiosInstance from "../axios-instance";
 import { AxiosRequestConfig } from "axios";
 
@@ -36,6 +36,8 @@ export const googlePress = async () => {
         },
       }
     );
+    console.log(responce);
+
     return responce.data.authorization_url;
   } catch (error) {
     console.error(error);
@@ -65,7 +67,10 @@ export const googleGetToken = async (url: URL) => {
         },
       }
     );
+
+    console.log(responce.data);
     const { access, refresh, user } = responce.data;
+    // localStorage.setItem("accessToken", access);
     return {
       accessToken: access,
       refreshToken: refresh,
@@ -76,7 +81,24 @@ export const googleGetToken = async (url: URL) => {
     throw error;
   }
 };
-
+export const getGoogleUserInfo = async () => {
+  try {
+    const token = localStorage.getItem("accessToken");
+    if (!token) throw new Error("No token Provided");
+    const result = await getReqAxios<GoogleUser>(
+      "api/users/get_google_user_info/",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return result as Partial<GoogleUser>;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
 export const Login = async (email: string, password: string) => {
   try {
     const result = await axiosInstance.post(
@@ -212,17 +234,17 @@ export const getReqAxios = async <T>(
 
 export const postReqAxios = async (
   url: string,
-  axiosReqSettings: axiosProps
+  axiosReqSettings?: axiosProps
 ) => {
   try {
     const token = localStorage.getItem("accessToken");
     if (!token) throw new Error("No Token Provided");
 
-    await axiosInstance.post(url, axiosReqSettings.data, {
+    await axiosInstance.post(url, axiosReqSettings?.data, {
       headers: {
         Authorization: `Token ${token}`,
       },
-      params: axiosReqSettings.params,
+      params: axiosReqSettings?.params,
     });
   } catch (error) {
     console.error(error);
@@ -242,7 +264,7 @@ export const updateReqAxios = async (url: string, id: number, data: any) => {
 
 export const GetAllCompanies = async <T>(page: number = 1): Promise<T> => {
   try {
-    const token = localStorage.getItem("access");
+    const token = localStorage.getItem("accessToken");
     if (!token) throw new Error("No token");
 
     const result = await axiosInstance.get<T>("api/companies/", {

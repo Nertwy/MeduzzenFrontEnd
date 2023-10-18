@@ -10,6 +10,15 @@ type User = {
   first_name: string;
   last_name: string;
   email: string;
+  image?: string;
+};
+type GoogleUser = {
+  name: string;
+  given_name: string;
+  family_name: string;
+  picture: Url;
+  email: string;
+  locale: string;
 };
 type PageWith<T> = {
   count: number;
@@ -47,7 +56,7 @@ type InvitationRequest = {
 };
 
 type Members = {
-  id:number
+  id: number;
   email: string;
   firstName: string;
   lastName: string;

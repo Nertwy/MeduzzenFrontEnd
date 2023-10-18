@@ -1,21 +1,26 @@
 <template>
   <div class="">
-    <nav>Navigation Bar</nav>
+    <NavBar></NavBar>
     <div class=""></div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { googleGetToken } from "@/utils/functions";
+import NavBar from "@/components/NavBar.vue";
+import { GoogleUser } from "@/types";
+import { getGoogleUserInfo, googleGetToken } from "@/utils/functions";
 import { onMounted } from "vue";
+const getGoogleToken = async () => {
+  try {
+    const url = new URL(document.location.href);
+    await googleGetToken(url);
+    // const user = await getGoogleUserInfo();
+    // console.log("User DATA IS ... = ", user);
+  } catch (error) {
+    console.error(error);
+  }
+};
 onMounted(() => {
-  const url = new URL(document.location.href);
-  googleGetToken(url).then((val) => {
-    if (val) {
-      localStorage.setItem("accessToken", val.accessToken);
-    } else {
-      console.error("No tokens where given from server");
-    }
-  });
+  getGoogleToken();
 });
 </script>

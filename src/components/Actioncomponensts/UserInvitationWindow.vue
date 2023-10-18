@@ -10,7 +10,7 @@
         </template>
         <template #td-slot="{ id, index, value }">
           <div class="">
-            <template v-if="usersInvites.find((user) => value.id === user.id)">
+            <template v-if="findInvitations(value.id ?? -1)">
               <BasicButton
                 class="btn-error w-full"
                 @click="revoke_invitation(value.id ?? -1)"
@@ -42,6 +42,7 @@ import { PageWith, User } from "@/types";
 import ModalWindow from "@/components/ModalWindow.vue";
 import { axiosRequest, deleteReqAxios, postReqAxios } from "@/utils/functions";
 import BasicTableWrapper from "../BasicTable/BasicTableWrapper.vue";
+import { findByKey } from "@/utils/helpers";
 type UserMiniList = Pick<User, "first_name" | "id" | "last_name">;
 const props = defineProps({
   companyId: {
@@ -56,34 +57,37 @@ const usersInvites = ref<Partial<User>[]>([]);
 const usersPageData = ref<PageWith<UserMiniList> | null>(null);
 const loaded = ref(false);
 
-const handleInviteUser = async (userId: number, companyId: number) => {
+const findInvitations = (id: number) => {
+  const index = findByKey(usersInvites.value, id, "id");
+  return index > -1;
+};
+const handleInviteUser = async (reciver_id: number, companyId: number) => {
   try {
     await postReqAxios(`api/companies/${companyId}/invite/`, {
       data: {
-        reciver_id: userId,
+        reciver_id,
       },
     });
-    usersInvites.value.push({ id: userId });
+    usersInvites.value.push({ id: reciver_id });
   } catch (error) {
     console.error(error);
   }
 };
-const revoke_invitation = async (id: number) => {
+const revoke_invitation = async (user_id: number) => {
   try {
     await deleteReqAxios(
       `api/companies/${props.companyId}/revoke_invitation/`,
       {
         data: {
-          user_id: id,
+          user_id,
         },
       }
     );
-    const userToDel = usersInvites.value.find((user) => user.id === id);
-    if (userToDel) {
-      const index = usersInvites.value.indexOf(userToDel);
-      if (index > -1) {
-        usersInvites.value.splice(index, 1);
-      }
+
+    const index = findByKey(usersInvites.value, user_id, "id");
+
+    if (index > -1) {
+      usersInvites.value.splice(index, 1);
     }
   } catch (error) {
     console.error(error);
@@ -100,11 +104,13 @@ const fetch_invitations = async () => {
 const fetchUsers = async () => {
   try {
     const result = await axiosRequest<PageWith<User>>("api/users/");
-    const properData = result.results.map<UserMiniList>((user) => ({
-      id: user.id,
-      first_name: user.first_name,
-      last_name: user.last_name,
-    }));
+    const properData = result.results.map<UserMiniList>(
+      ({ id, last_name, first_name }) => ({
+        id,
+        first_name,
+        last_name,
+      })
+    );
     usersPageData.value = {
       ...result,
       results: properData,
