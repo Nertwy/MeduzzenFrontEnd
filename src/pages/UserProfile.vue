@@ -1,3 +1,271 @@
-<template lang="">
-  <div>User Profile</div>
+<template>
+  <NavBar />
+  <template v-if="companies.length !== 0">
+    <div class="flex h-screen">
+      <div class="flex w-1/2 flex-col items-center">
+        Company View
+        <BasicSelect
+          @select-change="selectChange"
+          :data="companies"
+          :key-to-show="'name'"
+          :default-text="'Pick your company to view'"
+        />
+        <BasicTableWrapper
+          v-if="companyRequests.length >= 1"
+          class="table table-zebra text-center"
+          :keys="['first name', 'last name']"
+          :data="companyRequests"
+        >
+          <template #td-slot="{ id, index, value }">
+            <td>
+              <BasicButton
+                class="btn-success"
+                @click="acceptRequest(value.company_id, id ?? -1)"
+              >
+                Accept Request
+              </BasicButton>
+            </td>
+            <td>
+              <BasicButton
+                class="btn-error"
+                @click="declineRequest(value.company_id, id ?? -1)"
+              >
+                Decline Request
+              </BasicButton>
+            </td>
+          </template>
+        </BasicTableWrapper>
+        <div v-else>No requests to accept</div>
+        <div class="divider">
+          &#8593; Requests &#8593; | &#8595; Invitations &#8595;
+        </div>
+        <BasicTableWrapper
+          class="table table-zebra text-center"
+          :exclude-strings="['id', 'company_id']"
+          v-if="userInvitations.length >= 1"
+          :keys="['Company name', 'Owner last name']"
+          :data="userInvitations"
+        >
+          <template #td-slot="{ id, index, value }">
+            <td>
+              <BasicButton
+                class="btn-success"
+                @click="acceptInvitation(value.company_id, id ?? -1)"
+              >
+                Accept Invite
+              </BasicButton>
+            </td>
+            <td>
+              <BasicButton
+                class="btn-error"
+                @click="declineInvitation(value.company_id, id ?? -1)"
+              >
+                Decline Invite
+              </BasicButton>
+            </td>
+          </template>
+        </BasicTableWrapper>
+        <div v-else>No Invitations for this user :(</div>
+        <div class="divider">&#8595; Members &#8595;</div>
+        <BasicTableWrapper
+          class="table table-zebra"
+          :data="members"
+          :keys="['email', 'first name', 'last name']"
+        >
+        </BasicTableWrapper>
+      </div>
+      <div class="divider divider-horizontal"></div>
+      <div class="flex w-1/2 flex-col items-center">
+        <h1 class="text-2xl p-4">Your companies!</h1>
+        <BasicTableWrapper
+          :data="companiesYourIn"
+          :keys="['company name', 'company description', 'leave company']"
+          :exclude-strings="['id', 'created_at', 'updated_at', 'is_owner']"
+          class="table table-zebra"
+        >
+          <template #td-slot="{ id }">
+            <ModalWindow
+              :btn-open-text="'leave company'"
+              :title="'Leave company?'"
+              :text="'If you leave the company you will need to get a new invitation from the owner'"
+            >
+              <BasicButton class="btn-error" @click="leaveCompany(id)">
+                Leave company
+              </BasicButton>
+            </ModalWindow>
+          </template>
+        </BasicTableWrapper>
+      </div>
+    </div>
+  </template>
+  <template v-else>
+    <Spinner />
+  </template>
+  <Toast ref="toastRef" :text="'Invite'" />
 </template>
+<script setup lang="ts">
+const selectChange = async (id: number) => {
+  await fetchCompanyRequests(id);
+  await fetchMembers(id);
+};
+import BasicSelect from "@/components/BasicSelect.vue";
+import BasicTableWrapper from "@/components/BasicTable/BasicTableWrapper.vue";
+import ModalWindow from "@/components/ModalWindow.vue";
+import NavBar from "@/components/NavBar.vue";
+import Spinner from "@/components/Spinner.vue";
+import Toast from "@/components/Toast.vue";
+import BasicButton from "@/components/buttons/BasicButton.vue";
+import {
+  Company,
+  InvitationToCompany,
+  InvitationToUser,
+  Members,
+} from "@/types";
+import { getReqAxios, postReqAxios } from "@/utils/functions";
+import { onMounted, ref } from "vue";
+const companies = ref<Company[]>([]);
+const toastRef = ref<InstanceType<typeof Toast> | null>(null);
+const companyRequests = ref<InvitationToCompany[]>([]);
+const userInvitations = ref<InvitationToUser[]>([]);
+const companiesYourIn = ref<any[]>([]);
+const members = ref<Members[]>([]);
+const acceptRequest = async (company_id: number, request_id: number) => {
+  try {
+    await postReqAxios(`api/companies/${company_id}/accept_join_request/`, {
+      data: {
+        request_id,
+      },
+    });
+    toastRef.value?.triggerToast(true);
+  } catch (error) {
+    toastRef.value?.triggerToast(false);
+    console.error(error);
+  }
+};
+const leaveCompany = async (company_id?: number) => {
+  try {
+    if (!company_id) return;
+    await postReqAxios(`api/companies/${company_id}/leave_company/`, {});
+  } catch (error) {
+    console.error(error);
+  }
+};
+const declineRequest = async (company_id: number, request_id: number) => {
+  try {
+    await postReqAxios(`api/companies/${company_id}/decline_join_request/`, {
+      data: {
+        request_id,
+      },
+    });
+    toastRef.value?.triggerToast(true);
+  } catch (error) {
+    toastRef.value?.triggerToast(false);
+    console.error(error);
+  }
+};
+const fetchCompaniesYourIn = async () => {
+  try {
+    const result = await getReqAxios<any[]>("api/companies/get_my_companies/");
+    console.log(result);
+
+    companiesYourIn.value = result;
+  } catch (error) {
+    console.error(error);
+  }
+};
+const fetchCompanyRequests = async (company_id: number) => {
+  try {
+    const result = await getReqAxios<any[]>(
+      `api/companies/${company_id}/get_company_requests/`
+    );
+
+    const Requests: InvitationToCompany[] = result.map<InvitationToCompany>(
+      (data) => ({
+        id: data.id,
+        senderFirstName: data.sender_first_name,
+        senderLastName: data.sender_last_name,
+        company_id: data.company,
+      })
+    );
+    companyRequests.value = Requests;
+  } catch (error) {
+    console.error(error);
+  }
+};
+const fetchYourCompanies = async () => {
+  try {
+    const result = await getReqAxios<Company[]>(
+      "api/companies/owned_companies/"
+    );
+    companies.value = result;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const fetchUserInvitations = async () => {
+  try {
+    const result = await getReqAxios<any[]>("api/companies/user_invitations/");
+    console.log(result);
+    const invitations: InvitationToUser[] = result.map((item) => ({
+      id: item.id,
+      company_name: item.company_name,
+      company_id: item.company,
+      senderLastName: item.sender_last_name,
+    }));
+    userInvitations.value = invitations;
+  } catch (error) {
+    console.error(error);
+  }
+};
+const acceptInvitation = async (company_id: number, invitation_id: number) => {
+  try {
+    await postReqAxios(`api/companies/${company_id}/accept_invitation/`, {
+      data: {
+        invitation_id: invitation_id,
+      },
+    });
+    toastRef.value?.triggerToast(true);
+  } catch (error) {
+    toastRef.value?.triggerToast(false);
+    console.error(error);
+  }
+};
+const declineInvitation = async (company_id: number, invitation_id: number) => {
+  try {
+    await postReqAxios(`api/companies/${company_id}/decline_invitation/`, {
+      data: {
+        invitation_id: invitation_id,
+      },
+    });
+    toastRef.value?.triggerToast(true);
+  } catch (error) {
+    toastRef.value?.triggerToast(false);
+    console.error(error);
+  }
+};
+const fetchMembers = async (company_id: number) => {
+  try {
+    const result = await getReqAxios<any[]>(
+      `api/companies/${company_id}/users_in_company`,
+      {}
+    );
+    console.log(result);
+
+    const typedMembers: Members[] = result.map((member) => ({
+      id: member.id,
+      email: member.email,
+      firstName: member.first_name,
+      lastName: member.last_name,
+    }));
+    members.value = typedMembers;
+  } catch (error) {
+    console.error(error);
+  }
+};
+onMounted(() => {
+  fetchYourCompanies();
+  fetchUserInvitations();
+  fetchCompaniesYourIn();
+});
+</script>

@@ -24,7 +24,7 @@
 </template>
 <script setup lang="ts" generic="T extends {}">
 import BaseInputVue from "@/components/Inputs/BaseInput.vue";
-import { computed, onMounted, ref } from "vue";
+import {  onMounted, ref } from "vue";
 import Edit_Input from "../Inputs/EditInput.vue";
 type Props = {
   data: T;

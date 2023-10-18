@@ -51,7 +51,7 @@
       :regex="dataRegex"
     />
     <button class="btn btn-accent" type="submit">Register!</button>
-    <RouterLink to="/Auth" class="btn btn-link">Have an account?</RouterLink>
+    <RouterLink to="/login" class="btn btn-link">Have an account?</RouterLink>
     <slot></slot>
   </form>
 </template>
@@ -60,9 +60,9 @@ import { ref } from "vue";
 import InputWithValidation from "@/components/Inputs/InputWithValidation.vue";
 import { register } from "../../utils/functions";
 import { type RegisterUser } from "@/types";
-const dataRegex = ref<RegExp>(/.{3,}/);
-const emailRegex = ref<RegExp>(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
-const passRegex = ref<RegExp>(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/);
+const dataRegex = /.{3,}/
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const passRegex = /^(?=.*[A-Za-z\d])(?=.*[\W_]).{8,}$/;
 const data = ref<RegisterUser>({
   email: "",
   password: "",
@@ -79,8 +79,11 @@ const handleSubmit = async () => {
     console.error("Password isn`t confirmed ");
     return;
   }
-
-  await register(data.value);
-  console.log("Registration Successful");
+  try {
+    await register(data.value);
+    console.log("Registration Successful");
+  } catch (error) {
+    console.error(error);
+  }
 };
 </script>

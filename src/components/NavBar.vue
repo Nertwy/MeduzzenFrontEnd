@@ -32,7 +32,7 @@ const fetchUser = async () => {
 const LogoutUser = async () => {
   try {
     await logout();
-    router.push("/Login");
+    router.push("/login");
   } catch (error) {
     console.error(error);
   }

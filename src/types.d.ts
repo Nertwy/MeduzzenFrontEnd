@@ -10,6 +10,15 @@ type User = {
   first_name: string;
   last_name: string;
   email: string;
+  image?: string;
+};
+type GoogleUser = {
+  name: string;
+  given_name: string;
+  family_name: string;
+  picture: Url;
+  email: string;
+  locale: string;
 };
 type PageWith<T> = {
   count: number;
@@ -21,7 +30,7 @@ type Company = {
   id: number;
   name: string;
   description: string;
-  owner: User | null;
+  owner: number | null;
   is_visible: boolean;
   members: User[];
 };
@@ -32,6 +41,37 @@ type RegisterUser = {
   password: string;
   re_password: string;
   email: string;
+};
+
+type InvitationRequest = {
+  id: number;
+  sender: number;
+  receiver: number;
+  company: number;
+  invitation_type: "invitation" | "request";
+  accepted: boolean;
+  declined: boolean;
+  created_at: string;
+  updated_at: string;
+};
+
+type Members = {
+  id: number;
+  email: string;
+  firstName: string;
+  lastName: string;
+};
+type InvitationToCompany = {
+  id: number;
+  senderFirstName: string;
+  senderLastName: string;
+  company_id: number;
+};
+type InvitationToUser = {
+  id: number;
+  company_name: string;
+  senderLastName: string;
+  company_id: number;
 };
 
 type ResetPassword = {

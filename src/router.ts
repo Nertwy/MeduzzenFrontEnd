@@ -5,7 +5,7 @@ import {
   createWebHistory,
 } from "vue-router";
 
-import { store } from "./store/store";
+import useStoreTyped, { store, storeInitializer } from "./store/store";
 
 const authGuardReverse = (
   _to: RouteLocationNormalized,
@@ -36,7 +36,7 @@ const router = createRouter({
       beforeEnter: authGuardReverse,
     },
     {
-      path: "/Auth",
+      path: "/Login",
       name: "Authorization",
       component: () => import("./pages/UserAuthorization.vue"),
       beforeEnter: authGuardReverse,
@@ -65,6 +65,16 @@ const router = createRouter({
       meta: { requiresAuth: true },
       component: () => import("./pages/CompanyProfie.vue"),
     },
+    {
+      path: "/Invitations",
+      name: "Invitations",
+      component: () => import("@/pages/ActionsPage.vue"),
+    },
+    {
+      path: "/Profile",
+      name: "Profile",
+      component: () => import("@/pages/UserProfile.vue"),
+    },
   ],
 });
 
@@ -72,7 +82,8 @@ router.beforeEach((to, _from, next) => {
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     const accessToken = localStorage.getItem("accessToken");
     if (!accessToken) {
-      next({ path: "/Auth" });
+      // User is not authenticated, redirect to login page
+      next({ path: "/login" });
     } else {
       next();
     }

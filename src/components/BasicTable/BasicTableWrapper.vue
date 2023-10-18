@@ -12,7 +12,7 @@
           v-model="modelValue"
           :edit="edit === index"
         />
-        <slot name="td-slot" :id="item.id" :index="index" :value="item"></slot>
+        <slot name="td-slot" :id="item?.id" :index="index" :value="item"></slot>
       </tr>
     </tbody>
   </table>
@@ -27,20 +27,29 @@ type Props = {
   keys: string[];
   tdLayout?: any;
   edit?: number | null;
-  excludeId?: boolean;
+  excludeStrings?: (keyof T)[];
 };
 const props = withDefaults(defineProps<Props>(), {
   tdLayout: null,
   edit: null,
   excludeId: true,
+  excludeStrings: () => ["id"],
 });
 const filteredData = computed(() => {
   const newData = props.data.map((x) => ({ ...x }));
-  if (props.excludeId) {
-    newData.forEach((someItems) => {
-      delete someItems.id;
+  // if (props.excludeId) {
+  //   newData.forEach((someItems) => {
+  //     delete someItems?.id;
+  //   });
+  // }
+  if (props.excludeStrings) {
+    props.excludeStrings.forEach((someStr) => {
+      newData.forEach((someItems) => {
+        delete someItems[someStr];
+      });
     });
   }
+
   return newData;
 });
 
