@@ -68,9 +68,8 @@ export const googleGetToken = async (url: URL) => {
       }
     );
 
-    console.log(responce.data);
     const { access, refresh, user } = responce.data;
-    // localStorage.setItem("accessToken", access);
+    localStorage.setItem("accessToken", access);
     return {
       accessToken: access,
       refreshToken: refresh,
