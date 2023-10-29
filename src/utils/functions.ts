@@ -187,7 +187,15 @@ export const axiosRequest = async <T>(
   params?: Record<string, any>
 ): Promise<T> => {
   try {
-    const response = await axiosInstance.get<T>(url, { params });
+    const token = localStorage.getItem("accessToken");
+    if (!token) throw new Error("No token found!");
+
+    const response = await axiosInstance.get<T>(url, {
+      params,
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+    });
     return response.data;
   } catch (error) {
     console.error(error);
@@ -223,7 +231,12 @@ export const getReqAxios = async <T>(
   try {
     const token = localStorage.getItem("accessToken");
     if (!token) throw new Error("No token provided");
-    const result = await axiosInstance.get<T>(url, config);
+    const result = await axiosInstance.get<T>(url, {
+      ...config,
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+    });
     return result.data;
   } catch (error) {
     console.error(error);

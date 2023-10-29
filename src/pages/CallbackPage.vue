@@ -14,8 +14,6 @@ const getGoogleToken = async () => {
   try {
     const url = new URL(document.location.href);
     await googleGetToken(url);
-    // const user = await getGoogleUserInfo();
-    // console.log("User DATA IS ... = ", user);
   } catch (error) {
     console.error(error);
   }

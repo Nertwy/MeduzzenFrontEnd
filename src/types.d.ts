@@ -60,6 +60,8 @@ type Members = {
   email: string;
   firstName: string;
   lastName: string;
+  isAdmin: boolean;
+  isOwner: boolean;
 };
 type InvitationToCompany = {
   id: number;
