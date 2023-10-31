@@ -10,7 +10,7 @@ type User = {
   first_name: string;
   last_name: string;
   email: string;
-  image?: string;
+  image_path?: string;
 };
 type GoogleUser = {
   name: string;
@@ -60,6 +60,8 @@ type Members = {
   email: string;
   firstName: string;
   lastName: string;
+  isAdmin: boolean;
+  isOwner: boolean;
 };
 type InvitationToCompany = {
   id: number;

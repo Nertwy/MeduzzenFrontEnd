@@ -99,6 +99,9 @@ export const actions = {
   setUser({ commit }: ActionContext<State, State>, payload: User) {
     commit("userLogin", payload);
   },
+  userLogout({commit}: ActionContext<State,State>){
+    commit("userLogout")
+  },
   updateUserFromList(
     { commit }: ActionContext<State, State>,
     payload: Partial<User>

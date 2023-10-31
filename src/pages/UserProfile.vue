@@ -66,12 +66,37 @@
           </template>
         </BasicTableWrapper>
         <div v-else>No Invitations for this user :(</div>
-        <div class="divider">&#8595; Members &#8595;</div>
+        <div class="divider">
+          &#8595; Members &#8595; <Toggle v-model="isAdminFilter" />
+        </div>
         <BasicTableWrapper
           class="table table-zebra"
-          :data="members"
-          :keys="['email', 'first name', 'last name']"
+          :data="
+            !isAdminFilter
+              ? members
+              : members.filter((item) => item.isAdmin === true)
+          "
+          :keys="['email', 'first name', 'last name', 'is admin']"
+          :exclude-strings="['isOwner', 'id']"
         >
+          <template #td-slot="{ id, value, index }">
+            <td>
+              <template v-if="value.isAdmin">
+                <BasicButton
+                  :class="`btn-error ${value.isOwner ? 'btn-disabled' : ''}`"
+                  @click="revokeAdmin(companyId, index)"
+                  >Remove admin</BasicButton
+                >
+              </template>
+              <template v-else>
+                <BasicButton
+                  class="btn-info"
+                  @click="appointAdmin(companyId, index)"
+                  >Promote admin</BasicButton
+                >
+              </template>
+            </td>
+          </template>
         </BasicTableWrapper>
       </div>
       <div class="divider divider-horizontal"></div>
@@ -107,7 +132,9 @@
 const selectChange = async (id: number) => {
   await fetchCompanyRequests(id);
   await fetchMembers(id);
+  companyId.value = id;
 };
+import Toggle from "@/components/Toggle.vue";
 import BasicSelect from "@/components/BasicSelect.vue";
 import BasicTableWrapper from "@/components/BasicTable/BasicTableWrapper.vue";
 import ModalWindow from "@/components/ModalWindow.vue";
@@ -124,11 +151,13 @@ import {
 import { getReqAxios, postReqAxios } from "@/utils/functions";
 import { onMounted, ref } from "vue";
 const companies = ref<Company[]>([]);
+const isAdminFilter = ref(true);
 const toastRef = ref<InstanceType<typeof Toast> | null>(null);
 const companyRequests = ref<InvitationToCompany[]>([]);
 const userInvitations = ref<InvitationToUser[]>([]);
 const companiesYourIn = ref<any[]>([]);
 const members = ref<Members[]>([]);
+const companyId = ref<number>(-1);
 const acceptRequest = async (company_id: number, request_id: number) => {
   try {
     await postReqAxios(`api/companies/${company_id}/accept_join_request/`, {
@@ -166,7 +195,6 @@ const declineRequest = async (company_id: number, request_id: number) => {
 const fetchCompaniesYourIn = async () => {
   try {
     const result = await getReqAxios<any[]>("api/companies/get_my_companies/");
-    console.log(result);
 
     companiesYourIn.value = result;
   } catch (error) {
@@ -206,7 +234,7 @@ const fetchYourCompanies = async () => {
 const fetchUserInvitations = async () => {
   try {
     const result = await getReqAxios<any[]>("api/companies/user_invitations/");
-    console.log(result);
+
     const invitations: InvitationToUser[] = result.map((item) => ({
       id: item.id,
       company_name: item.company_name,
@@ -214,6 +242,36 @@ const fetchUserInvitations = async () => {
       senderLastName: item.sender_last_name,
     }));
     userInvitations.value = invitations;
+  } catch (error) {
+    console.error(error);
+  }
+};
+const appointAdmin = async (company_id: number, user_index: number) => {
+  try {
+    const result = await postReqAxios(
+      `api/companies/${company_id}/appoint_admin/`,
+      {
+        data: {
+          user_id: members.value[user_index].id,
+        },
+      }
+    );
+    members.value[user_index].isAdmin = true;
+  } catch (error) {
+    console.error(error);
+  }
+};
+const revokeAdmin = async (company_id: number, user_index: number) => {
+  try {
+    const result = await postReqAxios(
+      `api/companies/${company_id}/remove_admin/`,
+      {
+        data: {
+          user_id: members.value[user_index].id,
+        },
+      }
+    );
+    members.value[user_index].isAdmin = false;
   } catch (error) {
     console.error(error);
   }
@@ -250,13 +308,14 @@ const fetchMembers = async (company_id: number) => {
       `api/companies/${company_id}/users_in_company`,
       {}
     );
-    console.log(result);
 
     const typedMembers: Members[] = result.map((member) => ({
       id: member.id,
       email: member.email,
       firstName: member.first_name,
       lastName: member.last_name,
+      isAdmin: member.is_admin,
+      isOwner: member.is_owner,
     }));
     members.value = typedMembers;
   } catch (error) {

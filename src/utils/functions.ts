@@ -68,9 +68,8 @@ export const googleGetToken = async (url: URL) => {
       }
     );
 
-    console.log(responce.data);
     const { access, refresh, user } = responce.data;
-    // localStorage.setItem("accessToken", access);
+    localStorage.setItem("accessToken", access);
     return {
       accessToken: access,
       refreshToken: refresh,
@@ -188,7 +187,15 @@ export const axiosRequest = async <T>(
   params?: Record<string, any>
 ): Promise<T> => {
   try {
-    const response = await axiosInstance.get<T>(url, { params });
+    const token = localStorage.getItem("accessToken");
+    if (!token) throw new Error("No token found!");
+
+    const response = await axiosInstance.get<T>(url, {
+      params,
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+    });
     return response.data;
   } catch (error) {
     console.error(error);
@@ -224,7 +231,12 @@ export const getReqAxios = async <T>(
   try {
     const token = localStorage.getItem("accessToken");
     if (!token) throw new Error("No token provided");
-    const result = await axiosInstance.get<T>(url, config);
+    const result = await axiosInstance.get<T>(url, {
+      ...config,
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+    });
     return result.data;
   } catch (error) {
     console.error(error);
