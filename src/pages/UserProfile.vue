@@ -105,19 +105,42 @@
         <BasicTableWrapper
           :data="companiesYourIn"
           :keys="['company name', 'company description', 'leave company']"
-          :exclude-strings="['id', 'created_at', 'updated_at', 'is_owner']"
+          :exclude-strings="[
+            'id',
+            'created_at',
+            'updated_at',
+            'is_owner',
+            'is_admin',
+          ]"
           class="table table-zebra"
         >
           <template #td-slot="{ id }">
-            <ModalWindow
-              :btn-open-text="'leave company'"
-              :title="'Leave company?'"
-              :text="'If you leave the company you will need to get a new invitation from the owner'"
-            >
-              <BasicButton class="btn-error" @click="leaveCompany(id)">
-                Leave company
-              </BasicButton>
-            </ModalWindow>
+            <td>
+              <ModalWindow
+                :btn-open-text="'leave company'"
+                :title="'Leave company?'"
+                :text="'If you leave the company you will need to get a new invitation from the owner'"
+              >
+                <BasicButton class="btn-error" @click="leaveCompany(id)">
+                  Leave company
+                </BasicButton>
+              </ModalWindow>
+            </td>
+            <td>
+              <ModalWindow
+                :btn-open-text="'create Quiz'"
+                :title="'Create Quiz'"
+              >
+                <QuizForm :company-id="id" />
+              </ModalWindow>
+            </td>
+            <td>
+              <BasicButton
+                class="btn-link"
+                @click="router.push(`/Company_profile/${id}/`)"
+                >View Company</BasicButton
+              >
+            </td>
           </template>
         </BasicTableWrapper>
       </div>
@@ -129,11 +152,6 @@
   <Toast ref="toastRef" :text="'Invite'" />
 </template>
 <script setup lang="ts">
-const selectChange = async (id: number) => {
-  await fetchCompanyRequests(id);
-  await fetchMembers(id);
-  companyId.value = id;
-};
 import Toggle from "@/components/Toggle.vue";
 import BasicSelect from "@/components/BasicSelect.vue";
 import BasicTableWrapper from "@/components/BasicTable/BasicTableWrapper.vue";
@@ -150,6 +168,9 @@ import {
 } from "@/types";
 import { getReqAxios, postReqAxios } from "@/utils/functions";
 import { onMounted, ref } from "vue";
+import QuizForm from "@/components/FormComponents/QuizForm.vue";
+import { useRouter } from "vue-router";
+const router = useRouter();
 const companies = ref<Company[]>([]);
 const isAdminFilter = ref(true);
 const toastRef = ref<InstanceType<typeof Toast> | null>(null);
@@ -158,6 +179,11 @@ const userInvitations = ref<InvitationToUser[]>([]);
 const companiesYourIn = ref<any[]>([]);
 const members = ref<Members[]>([]);
 const companyId = ref<number>(-1);
+const selectChange = async (id: number) => {
+  await fetchCompanyRequests(id);
+  await fetchMembers(id);
+  companyId.value = id;
+};
 const acceptRequest = async (company_id: number, request_id: number) => {
   try {
     await postReqAxios(`api/companies/${company_id}/accept_join_request/`, {

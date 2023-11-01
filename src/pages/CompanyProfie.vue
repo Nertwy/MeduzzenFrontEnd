@@ -9,6 +9,29 @@
       >
         <template #slot-title> </template>
         <template #slot-actions>
+          <template v-if="quizzes">
+            <BasicTableWrapper
+              class="table table-zebra"
+              :data="quizzes?.results"
+              :keys="['title', 'description', 'frequency']"
+              :exclude-strings="['questions', 'id', 'company']"
+            >
+              <template #td-slot="{ value, id }">
+                <td>
+                  <ModalWindow :btn-open-text="'Edit Quiz'">
+                    <QuizForm :data="value" edit />
+                  </ModalWindow>
+                </td>
+                <td>
+                  <ModalWindow :btn-open-text="'Delete Quiz'">
+                    <BasicButton class="btn-error" @click="deleteQuiz(id)">
+                      Delete
+                    </BasicButton>
+                  </ModalWindow>
+                </td>
+              </template>
+            </BasicTableWrapper>
+          </template>
           <ModalWindow
             :btn-open-text="'Delete Company'"
             :title="'Delete Company?'"
@@ -40,14 +63,17 @@
 import ModalWindow from "@/components/ModalWindow.vue";
 import Card from "@/components/Card.vue";
 import useStoreTyped from "@/store/store";
-import { Company } from "@/types";
-import { axiosRequest, deleteReqAxios } from "@/utils/functions";
+import { Company, PageWith, Quiz } from "@/types";
+import { axiosRequest, deleteReqAxios, getReqAxios } from "@/utils/functions";
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import BaseInput from "@/components/Inputs/BaseInput.vue";
 import NavBar from "@/components/NavBar.vue";
 import BasicButton from "@/components/buttons/BasicButton.vue";
+import BasicTableWrapper from "@/components/BasicTable/BasicTableWrapper.vue";
+import QuizForm from "@/components/FormComponents/QuizForm.vue";
 const router = useRouter();
+const quizzes = ref<PageWith<Quiz> | null>(null);
 const store = useStoreTyped();
 const pass = ref("");
 const company = ref<Company>({
@@ -74,6 +100,20 @@ const fetch = async () => {
     console.error(error);
   }
 };
+
+const fetchQuizzes = async () => {
+  try {
+    const result = await getReqAxios<PageWith<Quiz>>(`api/company/quiz/`, {
+      params: {
+        company_id: router.currentRoute.value.params.id,
+      },
+    });
+
+    quizzes.value = result;
+  } catch (error) {
+    console.error(error);
+  }
+};
 const deleteFunc = async (id: number | undefined, pass: string) => {
   if (!id) return;
   try {
@@ -87,7 +127,21 @@ const deleteFunc = async (id: number | undefined, pass: string) => {
     console.error(error);
   }
 };
+const deleteQuiz = async (id?: number) => {
+  if (!id) return;
+  try {
+    await deleteReqAxios(`api/company/quiz/${id}`, {
+      data: {
+        current_password: pass,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 onMounted(() => {
   fetch();
+  fetchQuizzes();
 });
 </script>

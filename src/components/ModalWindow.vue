@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <div class="">
     <button class="btn" @click="toggleModal">{{ props.btnOpenText }}</button>
     <dialog :open="isOpen" class="modal">
-      <article class="modal-box">
+      <article class="modal-box max-w-full w-auto">
         <header class="modal-header">
           <h3 class="font-bold text-lg">{{ props.title }}</h3>
         </header>
