@@ -5,7 +5,7 @@
       <p>{{ description }}</p>
       <slot name="slot-title"></slot>
 
-      <div class="card-actions justify-end">
+      <div class="card-actions">
         <slot name="slot-actions"> </slot>
       </div>
     </div>

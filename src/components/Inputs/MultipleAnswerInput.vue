@@ -35,7 +35,6 @@
   >
     Add answer choice
   </BasicButton>
-  <button type="button">Click</button>
 </template>
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from "vue";

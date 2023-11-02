@@ -1,6 +1,6 @@
 <template>
   <template v-if="fetchError || !quiz">{{ fetchError }}</template>
-  <form v-else @submit="submitQuiz">
+  <form v-else @submit.prevent="submitQuiz">
     <section v-for="(question, index) in quiz.questions" :key="index">
       <Card>
         <template #slot-title>
@@ -45,7 +45,9 @@ const startQuiz = async () => {
 };
 const submitQuiz = async () => {
   try {
-    router.back();
+    const quizId = router.currentRoute.value.params.id;
+    await postReqAxios(`api/company/quiz/${quizId}/submit_quiz/`);
+    // router.back();
   } catch (error) {
     console.error(error);
   }
