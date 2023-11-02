@@ -1,6 +1,6 @@
 <template>
   <label v-if="label">{{ label }}</label>
-  <input v-bind="attrs" v-model="modelValue" :checked="modelValue" />
+  <input v-bind="attrs" v-model="modelValue" />
 </template>
 <script setup lang="ts">
 import { defineModel, useAttrs } from "vue";

@@ -1,5 +1,5 @@
 <template>
-  <section class="card w-96 bg-base-100 shadow-xl">
+  <section class="card w-auto bg-base-100 shadow-xl">
     <div class="card-body">
       <h2 class="card-title">{{ title }}</h2>
       <p>{{ description }}</p>

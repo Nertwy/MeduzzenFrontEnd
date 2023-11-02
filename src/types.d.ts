@@ -81,6 +81,26 @@ type ResetPassword = {
   re_new_password: string;
   new_password: string;
 };
+
+type Quiz = {
+  id?: number;
+  title: string;
+  description: string;
+  questions: Array<Question>;
+  company: null | number;
+};
+
+type Question = {
+  id?: number;
+  question: string;
+  answer: string[];
+  correct_answer: Array<string | null>;
+};
+
+type AnswerChoice = {
+  id?: number;
+  text: string;
+};
 //Store Types
 type ActionKeys = keyof typeof actions;
 
