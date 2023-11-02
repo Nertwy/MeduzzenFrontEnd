@@ -129,7 +129,7 @@ const quizModel = defineModel<Quiz>({
   },
 });
 
-const quiz = ref(props.data ? props.data : quizModel.value);
+const quiz = ref(props.data ?? quizModel.value);
 
 const submitQuiz = () => {
   try {
