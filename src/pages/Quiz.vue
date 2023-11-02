@@ -8,12 +8,12 @@
           <h2>{{ question.question }}</h2>
         </template>
         <template #slot-actions>
-          <!-- <MultipleAnswerInput
+          <MultipleAnswerInput
             :data="{
               answers: question.answer,
-              correct_answers:question.correct_answer,
+              correct_answers: [],
             }"
-          /> -->
+          />
         </template>
       </Card>
     </section>

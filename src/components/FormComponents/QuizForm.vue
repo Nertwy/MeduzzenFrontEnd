@@ -38,43 +38,17 @@
           </BasicButton>
         </div>
 
-        <ul>
-          <li
-            class="join join-vertical my-2 ml-2"
-            v-for="(answerChoice, answerIndex) in question.answer"
-            :key="answerIndex"
-          >
-            <BaseInput
-              :placeholder="'Write Your Answer'"
-              class="join-item input input-secondary"
-              v-model="question.answer[answerIndex]"
-              required
-            />
-            <BaseInput
-              :aria-label="'Correct answer'"
-              class="join-item btn"
-              type="checkbox"
-              :checked="answerChoice == question.correct_answer[0]"
-              :name="`options-${questionIndex}`"
-              v-model="question.correct_answer[0]"
-              :value="answerChoice"
-            />
-            <BasicButton
-              type="button"
-              class="btn btn-danger join-item"
-              @click="removeAnswerChoice(questionIndex, answerIndex)"
-            >
-              Remove answer choice
-            </BasicButton>
-          </li>
-        </ul>
-        <BasicButton
-          type="button"
-          class="btn btn-sm btn-outline"
-          @click="addAnswerChoice(questionIndex)"
-        >
-          Add answer choice
-        </BasicButton>
+        <MultipleAnswerInput
+          edit
+          :data="{
+            answers: question.answer,
+            correct_answers: question.correct_answer,
+          }"
+          :emit-answers="
+            (answers, correct_answers) =>
+              onAnswersUpdate(answers, correct_answers, questionIndex)
+          "
+        ></MultipleAnswerInput>
       </li>
     </ul>
     <BasicButton
@@ -103,6 +77,7 @@ import BaseInput from "../Inputs/BaseInput.vue";
 import BasicButton from "../buttons/BasicButton.vue";
 import { Quiz } from "@/types";
 import { postReqAxios, updateReqAxios } from "@/utils/functions";
+import MultipleAnswerInput from "../Inputs/MultipleAnswerInput.vue";
 type Props = {
   companyId: number | null;
   data?: Quiz;
@@ -155,10 +130,6 @@ const removeQuestion = (index?: number) => {
   }
 };
 
-const addAnswerChoice = (questionIndex: number) => {
-  quiz.value.questions[questionIndex].answer.push("");
-};
-
 const removeAnswerChoice = (questionIndex?: number, choiceIndex?: number) => {
   if (questionIndex !== undefined && choiceIndex !== undefined) {
     const question = quiz.value.questions[questionIndex];
@@ -186,8 +157,15 @@ const setCorrectAnswers = () => {
     });
   }
 };
-
+const onAnswersUpdate = (
+  answers: string[],
+  correct_answers: string[],
+  index: number
+) => {
+  quiz.value.questions[index].answer = answers;
+  quiz.value.questions[index].correct_answer = correct_answers;
+};
 onMounted(() => {
-  setCorrectAnswers();
+  // setCorrectAnswers();
 });
 </script>

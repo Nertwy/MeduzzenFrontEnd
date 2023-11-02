@@ -2,7 +2,7 @@
   <ul>
     <li
       class="join join-vertical my-2 ml-2"
-      v-for="(answerChoice, index) in data.answers"
+      v-for="(answerChoice, index) in selectedAnswers"
       :key="index"
     >
       <BaseInput
@@ -11,27 +11,34 @@
         :class="`join-item input ${
           edit ? 'input-secondary' : 'input-disabled'
         }`"
-        v-bind:model-value="answerChoice"
+        v-model="selectedAnswers[index]"
       />
       <BasicButton @click="removeAnswerChoice(index)" type="button" v-if="edit">
         Remove Answer
       </BasicButton>
 
-      <BaseInput
-        @vnode-updated="debug"
+      <input
+        :value="answerChoice"
+        @change="(e) => onValueUpdate(e)"
+        :checked="isAnswerSelected(answerChoice)"
         :aria-label="'Correct answer'"
         class="join-item btn"
         type="checkbox"
-        v-model="correct_answers[index]"
-        :true-value="answerChoice"
-        :false-value="''"
       />
     </li>
   </ul>
-  <button @click="debug" type="button">Click</button>
+  <BasicButton
+    @click="addAnswerChoice"
+    v-if="edit"
+    type="button"
+    class="btn btn-sm btn-outline"
+  >
+    Add answer choice
+  </BasicButton>
+  <button type="button">Click</button>
 </template>
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import BasicButton from "../buttons/BasicButton.vue";
 import BaseInput from "./BaseInput.vue";
 type Answers = {
@@ -47,37 +54,37 @@ const props = withDefaults(defineProps<Props>(), {
   edit: false,
 });
 const selectedAnswers = ref<string[]>(props.data.answers);
-const correct_answers = ref<string[]>([]);
+const correct_answers = computed(() => {
+  const correctAnswers: string[] = [];
+  selectedAnswers.value.forEach((answerChoice) => {
+    if (props.data.correct_answers.includes(answerChoice)) {
+      correctAnswers.push(answerChoice);
+    }
+  });
+  return correctAnswers;
+});
 const removeAnswerChoice = (index: number) => {
   if (selectedAnswers.value.length > 2) {
     selectedAnswers.value.splice(index, 1);
     correct_answers.value.splice(index, 1);
   }
 };
-const deleteEmptyStrings = <T>(array: T[]): T[] => {
-  const new_array: T[] = [];
-  for (const value of array) {
-    if (value) {
-      new_array.push(value);
-    }
-  }
-  return new_array;
+const addAnswerChoice = () => {
+  selectedAnswers.value.push("");
 };
-const debug = () => {
-    console.log(correct_answers.value);
-    
-  props.emitAnswers?.(
-    selectedAnswers.value,
-    deleteEmptyStrings(correct_answers.value)
-  );
+const isAnswerSelected = (answerChoice: string) => {
+  return correct_answers.value.includes(answerChoice);
 };
+const onValueUpdate = (e: Event) => {
+  const targetValue = (e.target as HTMLInputElement).value;
+  const correctAnswersIndex = correct_answers.value.indexOf(targetValue);
 
-onMounted(() => {
-  props.data.correct_answers.forEach((answerChoice) => {
-    const index = props.data.answers.indexOf(answerChoice);
-    if (index !== -1) {
-      correct_answers.value.push(answerChoice);
-    }
-  });
-});
+  if (correctAnswersIndex !== -1) {
+    correct_answers.value.splice(correctAnswersIndex, 1);
+  } else {
+    correct_answers.value.push(targetValue);
+  }
+
+  props.emitAnswers?.(selectedAnswers.value, correct_answers.value);
+};
 </script>

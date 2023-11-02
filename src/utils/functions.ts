@@ -36,8 +36,6 @@ export const googlePress = async () => {
         },
       }
     );
-    console.log(responce);
-
     return responce.data.authorization_url;
   } catch (error) {
     console.error(error);
