@@ -9,6 +9,10 @@
         </template>
         <template #slot-actions>
           <MultipleAnswerInput
+            :emit-answers="
+              (answer, correct_answer) =>
+                getAnswers(answer, correct_answer, index)
+            "
             :data="{
               answers: question.answer,
               correct_answers: [],
@@ -25,7 +29,7 @@ import Card from "@/components/Card.vue";
 import BaseInput from "@/components/Inputs/BaseInput.vue";
 import MultipleAnswerInput from "@/components/Inputs/MultipleAnswerInput.vue";
 import BasicButton from "@/components/buttons/BasicButton.vue";
-import { Quiz } from "@/types";
+import { Question, Quiz } from "@/types";
 import { getReqAxios, postReqAxios } from "@/utils/functions";
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
@@ -33,6 +37,7 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 const quiz = ref<Quiz | null>(null);
 const fetchError = ref<null | unknown>(null);
+const user_answers = ref<string[][]>([[]]);
 const startQuiz = async () => {
   try {
     const quizId = router.currentRoute.value.params.id;
@@ -43,11 +48,24 @@ const startQuiz = async () => {
     console.error(error);
   }
 };
+
+const getAnswers = (
+  _answer: string[],
+  correct_answer: string[],
+  index: number
+) => {
+  user_answers.value[index] = correct_answer;
+  console.log(user_answers.value);
+};
 const submitQuiz = async () => {
   try {
     const quizId = router.currentRoute.value.params.id;
-    await postReqAxios(`api/company/quiz/${quizId}/submit_quiz/`);
-    // router.back();
+    await postReqAxios(`api/company/quiz/${quizId}/submit_quiz/`, {
+      data: {
+        user_answers: user_answers.value,
+      },
+    });
+    router.push({ name: "Company_profile", params: { id: quizId } });
   } catch (error) {
     console.error(error);
   }
