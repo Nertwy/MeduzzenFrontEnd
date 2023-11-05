@@ -67,7 +67,8 @@
         </BasicTableWrapper>
         <div v-else>No Invitations for this user :(</div>
         <div class="divider">
-          &#8595; Members &#8595; <Toggle v-model="isAdminFilter" />
+          &#8595; Members &#8595;
+          <Toggle label="filter by admin users" v-model="isAdminFilter" />
         </div>
         <BasicTableWrapper
           class="table table-zebra"
@@ -80,21 +81,35 @@
           :exclude-strings="['isOwner', 'id']"
         >
           <template #td-slot="{ id, value, index }">
-            <td>
-              <template v-if="value.isAdmin">
+            <template v-if="value.isAdmin">
+              <td>
                 <BasicButton
                   :class="`btn-error ${value.isOwner ? 'btn-disabled' : ''}`"
                   @click="revokeAdmin(companyId, index)"
                   >Remove admin</BasicButton
                 >
-              </template>
-              <template v-else>
+              </td>
+            </template>
+
+            <template v-else>
+              <td>
                 <BasicButton
                   class="btn-info"
                   @click="appointAdmin(companyId, index)"
                   >Promote admin</BasicButton
                 >
+              </td>
+            </template>
+            <td>
+              <template v-if="companyId >= 1">
+                <UserAllQuizesChart
+                  :company_id="companyId"
+                  :user_id="value.id"
+                />
               </template>
+            </td>
+            <td>
+              {{ returnDateOrNone(value.email) }}
             </td>
           </template>
         </BasicTableWrapper>
@@ -143,6 +158,18 @@
             </td>
           </template>
         </BasicTableWrapper>
+        <div class="rating">
+          <label v-if="user?.avarage_score"
+            >You got {{ user.avarage_score.toFixed(4) }}&nbsp;</label
+          >
+          <input
+            type="radio"
+            name="rating-1"
+            class="mask mask-star-2 bg-orange-400"
+          />
+          Score
+        </div>
+        <SelectedUserChart :user_id="user.id" v-if="user?.id" />
       </div>
     </div>
   </template>
@@ -165,23 +192,35 @@ import {
   InvitationToCompany,
   InvitationToUser,
   Members,
+  User,
 } from "@/types";
 import { getReqAxios, postReqAxios } from "@/utils/functions";
 import { onMounted, ref } from "vue";
 import QuizForm from "@/components/FormComponents/QuizForm.vue";
 import { useRouter } from "vue-router";
+import SelectedUserChart from "@/components/Charts/SelectedUserChart.vue";
+import UserAllQuizesChart from "@/components/Charts/UserAllQuizesChart.vue";
+type fetchLastType = {
+  user_last_test_time: {
+    user__email: string;
+    last_test_time: string;
+  }[];
+};
 const router = useRouter();
 const companies = ref<Company[]>([]);
-const isAdminFilter = ref(true);
+const isAdminFilter = ref(false);
 const toastRef = ref<InstanceType<typeof Toast> | null>(null);
 const companyRequests = ref<InvitationToCompany[]>([]);
 const userInvitations = ref<InvitationToUser[]>([]);
 const companiesYourIn = ref<any[]>([]);
 const members = ref<Members[]>([]);
 const companyId = ref<number>(-1);
+const user = ref<User | null>(null);
+const fetchedUsersLastTime = ref<fetchLastType>({ user_last_test_time: [] });
 const selectChange = async (id: number) => {
   await fetchCompanyRequests(id);
   await fetchMembers(id);
+  await fetchLastTestTime(id);
   companyId.value = id;
 };
 const acceptRequest = async (company_id: number, request_id: number) => {
@@ -226,6 +265,25 @@ const fetchCompaniesYourIn = async () => {
   } catch (error) {
     console.error(error);
   }
+};
+const fetchAvgScore = async () => {
+  try {
+    const result = await getReqAxios<User>("api/users/me/");
+    if (result) user.value = result;
+  } catch (error) {
+    console.error(error);
+  }
+};
+const returnDateOrNone = (email: string) => {
+  const userLastTestTime = fetchedUsersLastTime.value.user_last_test_time.find(
+    (item) => item.user__email == email
+  )?.last_test_time;
+
+  if (!userLastTestTime) {
+    return "No date of the last quizz";
+  }
+  const userDate = new Date(userLastTestTime);
+  return userDate;
 };
 const fetchCompanyRequests = async (company_id: number) => {
   try {
@@ -274,14 +332,11 @@ const fetchUserInvitations = async () => {
 };
 const appointAdmin = async (company_id: number, user_index: number) => {
   try {
-    const result = await postReqAxios(
-      `api/companies/${company_id}/appoint_admin/`,
-      {
-        data: {
-          user_id: members.value[user_index].id,
-        },
-      }
-    );
+    await postReqAxios(`api/companies/${company_id}/appoint_admin/`, {
+      data: {
+        user_id: members.value[user_index].id,
+      },
+    });
     members.value[user_index].isAdmin = true;
   } catch (error) {
     console.error(error);
@@ -328,6 +383,17 @@ const declineInvitation = async (company_id: number, invitation_id: number) => {
     console.error(error);
   }
 };
+
+const fetchLastTestTime = async (companyId: number) => {
+  try {
+    const result = await getReqAxios<fetchLastType>(
+      `api/users_last_test_time/${companyId}/`
+    );
+    fetchedUsersLastTime.value = result;
+  } catch (error) {
+    console.error(error);
+  }
+};
 const fetchMembers = async (company_id: number) => {
   try {
     const result = await getReqAxios<any[]>(
@@ -348,9 +414,11 @@ const fetchMembers = async (company_id: number) => {
     console.error(error);
   }
 };
+
 onMounted(() => {
   fetchYourCompanies();
   fetchUserInvitations();
   fetchCompaniesYourIn();
+  fetchAvgScore();
 });
 </script>

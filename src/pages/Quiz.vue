@@ -26,10 +26,9 @@
 </template>
 <script setup lang="ts">
 import Card from "@/components/Card.vue";
-import BaseInput from "@/components/Inputs/BaseInput.vue";
 import MultipleAnswerInput from "@/components/Inputs/MultipleAnswerInput.vue";
 import BasicButton from "@/components/buttons/BasicButton.vue";
-import { Question, Quiz } from "@/types";
+import { Quiz } from "@/types";
 import { getReqAxios, postReqAxios } from "@/utils/functions";
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
@@ -43,7 +42,7 @@ const startQuiz = async () => {
     const quizId = router.currentRoute.value.params.id;
     const fetchedQuiz = await getReqAxios<Quiz>(`api/company/quiz/${quizId}/`);
     quiz.value = fetchedQuiz;
-    const result = await postReqAxios(`api/company/quiz/${quizId}/start_quiz/`);
+    await postReqAxios(`api/company/quiz/${quizId}/start_quiz/`);
   } catch (error) {
     console.error(error);
   }
@@ -55,7 +54,6 @@ const getAnswers = (
   index: number
 ) => {
   user_answers.value[index] = correct_answer;
-  console.log(user_answers.value);
 };
 const submitQuiz = async () => {
   try {

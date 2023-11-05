@@ -30,6 +30,7 @@
             </a>
           </li>
           <li><a>Settings</a></li>
+          <li><a @click="router.push('/Stats')">Stats</a></li>
         </ul>
       </div>
     </div>
