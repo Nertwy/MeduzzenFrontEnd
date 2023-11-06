@@ -162,7 +162,7 @@
           <label v-if="user?.avarage_score"
             >You got {{ user.avarage_score.toFixed(4) }}&nbsp;</label
           >
-          <input
+          <BaseInput
             type="radio"
             name="rating-1"
             class="mask mask-star-2 bg-orange-400"
@@ -170,6 +170,23 @@
           Score
         </div>
         <SelectedUserChart :user_id="user.id" v-if="user?.id" />
+        <ModalWindow
+          :btn-open-text="'Delete profile'"
+          :title="'Delete profile?'"
+          :text="'This will erase all your information!'"
+          ><div class="flex flex-col">
+            <BaseInput
+              label="Write password for confirmation"
+              class="input input-bordered"
+              v-model="confirmationPass"
+            />
+            <BasicButton
+              class="btn-error"
+              @click="handleDeleteUser(confirmationPass)"
+              >Delete profile!</BasicButton
+            >
+          </div>
+        </ModalWindow>
       </div>
     </div>
   </template>
@@ -194,18 +211,20 @@ import {
   Members,
   User,
 } from "@/types";
-import { getReqAxios, postReqAxios } from "@/utils/functions";
+import { deleteReqAxios, getReqAxios, postReqAxios } from "@/utils/functions";
 import { onMounted, ref } from "vue";
 import QuizForm from "@/components/FormComponents/QuizForm.vue";
 import { useRouter } from "vue-router";
 import SelectedUserChart from "@/components/Charts/SelectedUserChart.vue";
 import UserAllQuizesChart from "@/components/Charts/UserAllQuizesChart.vue";
+import BaseInput from "@/components/Inputs/BaseInput.vue";
 type fetchLastType = {
   user_last_test_time: {
     user__email: string;
     last_test_time: string;
   }[];
 };
+const confirmationPass = ref<string>("");
 const router = useRouter();
 const companies = ref<Company[]>([]);
 const isAdminFilter = ref(false);
@@ -414,7 +433,18 @@ const fetchMembers = async (company_id: number) => {
     console.error(error);
   }
 };
-
+const handleDeleteUser = async (current_password: string) => {
+  try {
+    await deleteReqAxios(`api/auth/users/me/`, {
+      data: {
+        current_password,
+      },
+    });
+    router.push("/");
+  } catch (error) {
+    console.error(error);
+  }
+};
 onMounted(() => {
   fetchYourCompanies();
   fetchUserInvitations();
