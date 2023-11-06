@@ -29,6 +29,12 @@
                     </BasicButton>
                   </ModalWindow>
                 </td>
+                <td>
+                  <BasicButton
+                    @click="router.push(`/Quiz/${id}/${value.company}`)"
+                    >Take Quiz</BasicButton
+                  >
+                </td>
               </template>
             </BasicTableWrapper>
           </template>

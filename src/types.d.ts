@@ -94,7 +94,7 @@ type Question = {
   id?: number;
   question: string;
   answer: string[];
-  correct_answer: Array<string | null>;
+  correct_answer: Array<string>;
 };
 
 type AnswerChoice = {

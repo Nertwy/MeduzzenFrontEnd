@@ -36,8 +36,6 @@ export const googlePress = async () => {
         },
       }
     );
-    console.log(responce);
-
     return responce.data.authorization_url;
   } catch (error) {
     console.error(error);
@@ -252,12 +250,13 @@ export const postReqAxios = async (
     const token = localStorage.getItem("accessToken");
     if (!token) throw new Error("No Token Provided");
 
-    await axiosInstance.post(url, axiosReqSettings?.data, {
+    const data = await axiosInstance.post(url, axiosReqSettings?.data, {
       headers: {
         Authorization: `Token ${token}`,
       },
       params: axiosReqSettings?.params,
     });
+    return data;
   } catch (error) {
     console.error(error);
     throw error;
