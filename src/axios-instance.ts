@@ -6,7 +6,7 @@ const axiosInstance = axios.create({
   xsrfCookieName: "csrftoken",
   headers: {
     Accept:
-      "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,application/json,*/*;q=0.8",
+      "text/html,application/xhtml+xml,application/xml;q=0.9,text/csv,image/avif,image/webp,application/json,*/*;q=0.8",
   },
   withCredentials: true,
   baseURL: import.meta.env.VITE_BACKEND_BASE_URL,

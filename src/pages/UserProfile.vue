@@ -89,6 +89,14 @@
                   >Remove admin</BasicButton
                 >
               </td>
+              <td>
+                <BasicButton
+                  @click="
+                    exportCSVFile({ company_id: companyId, user_id: value.id })
+                  "
+                  >User CSV</BasicButton
+                >
+              </td>
             </template>
 
             <template v-else>
@@ -113,6 +121,9 @@
             </td>
           </template>
         </BasicTableWrapper>
+        <BasicButton @click="exportCSVFile({ company_id: companyId })"
+          >Download CSV</BasicButton
+        >
       </div>
       <div class="divider divider-horizontal"></div>
       <div class="flex w-1/2 flex-col items-center">
@@ -211,7 +222,12 @@ import {
   Members,
   User,
 } from "@/types";
-import { deleteReqAxios, getReqAxios, postReqAxios } from "@/utils/functions";
+import {
+  deleteReqAxios,
+  exportCSVFile,
+  getReqAxios,
+  postReqAxios,
+} from "@/utils/functions";
 import { onMounted, ref } from "vue";
 import QuizForm from "@/components/FormComponents/QuizForm.vue";
 import { useRouter } from "vue-router";
@@ -445,6 +461,7 @@ const handleDeleteUser = async (current_password: string) => {
     console.error(error);
   }
 };
+
 onMounted(() => {
   fetchYourCompanies();
   fetchUserInvitations();

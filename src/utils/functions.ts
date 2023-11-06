@@ -307,3 +307,33 @@ export const logout = async () => {
     throw error;
   }
 };
+
+type ExportCSVOptions = {
+  company_id?: number;
+  user_id?: number;
+};
+export const exportCSVFile = async (options: ExportCSVOptions) => {
+  try {
+    const { company_id, user_id } = options;
+    const result = await getReqAxios<Blob>(
+      `api/company/quiz_results/export_to_csv/`,
+      {
+        params: {
+          company_id,
+          user_id,
+        },
+        responseType: "blob",
+      }
+    );
+    const url = window.URL.createObjectURL(result);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "quiz_results.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error(error);
+  }
+};
