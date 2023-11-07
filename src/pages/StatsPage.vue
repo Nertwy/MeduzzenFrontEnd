@@ -3,9 +3,9 @@
   <template v-if="data">
     <BasicTableWrapper
       :data="data"
-      :keys="['Quiz name', 'Score', 'Time taken', 'Last attempt']"
+      :keys="keys"
       class="table table-zebra"
-      :exclude-strings="['id', 'quiz', 'user', 'company']"
+      :exclude-strings="excludedKeys"
     >
       <template #th-slot></template>
       <template #td-slot></template>
@@ -17,6 +17,7 @@
   <BasicButton @click="downloadResults" class="btn-info"
     >Download Results</BasicButton
   >
+  <NotificationWindow />
 </template>
 <script setup lang="ts">
 import NavBar from "@/components/NavBar.vue";
@@ -27,6 +28,14 @@ import { UserLastQuizStat } from "@/types";
 import { exportCSVFile, fetchUserInfo, getReqAxios } from "@/utils/functions";
 import { formatUpdatedAt } from "@/utils/helpers";
 import { onMounted, ref } from "vue";
+import NotificationWindow from "@/components/NotificationWindow.vue";
+const keys = ["Quiz name", "Score", "Time taken", "Last attempt"];
+const excludedKeys: (keyof UserLastQuizStat)[] = [
+  "id",
+  "quiz",
+  "user",
+  "company",
+];
 const data = ref<UserLastQuizStat[] | null>(null);
 const fetchUserLastTestsTime = async () => {
   try {

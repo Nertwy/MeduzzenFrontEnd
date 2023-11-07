@@ -41,9 +41,9 @@
         </div>
         <BasicTableWrapper
           class="table table-zebra text-center"
-          :exclude-strings="['id', 'company_id']"
+          :exclude-strings="invitationsExclude"
           v-if="userInvitations.length >= 1"
-          :keys="['Company name', 'Owner last name']"
+          :keys="invitationKeys"
           :data="userInvitations"
         >
           <template #td-slot="{ id, index, value }">
@@ -77,8 +77,8 @@
               ? members
               : members.filter((item) => item.isAdmin === true)
           "
-          :keys="['email', 'first name', 'last name', 'is admin']"
-          :exclude-strings="['isOwner', 'id']"
+          :keys="userKeys"
+          :exclude-strings="userExcludekeys"
         >
           <template #td-slot="{ id, value, index }">
             <template v-if="value.isAdmin">
@@ -130,14 +130,8 @@
         <h1 class="text-2xl p-4">Your companies!</h1>
         <BasicTableWrapper
           :data="companiesYourIn"
-          :keys="['company name', 'company description', 'leave company']"
-          :exclude-strings="[
-            'id',
-            'created_at',
-            'updated_at',
-            'is_owner',
-            'is_admin',
-          ]"
+          :keys="companyKeys"
+          :exclude-strings="companyExcludeKeys"
           class="table table-zebra"
         >
           <template #td-slot="{ id }">
@@ -240,6 +234,18 @@ type fetchLastType = {
     last_test_time: string;
   }[];
 };
+const userKeys = ["email", "first name", "last name", "is admin"];
+const userExcludekeys: (keyof Members)[] = ["isOwner", "id"];
+const companyKeys = ["company name", "company description", "leave company"];
+const companyExcludeKeys: (string | number | symbol)[] = [
+  "id",
+  "created_at",
+  "updated_at",
+  "is_owner",
+  "is_admin",
+];
+const invitationKeys = ["Company name", "Owner last name"];
+const invitationsExclude: (keyof InvitationToUser)[] = ["id", "company_id"];
 const confirmationPass = ref<string>("");
 const router = useRouter();
 const companies = ref<Company[]>([]);
