@@ -41,9 +41,9 @@
         </div>
         <BasicTableWrapper
           class="table table-zebra text-center"
-          :exclude-strings="['id', 'company_id']"
+          :exclude-strings="invitationsExclude"
           v-if="userInvitations.length >= 1"
-          :keys="['Company name', 'Owner last name']"
+          :keys="invitationKeys"
           :data="userInvitations"
         >
           <template #td-slot="{ id, index, value }">
@@ -77,8 +77,8 @@
               ? members
               : members.filter((item) => item.isAdmin === true)
           "
-          :keys="['email', 'first name', 'last name', 'is admin']"
-          :exclude-strings="['isOwner', 'id']"
+          :keys="userKeys"
+          :exclude-strings="userExcludekeys"
         >
           <template #td-slot="{ id, value, index }">
             <template v-if="value.isAdmin">
@@ -119,14 +119,8 @@
         <h1 class="text-2xl p-4">Your companies!</h1>
         <BasicTableWrapper
           :data="companiesYourIn"
-          :keys="['company name', 'company description', 'leave company']"
-          :exclude-strings="[
-            'id',
-            'created_at',
-            'updated_at',
-            'is_owner',
-            'is_admin',
-          ]"
+          :keys="companyKeys"
+          :exclude-strings="companyExcludeKeys"
           class="table table-zebra"
         >
           <template #td-slot="{ id }">
@@ -162,7 +156,7 @@
           <label v-if="user?.avarage_score"
             >You got {{ user.avarage_score.toFixed(4) }}&nbsp;</label
           >
-          <input
+          <BaseInput
             type="radio"
             name="rating-1"
             class="mask mask-star-2 bg-orange-400"
@@ -194,18 +188,32 @@ import {
   Members,
   User,
 } from "@/types";
-import { getReqAxios, postReqAxios } from "@/utils/functions";
+import { deleteReqAxios, getReqAxios, postReqAxios } from "@/utils/functions";
 import { onMounted, ref } from "vue";
 import QuizForm from "@/components/FormComponents/QuizForm.vue";
 import { useRouter } from "vue-router";
 import SelectedUserChart from "@/components/Charts/SelectedUserChart.vue";
 import UserAllQuizesChart from "@/components/Charts/UserAllQuizesChart.vue";
+import BaseInput from "@/components/Inputs/BaseInput.vue";
 type fetchLastType = {
   user_last_test_time: {
     user__email: string;
     last_test_time: string;
   }[];
 };
+const userKeys = ["email", "first name", "last name", "is admin"];
+const userExcludekeys: (keyof Members)[] = ["isOwner", "id"];
+const companyKeys = ["company name", "company description", "leave company"];
+const companyExcludeKeys: (string | number | symbol)[] = [
+  "id",
+  "created_at",
+  "updated_at",
+  "is_owner",
+  "is_admin",
+];
+const invitationKeys = ["Company name", "Owner last name"];
+const invitationsExclude: (keyof InvitationToUser)[] = ["id", "company_id"];
+const confirmationPass = ref<string>("");
 const router = useRouter();
 const companies = ref<Company[]>([]);
 const isAdminFilter = ref(false);
