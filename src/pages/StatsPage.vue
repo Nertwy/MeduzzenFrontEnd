@@ -2,9 +2,9 @@
   <template v-if="data">
     <BasicTableWrapper
       :data="data"
-      :keys="['Quiz name', 'Score', 'Time taken', 'Last attempt']"
+      :keys="keys"
       class="table table-zebra"
-      :exclude-strings="['id', 'quiz', 'user', 'company']"
+      :exclude-strings="excludedKeys"
     >
       <template #th-slot></template>
       <template #td-slot></template>
@@ -22,6 +22,13 @@ import { getReqAxios } from "@/utils/functions";
 import { formatUpdatedAt } from "@/utils/helpers";
 import { onMounted, ref } from "vue";
 const data = ref<UserLastQuizStat[] | null>(null);
+const keys = ["Quiz name", "Score", "Time taken", "Last attempt"];
+const excludedKeys: (keyof UserLastQuizStat)[] = [
+  "id",
+  "quiz",
+  "user",
+  "company",
+];
 const fetchUserLastTestsTime = async () => {
   try {
     const result = await getReqAxios<UserLastQuizStat[]>(
