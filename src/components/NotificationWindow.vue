@@ -1,27 +1,47 @@
 <template>
-  {{ data }}
-  <!-- <BasicTableWrapper></BasicTableWrapper> -->
-  <button @click="sendMessage">Send message</button>
+  <BasicTableWrapper
+    :keys="['text', 'status']"
+    :data="data"
+    class="table table-zebra"
+  >
+    <template #td-slot="{ id, index, value }">
+      <td>
+        <BasicButton @click="readNotification(id ?? -1)">
+          Mark as read
+        </BasicButton>
+      </td>
+    </template>
+  </BasicTableWrapper>
 </template>
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import BasicTableWrapper from "./BasicTable/BasicTableWrapper.vue";
 import { getReqAxios } from "@/utils/functions";
 import { onMounted } from "vue";
-const data = ref();
+import {
+  CustomNotification,
+  NotificationType,
+  ReadNotification,
+} from "@/types";
+import BasicButton from "./buttons/BasicButton.vue";
+type UserNotifications = {
+  type: NotificationType;
+  notifications: CustomNotification[];
+};
 
+const keys = [];
+const data = ref<CustomNotification[]>([]);
+const accessToken = localStorage.getItem("accessToken");
 const ws = new WebSocket(
-  `ws://${import.meta.env.VITE_BACKEND_HOST}notifications/`
+  `ws://${import.meta.env.VITE_BACKEND_HOST}notifications/?token=${accessToken}`
 );
 
+const userGroups = ref<any[]>([]);
 onMounted(() => {
-  ws.onopen = (event) => {
-    const accessToken = localStorage.getItem("accessToken");
-    ws.send(JSON.stringify(accessToken));
-  };
+  ws.onopen = (event) => {};
   ws.onmessage = (event) => {
-    const notificationData = JSON.parse(event.data);
-    console.log(notificationData);
+    const notifications = JSON.parse(event.data) as UserNotifications;
+    data.value?.push(...notifications.notifications);
   };
 
   ws.onclose = (event) => {
@@ -32,10 +52,12 @@ onMounted(() => {
     console.error("WebSocket error:", event);
   };
 });
-const sendMessage = () => {
-  const message = {
-    text: "Hello, server!",
+
+const readNotification = (id: number) => {
+  const notification: ReadNotification = {
+    id,
+    type: "read_notification",
   };
-  ws.send("asd");
+  ws.send(JSON.stringify(notification));
 };
 </script>

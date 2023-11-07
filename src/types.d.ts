@@ -119,6 +119,25 @@ type UserLastQuizStat = {
   time_taken: string;
   updated_at: string;
 };
+
+type NotificationStatus = {
+  UNREAD: "unread";
+  READ: "read";
+};
+type CustomNotification = {
+  id?: number;
+  text: string;
+  status: keyof NotificationStatus;
+};
+type NotificationType =
+  | "user_notifications"
+  | "send_notification"
+  | "read_notification";
+
+type ReadNotification = {
+  type: NotificationType;
+  id: number;
+};
 //Store Types
 type ActionKeys = keyof typeof actions;
 

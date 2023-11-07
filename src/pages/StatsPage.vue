@@ -56,6 +56,6 @@ const downloadResults = async () => {
   }
 };
 onMounted(() => {
-  // fetchUserLastTestsTime();
+  fetchUserLastTestsTime();
 });
 </script>
