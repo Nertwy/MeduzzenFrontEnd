@@ -1,5 +1,5 @@
 <template>
-    {{ data }}
+  {{ data }}
   <!-- <BasicTableWrapper></BasicTableWrapper> -->
   <button @click="sendMessage">Send message</button>
 </template>
@@ -8,23 +8,34 @@ import { computed, ref } from "vue";
 import BasicTableWrapper from "./BasicTable/BasicTableWrapper.vue";
 import { getReqAxios } from "@/utils/functions";
 import { onMounted } from "vue";
-const data = ref()
-const ws = new WebSocket("ws://localhost:8000/notifications/");
+const data = ref();
+
+const ws = new WebSocket(
+  `ws://${import.meta.env.VITE_BACKEND_HOST}notifications/`
+);
+
 onMounted(() => {
   ws.onopen = (event) => {
-    ws.send("This is sending message");
+    const accessToken = localStorage.getItem("accessToken");
+    ws.send(JSON.stringify(accessToken));
   };
-  ws.addEventListener("message", (event) => {
-    console.log(event.target);
-  });
-  ws.onmessage = (event)=>{
-    data.value = event.data
-    console.log(event.data);
-  }
+  ws.onmessage = (event) => {
+    const notificationData = JSON.parse(event.data);
+    console.log(notificationData);
+  };
+
+  ws.onclose = (event) => {
+    console.log("WebSocket connection closed:", event);
+  };
+
+  ws.onerror = (event) => {
+    console.error("WebSocket error:", event);
+  };
 });
 const sendMessage = () => {
-    console.log("click");
-    
-  ws.send("Test message");
+  const message = {
+    text: "Hello, server!",
+  };
+  ws.send("asd");
 };
 </script>
