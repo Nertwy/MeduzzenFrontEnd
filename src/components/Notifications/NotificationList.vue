@@ -15,15 +15,16 @@
 </template>
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import BasicTableWrapper from "./BasicTable/BasicTableWrapper.vue";
+import BasicTableWrapper from "../BasicTable/BasicTableWrapper.vue";
 import { getReqAxios } from "@/utils/functions";
 import { onMounted } from "vue";
 import {
   CustomNotification,
+  NewNotification,
   NotificationType,
   ReadNotification,
 } from "@/types";
-import BasicButton from "./buttons/BasicButton.vue";
+import BasicButton from "../buttons/BasicButton.vue";
 type UserNotifications = {
   type: NotificationType;
   notifications: CustomNotification[];
@@ -37,8 +38,8 @@ const ws = new WebSocket(
 );
 
 const userGroups = ref<any[]>([]);
+
 onMounted(() => {
-  ws.onopen = (event) => {};
   ws.onmessage = (event) => {
     const notifications = JSON.parse(event.data) as UserNotifications;
     data.value?.push(...notifications.notifications);

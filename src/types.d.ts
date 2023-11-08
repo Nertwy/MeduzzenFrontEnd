@@ -128,15 +128,21 @@ type CustomNotification = {
   id?: number;
   text: string;
   status: keyof NotificationStatus;
+  recipient: number;
 };
 type NotificationType =
   | "user_notifications"
   | "send_notification"
-  | "read_notification";
+  | "read_notification"
+  | "new_notification";
 
 type ReadNotification = {
   type: NotificationType;
   id: number;
+};
+type NewNotification = {
+  type: "new_notification";
+  notification: CustomNotification;
 };
 //Store Types
 type ActionKeys = keyof typeof actions;

@@ -6,6 +6,7 @@
     <div v-else class="alert alert-success">
       <span>{{ text }}</span>
     </div>
+    <slot name="toast-inside"></slot>
   </div>
   <slot></slot>
 </template>

@@ -28,7 +28,7 @@ import { UserLastQuizStat } from "@/types";
 import { exportCSVFile, fetchUserInfo, getReqAxios } from "@/utils/functions";
 import { formatUpdatedAt } from "@/utils/helpers";
 import { onMounted, ref } from "vue";
-import NotificationWindow from "@/components/NotificationWindow.vue";
+import NotificationWindow from "@/components/Notifications/NotificationList.vue";
 const keys = ["Quiz name", "Score", "Time taken", "Last attempt"];
 const excludedKeys: (keyof UserLastQuizStat)[] = [
   "id",
