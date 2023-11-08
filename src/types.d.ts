@@ -11,6 +11,7 @@ type User = {
   last_name: string;
   email: string;
   image_path?: string;
+  avarage_score?: number;
 };
 type GoogleUser = {
   name: string;
@@ -100,6 +101,23 @@ type Question = {
 type AnswerChoice = {
   id?: number;
   text: string;
+};
+
+type UserLastQuizStat = {
+  id: number;
+  user: {
+    last_name: string;
+    email: string;
+  };
+  company: {
+    name: string;
+    description: string;
+  };
+  quiz: number;
+  quiz_title: string;
+  score: number;
+  time_taken: string;
+  updated_at: string;
 };
 //Store Types
 type ActionKeys = keyof typeof actions;

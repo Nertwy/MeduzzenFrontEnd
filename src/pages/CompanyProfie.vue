@@ -54,6 +54,7 @@
               >
             </div>
           </ModalWindow>
+            <CompanyChart/>
         </template>
       </Card>
     </section>
@@ -66,6 +67,7 @@
   </template>
 </template>
 <script setup lang="ts">
+import CompanyChart from "@/components/Charts/CompanyChart.vue";
 import ModalWindow from "@/components/ModalWindow.vue";
 import Card from "@/components/Card.vue";
 import useStoreTyped from "@/store/store";

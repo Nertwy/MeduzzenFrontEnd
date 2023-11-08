@@ -80,6 +80,12 @@ const router = createRouter({
       name: "Quiz",
       component: () => import("@/pages/Quiz.vue"),
     },
+    {
+      path: "/Stats",
+      name: "Stats",
+      meta: { requiresAuth: true },
+      component: () => import("@/pages/StatsPage.vue"),
+    },
   ],
 });
 
