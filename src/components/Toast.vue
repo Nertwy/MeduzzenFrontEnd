@@ -1,7 +1,12 @@
 <template>
   <div v-if="ToastInfo.isShowing" class="toast toast-end">
     <div v-if="ToastInfo.alertInfoType" class="alert alert-info">
-      <span>{{ text }}</span>
+      <span
+        >{{ text
+        }}<template v-if="ToastInfo.text"
+          >&nbsp; {{ ToastInfo.text }}</template
+        ></span
+      >
     </div>
     <div v-else class="alert alert-success">
       <span>{{ text }}</span>
@@ -17,6 +22,7 @@ type ToastInfo = {
   alertInfoType: boolean;
   isShowing: boolean;
   showTime: number;
+  text: string | null;
 };
 const props = defineProps({
   showTime: {
@@ -44,12 +50,16 @@ const ToastInfo = ref<ToastInfo>({
   isShowing: props.isShowing,
   alertInfoType: props.alertInfoType,
   showTime: props.showTime,
+  text: null,
 });
-const triggerToast = (infoType: boolean) => {
+const triggerToast = (infoType: boolean, text?: string) => {
   ToastInfo.value.isShowing = true;
   ToastInfo.value.alertInfoType = infoType;
+  if (text) ToastInfo.value.text = text;
+
   setTimeout(() => {
     ToastInfo.value.isShowing = false;
+    ToastInfo.value.text = null;
   }, ToastInfo.value.showTime);
 };
 defineExpose({

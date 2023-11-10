@@ -37,6 +37,13 @@ const excludedKeys: (keyof UserLastQuizStat)[] = [
   "company",
 ];
 const data = ref<UserLastQuizStat[] | null>(null);
+const keys = ["Quiz name", "Score", "Time taken", "Last attempt"];
+const excludedKeys: (keyof UserLastQuizStat)[] = [
+  "id",
+  "quiz",
+  "user",
+  "company",
+];
 const fetchUserLastTestsTime = async () => {
   try {
     const result = await getReqAxios<UserLastQuizStat[]>(

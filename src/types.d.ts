@@ -144,6 +144,12 @@ type NewNotification = {
   type: "new_notification";
   notification: CustomNotification;
 };
+type UserLastTestTime = {
+  user_last_test_time: {
+    user__email: string;
+    last_test_time: string;
+  }[];
+};
 //Store Types
 type ActionKeys = keyof typeof actions;
 
