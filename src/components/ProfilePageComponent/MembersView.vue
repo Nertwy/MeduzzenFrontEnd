@@ -1,9 +1,7 @@
 <template>
   <BasicTableWrapper
     class="table table-zebra"
-    :data="
-      !isAdminFilter ? members : members.filter((item) => item.isAdmin === true)
-    "
+    :data="data"
     :keys="userKeys"
     :exclude-strings="userExcludekeys"
   >
@@ -38,17 +36,18 @@
 </template>
 
 <script setup lang="ts">
-import { Members, fetchLastType } from "@/types";
+import { Members, UserLastTestTime } from "@/types";
 import BasicTableWrapper from "../BasicTable/BasicTableWrapper.vue";
 import BasicButton from "../buttons/BasicButton.vue";
 import UserAllQuizesChart from "@/components/Charts/UserAllQuizesChart.vue";
 import { postReqAxios } from "@/utils/functions";
 import { ref } from "vue";
+import { computed } from "vue";
 type Props = {
   companyId: number;
   isAdminFilter: boolean;
   members: Members[];
-  fetchedUsersLastTime: fetchLastType;
+  fetchedUsersLastTime: UserLastTestTime;
 };
 const userKeys = ["email", "first name", "last name", "is admin"];
 const userExcludekeys: (keyof Members)[] = ["isOwner", "id"];
@@ -56,7 +55,11 @@ const props = withDefaults(defineProps<Props>(), {
   isAdminFilter: false,
   members: () => [],
 });
-
+const data = computed(() =>
+  !props.isAdminFilter
+    ? props.members
+    : props.members.filter((item) => item.isAdmin)
+);
 const appointAdmin = async (company_id: number, user_index: number) => {
   try {
     await postReqAxios(`api/companies/${company_id}/appoint_admin/`, {

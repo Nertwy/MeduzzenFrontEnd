@@ -119,7 +119,7 @@ type UserLastQuizStat = {
   time_taken: string;
   updated_at: string;
 };
-type fetchLastType = {
+type UserLastTestTime = {
   user_last_test_time: {
     user__email: string;
     last_test_time: string;

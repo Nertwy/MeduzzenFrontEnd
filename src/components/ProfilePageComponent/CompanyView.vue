@@ -59,7 +59,12 @@ import BasicTableWrapper from "@/components/BasicTable/BasicTableWrapper.vue";
 import BasicButton from "@/components/buttons/BasicButton.vue";
 import Toggle from "@/components/Toggle.vue";
 import { getReqAxios, postReqAxios } from "@/utils/functions";
-import { Company, InvitationToCompany, Members, fetchLastType } from "@/types";
+import {
+  Company,
+  InvitationToCompany,
+  Members,
+  UserLastTestTime,
+} from "@/types";
 import { ref } from "vue";
 import { onMounted } from "vue";
 import InvitationsView from "./InvitationsView.vue";
@@ -70,7 +75,7 @@ const companyId = ref<number>(-1);
 const companyRequests = ref<InvitationToCompany[]>([]);
 const toastRef = ref<InstanceType<typeof Toast> | null>(null);
 const members = ref<Members[]>([]);
-const fetchedUsersLastTime = ref<fetchLastType>({ user_last_test_time: [] });
+const fetchedUsersLastTime = ref<UserLastTestTime>({ user_last_test_time: [] });
 
 const selectChange = async (id: number) => {
   await fetchCompanyRequests(id);
@@ -101,7 +106,7 @@ const fetchMembers = async (company_id: number) => {
 };
 const fetchLastTestTime = async (companyId: number) => {
   try {
-    const result = await getReqAxios<fetchLastType>(
+    const result = await getReqAxios<UserLastTestTime>(
       `api/users_last_test_time/${companyId}/`
     );
     fetchedUsersLastTime.value = result;
