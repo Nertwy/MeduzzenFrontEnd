@@ -10,7 +10,11 @@ const config: Config = {
     customExportConditions: ["node", "node-addons"],
     url: "http://localhost/",
   },
-
+  moduleNameMapper: {
+    "^@/(.*)$": "<rootDir>/src/$1",
+    "^@/pages/(.*)$": "<rootDir>/src/pages/$1",
+    "^@/components/(.*)$": "<rootDir>/src/components/$1",
+  },
   testEnvironment: "jsdom",
 };
 

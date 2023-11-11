@@ -130,14 +130,7 @@ const removeQuestion = (index?: number) => {
   }
 };
 
-const removeAnswerChoice = (questionIndex?: number, choiceIndex?: number) => {
-  if (questionIndex !== undefined && choiceIndex !== undefined) {
-    const question = quiz.value.questions[questionIndex];
-    if (question.answer.length > 2) {
-      question.answer.splice(choiceIndex, 1);
-    }
-  }
-};
+
 const editQuiz = () => {
   try {
     if (!quiz.value.id) return;
@@ -147,16 +140,6 @@ const editQuiz = () => {
   }
 };
 
-const setCorrectAnswers = () => {
-  if (props.data) {
-    quiz.value.questions.forEach((question, questionIndex) => {
-      if (props.data && props.data.questions[questionIndex]) {
-        question.correct_answer[0] =
-          props.data.questions[questionIndex].correct_answer[0];
-      }
-    });
-  }
-};
 const onAnswersUpdate = (
   answers: string[],
   correct_answers: string[],
@@ -165,7 +148,5 @@ const onAnswersUpdate = (
   quiz.value.questions[index].answer = answers;
   quiz.value.questions[index].correct_answer = correct_answers;
 };
-onMounted(() => {
-  // setCorrectAnswers();
-});
+
 </script>
