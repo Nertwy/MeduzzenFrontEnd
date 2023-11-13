@@ -138,6 +138,7 @@ const handleDeleteUser = async (current_password: string) => {
     console.error(error);
   }
 };
+
 onMounted(() => {
   fetchCompaniesYourIn();
   fetchAvgScore();
