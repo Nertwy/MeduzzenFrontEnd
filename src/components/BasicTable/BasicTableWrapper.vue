@@ -7,9 +7,9 @@
     <tbody>
       <tr v-for="(item, index) in data" :key="index" class="">
         <BasicTd
+          @update:props-data="(newObj) => updateModelValue(item, newObj)"
           :data="filteredData[index]"
           :custom-td-component="tdLayout"
-          v-model="modelValue"
           :edit="edit === index"
         />
         <slot name="td-slot" :id="item?.id" :index="index" :value="item"></slot>
@@ -19,7 +19,7 @@
 </template>
 <script setup lang="ts" generic="T extends {id?:number}">
 import BasicTh from "./BasicTh.vue";
-import { computed, onMounted } from "vue";
+import { computed} from "vue";
 import BasicTd from "./BasicTd.vue";
 
 type Props = {
@@ -37,11 +37,7 @@ const props = withDefaults(defineProps<Props>(), {
 });
 const filteredData = computed(() => {
   const newData = props.data.map((x) => ({ ...x }));
-  // if (props.excludeId) {
-  //   newData.forEach((someItems) => {
-  //     delete someItems?.id;
-  //   });
-  // }
+
   if (props.excludeStrings) {
     props.excludeStrings.forEach((someStr) => {
       newData.forEach((someItems) => {
@@ -52,9 +48,12 @@ const filteredData = computed(() => {
 
   return newData;
 });
-
-const modelValue = defineModel({});
-onMounted(() => {
-  modelValue.value = props.data;
-});
+const emit = defineEmits(["update:model-value"]);
+const updateModelValue = (defaultValue: T, obj: Record<string, T>) => {
+  const newValue: T = {
+    ...defaultValue,
+    ...obj,
+  };
+  emit("update:model-value", newValue);
+};
 </script>

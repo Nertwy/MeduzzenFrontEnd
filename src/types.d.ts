@@ -12,6 +12,8 @@ type User = {
   email: string;
   image_path?: string;
   avarage_score?: number;
+  is_owner?: boolean;
+  is_admin?: boolean;
 };
 type GoogleUser = {
   name: string;

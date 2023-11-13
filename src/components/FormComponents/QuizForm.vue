@@ -1,5 +1,6 @@
 <template>
   <form
+    role="form"
     @submit.prevent="submitQuiz"
     class="flex flex-col justify-around gap-3 m-2"
   >
@@ -72,7 +73,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { ref } from "vue";
 import BaseInput from "../Inputs/BaseInput.vue";
 import BasicButton from "../buttons/BasicButton.vue";
 import { Quiz } from "@/types";
@@ -87,21 +88,22 @@ const props = withDefaults(defineProps<Props>(), {
   companyId: null,
   edit: false,
 });
-const quizModel = defineModel<Quiz>({
-  default: {
-    questions: [
-      {
-        question: "",
-        answer: ["", ""],
-        correct_answer: [""],
-      },
-      {
-        question: "",
-        answer: ["", ""],
-        correct_answer: [""],
-      },
-    ],
-  },
+const quizModel = ref<Quiz>({
+  company: props.companyId,
+  description: "",
+  title: "",
+  questions: [
+    {
+      question: "",
+      answer: ["", ""],
+      correct_answer: [""],
+    },
+    {
+      question: "",
+      answer: ["", ""],
+      correct_answer: [""],
+    },
+  ],
 });
 
 const quiz = ref(props.data ?? quizModel.value);
@@ -130,7 +132,6 @@ const removeQuestion = (index?: number) => {
   }
 };
 
-
 const editQuiz = () => {
   try {
     if (!quiz.value.id) return;
@@ -148,5 +149,4 @@ const onAnswersUpdate = (
   quiz.value.questions[index].answer = answers;
   quiz.value.questions[index].correct_answer = correct_answers;
 };
-
 </script>

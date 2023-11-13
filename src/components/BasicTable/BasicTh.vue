@@ -1,5 +1,7 @@
 <template>
-  <th v-for="(item, index) in filteredData" :key="index">{{ item }}</th>
+  <th v-for="(item, index) in filteredData" :key="index" role="rowheader">
+    {{ item }}
+  </th>
 </template>
 <script setup lang="ts" generic="T">
 import { computed } from "vue";

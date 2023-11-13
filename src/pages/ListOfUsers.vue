@@ -6,11 +6,12 @@
     </template>
     <template v-else>
       <BasicTableWrapper
+        :exclude-strings="excludeKeys"
         :keys="keys"
         :data="store.state.usersList"
         class="table table-zebra"
         :td-layout="Edit_Input"
-        v-model="handleDataRef"
+        @update:model-value="(newObj) => handleDataChange(newObj)"
         :edit="edit"
       >
         <template #th-slot>
@@ -22,7 +23,7 @@
           <td>
             <EditButton
               button-text="Edit"
-              @submit-user="() => updateFunc(id ?? -1, handleDataRef)"
+              @submit-user="() => updateFunc(value.id ?? -1, handleDataRef)"
               @edit-click="() => handleEditClick(index)"
               @edit-cancel="() => handleEditClick(null)"
               :edit="edit === index"
@@ -125,7 +126,13 @@ const resetPassword = ref<ResetPassword>({
   new_password: "",
   re_new_password: "",
 });
-const keys = ref<string[]>([]);
+const keys = ref<string[]>(["email", "first name", "last name"]);
+const excludeKeys: (keyof User)[] = [
+  "id",
+  "is_owner",
+  "is_admin",
+  "avarage_score",
+];
 const isLoading = ref(true);
 const pageData = ref<PageWith<User>>({
   count: 0,
@@ -135,6 +142,9 @@ const pageData = ref<PageWith<User>>({
 });
 const edit = ref<number | null>(null);
 const handleDataRef = ref<T>();
+const handleDataChange = (obj: T) => {
+  handleDataRef.value = obj  
+};
 const handleEditClick = (index: number | null) => {
   if (index === null) {
     edit.value = null;
@@ -194,7 +204,6 @@ const fetch = async () => {
       store.commit("addUserToList", company as User);
     });
     pageData.value = fetchedData;
-    keys.value = Object.keys(fetchedData.results[0]);
     isLoading.value = false;
   } catch (error) {
     console.error(error);

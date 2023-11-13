@@ -10,7 +10,6 @@ import {
 } from "vuex";
 import { TypedDispatchAndAction } from "../types";
 
-
 type State = {
   count: number;
   test: string;
@@ -109,6 +108,9 @@ export const actions = {
   userLogout({ commit }: ActionContext<State, State>) {
     commit("userLogout");
   },
+  userLogin({ commit }: ActionContext<State, State>, payload: User) {
+    commit("userLogin", payload);
+  },
   updateUserFromList(
     { commit }: ActionContext<State, State>,
     payload: Partial<User>
@@ -163,7 +165,6 @@ export const storeInitializer = {
   mutations,
   actions,
   getters,
-
 };
 
 export const key: InjectionKey<Store<State>> = Symbol();
