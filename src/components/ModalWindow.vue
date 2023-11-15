@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div>
     <button class="btn" @click="toggleModal">{{ props.btnOpenText }}</button>
     <dialog :open="isOpen" class="modal">
       <article class="modal-box max-w-full w-auto">

@@ -1,5 +1,5 @@
 <template>
-  <ModalWindow>
+  <ModalWindow :btn-open-text="$t('CompanyForm.ModalWindowBtnText')" class="w-screen">
     <h1 class="text-4xl text-white mb-6">Create Company</h1>
     <form class="flex flex-col">
       <BaseInput
@@ -7,7 +7,7 @@
         placeholder="Company Name"
         class="input input-bordered"
         :label="'Company name'"
-        v-model:model-value="companyModalData.name"
+        v-model="companyModalData.name"
         required
       />
       <BaseInput
@@ -15,7 +15,7 @@
         placeholder="description"
         class="input input-bordered"
         :label="'Company description'"
-        v-model:model-value="companyModalData.description"
+        v-model="companyModalData.description"
         required
       />
       <BaseInput
@@ -23,7 +23,7 @@
         placeholder="visibility"
         :label="'Is company visible to others?'"
         class="checkbox"
-        v-model:model-value="companyModalData.is_visible"
+        v-model="companyModalData.is_visible"
       />
       <button
         class="btn btn-accent w-1/2 self-center"

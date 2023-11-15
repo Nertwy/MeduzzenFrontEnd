@@ -83,6 +83,7 @@ import QuizForm from "@/components/FormComponents/QuizForm.vue";
 import { useRouter } from "vue-router";
 import SelectedUserChart from "@/components/Charts/SelectedUserChart.vue";
 import BaseInput from "@/components/Inputs/BaseInput.vue";
+import CompanyForm from "@/components/FormComponents/CompanyForm.vue";
 
 const companyKeys = ["company name", "company description", "leave company"];
 const companyExcludeKeys: (string | number | symbol)[] = [

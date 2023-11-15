@@ -13,7 +13,7 @@ const props = defineProps({
     type: [String, Boolean],
   },
   modelValue: {
-    type: [String],
+    type: [String,Boolean],
   },
 });
 const internalModelValue = ref(props.modelValue ?? "");

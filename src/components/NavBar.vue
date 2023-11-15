@@ -1,5 +1,6 @@
 <template>
   <nav class="navbar bg-base-100">
+    <CompanyForm />
     <div class="flex-1">
       <a class="btn btn-ghost normal-case text-xl"
         >{{ data?.email }} {{ data?.first_name }}</a
@@ -9,6 +10,11 @@
       <BasicButton class="btn-ghost" @click="router.push('/Profile')"
         >Home</BasicButton
       >
+
+      <router-link to="/Login" v-if="store.state.user"
+        ><BasicButton class="btn-ghost">Login</BasicButton></router-link
+      >
+
       <BasicButton class="btn-ghost" @click="LogoutUser">Logout</BasicButton>
 
       <div class="dropdown dropdown-end">
@@ -43,7 +49,6 @@ import { onMounted, computed } from "vue";
 import { useRouter } from "vue-router";
 import BasicButton from "./buttons/BasicButton.vue";
 import defaultProfileImage from "@/assets/Default.png";
-import ModalWindow from "./ModalWindow.vue";
 import CompanyForm from "./FormComponents/CompanyForm.vue";
 const store = useStoreTyped();
 const router = useRouter();
