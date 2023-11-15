@@ -6,6 +6,7 @@
     </template>
     <template v-else>
       <BasicTableWrapper
+        @update:model-value="(newObj) => handleDataChange(newObj)"
         :keys="keys"
         :data="store.state.companyList"
         class="table table-zebra"
@@ -94,6 +95,10 @@ const handleEditClick = (index: number | null) => {
 
   handleDataRef.value = company as T;
   edit.value = index;
+};
+const handleDataChange = (obj: T) => {
+  handleDataRef.value = obj
+  
 };
 const updateFunc = async (id: number, data?: Partial<T>) => {
   try {

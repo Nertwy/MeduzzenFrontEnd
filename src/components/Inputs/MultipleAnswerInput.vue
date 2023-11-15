@@ -1,11 +1,13 @@
 <template>
-  <ul>
+  <ul role="list">
     <li
+      role="listitem"
       class="join join-vertical my-2 ml-2"
       v-for="(answerChoice, index) in selectedAnswers"
       :key="index"
     >
       <BaseInput
+        role="textbox"
         :placeholder="`${edit ? 'Write Your Answer' : ''}`"
         type="text"
         :class="`join-item input ${
@@ -13,11 +15,18 @@
         }`"
         v-model="selectedAnswers[index]"
       />
-      <BasicButton @click="removeAnswerChoice(index)" type="button" v-if="edit">
+      <BasicButton
+        role="button"
+        name="remove-answer"
+        @click="removeAnswerChoice(index)"
+        type="button"
+        v-if="edit"
+      >
         Remove Answer
       </BasicButton>
 
       <input
+        role="checkbox"
         :value="answerChoice"
         @change="(e) => onValueUpdate(e)"
         :checked="isAnswerSelected(answerChoice)"
@@ -28,6 +37,8 @@
     </li>
   </ul>
   <BasicButton
+    name="add-answer"
+    role="button"
     @click="addAnswerChoice"
     v-if="edit"
     type="button"
@@ -40,16 +51,17 @@
 import { computed, onMounted, ref, watch } from "vue";
 import BasicButton from "../buttons/BasicButton.vue";
 import BaseInput from "./BaseInput.vue";
+
 type Answers = {
   answers: string[];
   correct_answers: string[];
 };
-type Props = {
+type MultipleAnswerInputProps = {
   edit?: boolean;
   data: Answers;
   emitAnswers?: (answers: string[], correct_answers: string[]) => void;
 };
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<MultipleAnswerInputProps>(), {
   edit: false,
 });
 const selectedAnswers = ref<string[]>(props.data.answers);

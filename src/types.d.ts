@@ -1,6 +1,6 @@
 import { Url } from "url";
 import { actions } from "./store/store";
-
+import { RenderOptions } from "@testing-library/vue";
 type Language = "en" | "uk";
 type LanguageAndFlag = [Language, Flag];
 
@@ -12,6 +12,8 @@ type User = {
   email: string;
   image_path?: string;
   avarage_score?: number;
+  is_owner?: boolean;
+  is_admin?: boolean;
 };
 type GoogleUser = {
   name: string;
@@ -150,6 +152,9 @@ type UserLastTestTime = {
     last_test_time: string;
   }[];
 };
+
+// Test Types
+
 //Store Types
 type ActionKeys = keyof typeof actions;
 

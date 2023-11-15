@@ -1,5 +1,6 @@
 <template>
   <form
+    role="form"
     @submit.prevent="submitQuiz"
     class="flex flex-col justify-around gap-3 m-2"
   >
@@ -72,7 +73,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { ref } from "vue";
 import BaseInput from "../Inputs/BaseInput.vue";
 import BasicButton from "../buttons/BasicButton.vue";
 import { Quiz } from "@/types";
@@ -87,21 +88,22 @@ const props = withDefaults(defineProps<Props>(), {
   companyId: null,
   edit: false,
 });
-const quizModel = defineModel<Quiz>({
-  default: {
-    questions: [
-      {
-        question: "",
-        answer: ["", ""],
-        correct_answer: [""],
-      },
-      {
-        question: "",
-        answer: ["", ""],
-        correct_answer: [""],
-      },
-    ],
-  },
+const quizModel = ref<Quiz>({
+  company: props.companyId,
+  description: "",
+  title: "",
+  questions: [
+    {
+      question: "",
+      answer: ["", ""],
+      correct_answer: [""],
+    },
+    {
+      question: "",
+      answer: ["", ""],
+      correct_answer: [""],
+    },
+  ],
 });
 
 const quiz = ref(props.data ?? quizModel.value);
@@ -130,14 +132,6 @@ const removeQuestion = (index?: number) => {
   }
 };
 
-const removeAnswerChoice = (questionIndex?: number, choiceIndex?: number) => {
-  if (questionIndex !== undefined && choiceIndex !== undefined) {
-    const question = quiz.value.questions[questionIndex];
-    if (question.answer.length > 2) {
-      question.answer.splice(choiceIndex, 1);
-    }
-  }
-};
 const editQuiz = () => {
   try {
     if (!quiz.value.id) return;
@@ -147,16 +141,6 @@ const editQuiz = () => {
   }
 };
 
-const setCorrectAnswers = () => {
-  if (props.data) {
-    quiz.value.questions.forEach((question, questionIndex) => {
-      if (props.data && props.data.questions[questionIndex]) {
-        question.correct_answer[0] =
-          props.data.questions[questionIndex].correct_answer[0];
-      }
-    });
-  }
-};
 const onAnswersUpdate = (
   answers: string[],
   correct_answers: string[],
@@ -165,7 +149,4 @@ const onAnswersUpdate = (
   quiz.value.questions[index].answer = answers;
   quiz.value.questions[index].correct_answer = correct_answers;
 };
-onMounted(() => {
-  // setCorrectAnswers();
-});
 </script>

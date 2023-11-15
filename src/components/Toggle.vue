@@ -9,11 +9,11 @@
   />
 </template>
 <script setup lang="ts">
-import { useAttrs } from "vue";
+import { useAttrs,ref } from "vue";
 
 const attrs = useAttrs();
 const emit = defineEmits(["change"]);
-const isChecked = defineModel({ default: false });
+const isChecked = ref<boolean>(false);
 defineProps({
   label: {
     type: [String],
