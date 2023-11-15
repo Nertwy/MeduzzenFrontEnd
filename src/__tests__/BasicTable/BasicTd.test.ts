@@ -35,23 +35,4 @@ describe("Basic Td tag", () => {
     expect(getAllByRole("row")).toHaveLength(3);
     expect(getAllByRole("textbox")).toHaveLength(2);
   });
-  // it("Render td with custom wrapper component", () => {
-  //   const data: Record<string, any> = {
-  //     name: "John",
-  //     age: 25,
-  //     isAdmin: true,
-  //   };
-  //   const sampleProps = {
-  //     data,
-  //     edit: true,
-  //     style: "font-size: 16px; color: blue;",
-  //   };
-  //   const options: RenderOptions = {
-  //     props: {
-  //       ...sampleProps,
-  //     },
-  //   };
-  //   const { debug } = render(EditInput, options);
-  //   debug();
-  // });
 });
