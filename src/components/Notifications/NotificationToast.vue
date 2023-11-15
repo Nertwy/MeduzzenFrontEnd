@@ -1,9 +1,9 @@
 <template>
   <Toast ref="toastRef" :text="newNotification?.text">
     <template #toast-inside>
-      <BasicButton @click="readNotification(newNotification?.id ?? -1)"
-        >Mark as read</BasicButton
-      >
+      <BasicButton @click="readNotification(newNotification?.id ?? -1)">{{
+        $t("Notification.MarkAsRead")
+      }}</BasicButton>
     </template>
   </Toast>
 </template>
@@ -36,23 +36,7 @@ onMounted(() => {
     const notifications = JSON.parse(event.data) as UserNotifications;
     switch (notifications.type) {
       case "new_notification":
-        if (!isArray(notifications.notifications))
-          newNotification.value = notifications.notifications;
-        else {
-          let user_id = store.state.user?.id;
-          if (!user_id) {
-            try {
-              user_id = (await fetchUserInfo()).id;
-            } catch (error) {
-              console.error(error);
-            }
-          }
-          const userNotification = notifications.notifications.find(
-            (notification) => notification.recipient === user_id
-          );
-          if (userNotification) newNotification.value = userNotification;
-        }
-        toastRef.value?.triggerToast(true);
+        await newNotificationAction(notifications);
         break;
 
       default:
@@ -68,7 +52,25 @@ onMounted(() => {
     console.error("WebSocket error:", event);
   };
 });
-
+const newNotificationAction = async (notifications: UserNotifications) => {
+  if (!isArray(notifications.notifications)) {
+    newNotification.value = notifications.notifications;
+  } else {
+    let user_id = store.state.user?.id;
+    if (!user_id) {
+      try {
+        user_id = (await fetchUserInfo()).id;
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    const userNotification = notifications.notifications.find(
+      (notification) => notification.recipient === user_id
+    );
+    if (userNotification) newNotification.value = userNotification;
+  }
+  toastRef.value?.triggerToast(true);
+};
 const readNotification = (id: number) => {
   const notification: ReadNotification = {
     id,
