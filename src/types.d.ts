@@ -119,6 +119,31 @@ type UserLastQuizStat = {
   time_taken: string;
   updated_at: string;
 };
+
+type NotificationStatus = {
+  UNREAD: "unread";
+  READ: "read";
+};
+type CustomNotification = {
+  id?: number;
+  text: string;
+  status: keyof NotificationStatus;
+  recipient: number;
+};
+type NotificationType =
+  | "user_notifications"
+  | "send_notification"
+  | "read_notification"
+  | "new_notification";
+
+type ReadNotification = {
+  type: NotificationType;
+  id: number;
+};
+type NewNotification = {
+  type: "new_notification";
+  notification: CustomNotification;
+};
 type UserLastTestTime = {
   user_last_test_time: {
     user__email: string;

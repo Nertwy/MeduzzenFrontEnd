@@ -1,8 +1,15 @@
 import { Company, User } from "../types";
 import { InjectionKey } from "vue";
 
-import { Store, createStore, useStore as baseStore, ActionContext } from "vuex";
+import {
+  Store,
+  createStore,
+  useStore as baseStore,
+  ActionContext,
+  Plugin,
+} from "vuex";
 import { TypedDispatchAndAction } from "../types";
+
 
 type State = {
   count: number;
@@ -99,8 +106,8 @@ export const actions = {
   setUser({ commit }: ActionContext<State, State>, payload: User) {
     commit("userLogin", payload);
   },
-  userLogout({commit}: ActionContext<State,State>){
-    commit("userLogout")
+  userLogout({ commit }: ActionContext<State, State>) {
+    commit("userLogout");
   },
   updateUserFromList(
     { commit }: ActionContext<State, State>,
@@ -156,6 +163,7 @@ export const storeInitializer = {
   mutations,
   actions,
   getters,
+
 };
 
 export const key: InjectionKey<Store<State>> = Symbol();

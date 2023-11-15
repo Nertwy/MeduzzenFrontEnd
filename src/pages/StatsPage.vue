@@ -14,9 +14,10 @@
   <template v-else>
     <Spinner />
   </template>
-  <BasicButton @click="downloadResults" class="btn-info"
-    >Download Results</BasicButton
-  >
+  <BasicButton @click="downloadResults" class="btn-info">{{
+    $t("StatsPage.Download")
+  }}</BasicButton>
+  <NotificationWindow />
 </template>
 <script setup lang="ts">
 import NavBar from "@/components/NavBar.vue";
@@ -25,8 +26,9 @@ import Spinner from "@/components/Spinner.vue";
 import BasicButton from "@/components/buttons/BasicButton.vue";
 import { UserLastQuizStat } from "@/types";
 import { exportCSVFile, fetchUserInfo, getReqAxios } from "@/utils/functions";
-import { formatUpdatedAt } from "@/utils/helpers";
 import { onMounted, ref } from "vue";
+import NotificationWindow from "@/components/Notifications/NotificationList.vue";
+
 const data = ref<UserLastQuizStat[] | null>(null);
 const keys = ["Quiz name", "Score", "Time taken", "Last attempt"];
 const excludedKeys: (keyof UserLastQuizStat)[] = [
